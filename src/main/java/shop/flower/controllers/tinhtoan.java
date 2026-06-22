@@ -42,7 +42,7 @@ public class tinhtoan extends HttpServlet {
                 double n2 = Double.parseDouble(num2);
                 switch (op) {
                     case "+":
-                        result += (n1 + n2);
+                        result += (n1 * n2);
                         break;
                     case "-":
                         result += (n1 - n2);
