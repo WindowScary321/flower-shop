@@ -22,8 +22,37 @@ public class OrderHistoryServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Account user = (Account) request.getSession(false).getAttribute("user");
-        List<Order> orders = orderDAO.getOrdersByAccountId(user.getAccountId());
+        
+        String status = request.getParameter("status");
+        String fromDate = request.getParameter("fromDate");
+        String toDate = request.getParameter("toDate");
+
+        int page = 1;
+        int pageSize = 5;
+        try {
+            String pageStr = request.getParameter("page");
+            if (pageStr != null && !pageStr.isEmpty()) {
+                page = Integer.parseInt(pageStr);
+                if (page < 1) page = 1;
+            }
+        } catch (NumberFormatException e) {
+        }
+
+        int totalRecords = orderDAO.countOrders(user.getAccountId(), status, fromDate, toDate);
+        int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
+        if (page > totalPages && totalPages > 0) {
+            page = totalPages;
+        }
+
+        List<Order> orders = orderDAO.searchOrdersPaging(user.getAccountId(), status, fromDate, toDate, page, pageSize);
+        
         request.setAttribute("orders", orders);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("status", status != null ? status : "");
+        request.setAttribute("fromDate", fromDate != null ? fromDate : "");
+        request.setAttribute("toDate", toDate != null ? toDate : "");
+
         request.getRequestDispatcher("/customer/order-history.jsp").forward(request, response);
     }
 

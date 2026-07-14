@@ -16,6 +16,34 @@
             </button>
         </div>
 
+        <!-- Filter Form -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body">
+                <form action="${pageContext.request.contextPath}/admin/manage-flowers" method="GET" class="row g-3">
+                    <div class="col-md-3">
+                        <input type="text" name="keyword" class="form-control" placeholder="Tìm tên hoa..." value="${keyword}">
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" name="categoryId">
+                            <option value="">Tất cả danh mục</option>
+                            <c:forEach var="c" items="${categories}">
+                                <option value="${c.categoryId}" ${categoryId == c.categoryId ? 'selected' : ''}>${c.categoryName}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" name="minPrice" class="form-control" placeholder="Giá từ" value="${minPrice}" min="0">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" name="maxPrice" class="form-control" placeholder="Đến giá" value="${maxPrice}" min="0">
+                    </div>
+                    <div class="col-md-2 d-grid">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Lọc</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <c:if test="${not empty sessionScope.successMsg}">
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 ${sessionScope.successMsg}
@@ -96,6 +124,25 @@
                 </table>
             </div>
         </div>
+        
+        <!-- Pagination -->
+        <c:if test="${totalPages > 1}">
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                        <a class="page-link" href="?page=${currentPage - 1}&keyword=${keyword}&categoryId=${categoryId}&minPrice=${minPrice}&maxPrice=${maxPrice}">Trang trước</a>
+                    </li>
+                    <c:forEach begin="1" end="${totalPages}" var="i">
+                        <li class="page-item ${i == currentPage ? 'active' : ''}">
+                            <a class="page-link" href="?page=${i}&keyword=${keyword}&categoryId=${categoryId}&minPrice=${minPrice}&maxPrice=${maxPrice}">${i}</a>
+                        </li>
+                    </c:forEach>
+                    <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                        <a class="page-link" href="?page=${currentPage + 1}&keyword=${keyword}&categoryId=${categoryId}&minPrice=${minPrice}&maxPrice=${maxPrice}">Trang sau</a>
+                    </li>
+                </ul>
+            </nav>
+        </c:if>
     </div>
 </div>
 

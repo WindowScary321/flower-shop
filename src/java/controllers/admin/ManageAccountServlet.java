@@ -72,8 +72,37 @@ public class ManageAccountServlet extends HttpServlet {
 
     private void listAccounts(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Account> accounts = accountDAO.getAllAccounts();
+        String keyword = request.getParameter("keyword");
+        String role = request.getParameter("role");
+        String status = request.getParameter("status");
+
+        int page = 1;
+        int pageSize = 10;
+        try {
+            String pageStr = request.getParameter("page");
+            if (pageStr != null && !pageStr.isEmpty()) {
+                page = Integer.parseInt(pageStr);
+                if (page < 1) page = 1;
+            }
+        } catch (NumberFormatException e) {
+        }
+
+        int totalRecords = accountDAO.countAccounts(keyword, role, status);
+        int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
+        if (page > totalPages && totalPages > 0) {
+            page = totalPages;
+        }
+
+        List<Account> accounts = accountDAO.searchAccountsPaging(keyword, role, status, page, pageSize);
+        
         request.setAttribute("accounts", accounts);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+        
+        request.setAttribute("keyword", keyword != null ? keyword : "");
+        request.setAttribute("role", role != null ? role : "");
+        request.setAttribute("status", status != null ? status : "");
+
         request.getRequestDispatcher("/admin/manage-accounts.jsp").forward(request, response);
     }
 

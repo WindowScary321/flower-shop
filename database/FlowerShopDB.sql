@@ -116,7 +116,12 @@ INSERT INTO Flowers (FlowerName, Unit, Price, Quantity, Image, Description, Cate
 (N'Bó hoa lan hồ điệp',      N'Bó',    750000,  12, 'orchid.jpg',       N'Bó lan hồ điệp nhập khẩu cao cấp',         5),
 (N'Hoa hồng lẻ (1 bông)',    N'Bông',  20000,   100, 'single_rose.jpg', N'Hoa hồng đỏ bán lẻ theo từng bông',         2),
 (N'Nhành lan hồ điệp',       N'Nhành', 150000,  50, 'single_orchid.jpg', N'Lan hồ điệp cắt cành lẻ, đa dạng màu sắc',  5),
-(N'Hoa cẩm chướng',          N'Bông',  15000,   80, 'carnation.jpg',    N'Cẩm chướng đơn bông nhiều màu',             5);
+(N'Hoa cẩm chướng',          N'Bông',  15000,   80, 'carnation.jpg',    N'Cẩm chướng đơn bông nhiều màu',             5),
+(N'Giỏ hoa sen trắng',       N'Giỏ',   450000,  20, 'lotus.jpg',        N'Giỏ hoa sen trắng tinh khiết',              5),
+(N'Bó hoa cẩm tú cầu',       N'Bó',    550000,  15, 'hydrangea.jpg',    N'Bó cẩm tú cầu xanh biển',                   2),
+(N'Hoa đồng tiền đỏ',        N'Lẵng',  320000,  25, 'gerbera.jpg',      N'Lẵng hoa đồng tiền chúc mừng',              3),
+(N'Chậu lan hồ điệp',        N'Chậu', 1200000,  10, 'orchid_pot.jpg',   N'Chậu lan hồ điệp 3 cành loại A',            5),
+(N'Bó hoa baby trắng',       N'Bó',    250000,  40, 'baby_breath.jpg',  N'Bó hoa baby trắng bọc giấy kraft',          2);
 
 -- Tài khoản (mật khẩu mẫu: "123456" đã băm SHA-256)
 INSERT INTO Accounts (Username, Password, FullName, Email, Phone, Role) VALUES
@@ -127,18 +132,34 @@ INSERT INTO Accounts (Username, Password, FullName, Email, Phone, Role) VALUES
 ('customer1','8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92',
     N'Lê Khách Hàng',     'kh1@gmail.com',          '0901000003', 'customer'),
 ('customer2','8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92',
-    N'Phạm Minh Anh',     'minhanh@gmail.com',      '0901000004', 'customer');
+    N'Phạm Minh Anh',     'minhanh@gmail.com',      '0901000004', 'customer'),
+('customer3','8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92',
+    N'Hoàng Gia Bảo',     'giabao@gmail.com',       '0901000005', 'customer'),
+('customer4','8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92',
+    N'Vũ Thanh Thảo',     'thanhthao@gmail.com',    '0901000006', 'customer'),
+('customer5','8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92',
+    N'Đặng Hoàng Long',   'hoanglong@gmail.com',    '0901000007', 'customer');
 
 -- Đơn hàng mẫu
 INSERT INTO Orders (TotalAmount, ReceiverName, ReceiverAddress, ReceiverPhone, Status, PaymentMethod, PaymentStatus, AccountId) VALUES
 (700000,  N'Nguyễn Văn A', N'123 Nguyễn Huệ, Q.1, TP.HCM',   '0909111222', N'Đã giao', 'COD', 1, 3),
 (800000,  N'Trần Thị B',   N'456 Lê Lợi, Q.3, TP.HCM',       '0909333444', N'Đang giao', 'QR', 1, 3),
-(350000,  N'Phạm Văn C',   N'789 Hai Bà Trưng, Q.1, TP.HCM',  '0909555666', N'Chờ xử lý', 'QR', 0, 4);
+(350000,  N'Phạm Văn C',   N'789 Hai Bà Trưng, Q.1, TP.HCM',  '0909555666', N'Chờ xử lý', 'QR', 0, 4),
+(1200000, N'Hoàng Gia Bảo',N'101 Hoàng Sa, Q.3, TP.HCM',     '0901000005', N'Đã giao',   'COD', 1, 5),
+(550000,  N'Vũ Thanh Thảo',N'202 Trường Sa, Q.Phú Nhuận, TP.HCM','0901000006', N'Đang giao', 'QR', 1, 6),
+(900000,  N'Đặng Hoàng Long',N'303 Cách Mạng Tháng 8, Q.10, TP.HCM','0901000007', N'Đã hủy', 'COD', 0, 7),
+(700000,  N'Trần Minh Đức',N'404 Võ Văn Tần, Q.3, TP.HCM',   '0909999888', N'Chờ xử lý', 'QR', 0, 3),
+(450000,  N'Lê Khách Hàng',N'505 Điện Biên Phủ, Q.Bình Thạnh, TP.HCM','0901000003', N'Đã giao', 'COD', 1, 3);
 
 -- Chi tiết đơn hàng
 INSERT INTO OrderDetails (OrderId, FlowerId, Quantity, UnitPrice) VALUES
 (1, 1, 2, 350000),    -- Đơn 1: 2 bó hồng đỏ
 (2, 4, 1, 800000),    -- Đơn 2: 1 lẵng hoa khai trương
 (3, 2, 1, 280000),    -- Đơn 3: 1 giỏ hoa hướng dương
-(3, 6, 1, 200000);    -- Đơn 3: thêm 1 hoa cúc chia buồn
+(3, 6, 1, 200000),    -- Đơn 3: thêm 1 hoa cúc chia buồn
+(4, 17, 1, 1200000),  -- Đơn 4: 1 chậu lan hồ điệp (Id = 17)
+(5, 15, 1, 550000),   -- Đơn 5: 1 bó hoa cẩm tú cầu (Id = 15)
+(6, 14, 2, 450000),   -- Đơn 6: 2 giỏ hoa sen trắng (Id = 14) -> 900000
+(7, 1, 2, 350000),    -- Đơn 7: 2 bó hồng đỏ (Id = 1) -> 700000
+(8, 14, 1, 450000);   -- Đơn 8: 1 giỏ hoa sen trắng (Id = 14) -> 450000
 GO

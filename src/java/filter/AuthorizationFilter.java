@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpSession;
  * - /admin/*  -> chỉ role 'admin'
  * - /employee/* -> role 'employee' hoặc 'admin'
  */
-@WebFilter(filterName = "AuthorizationFilter", urlPatterns = {"/admin/*", "/employee/*"})
+@WebFilter(filterName = "AuthorizationFilter", urlPatterns = {"/admin/*", "/employee/*", "/customer/*"})
 public class AuthorizationFilter implements Filter {
 
     @Override
@@ -48,6 +48,12 @@ public class AuthorizationFilter implements Filter {
 
         if (path.startsWith("/employee") && !(role.equals("employee") || role.equals("admin"))) {
             req.setAttribute("error", "Bạn không có quyền truy cập trang nhân viên.");
+            req.getRequestDispatcher("/login.jsp").forward(request, response);
+            return;
+        }
+
+        if (path.startsWith("/customer") && !role.equals("customer")) {
+            req.setAttribute("error", "Bạn không có quyền truy cập chức năng của khách hàng.");
             req.getRequestDispatcher("/login.jsp").forward(request, response);
             return;
         }

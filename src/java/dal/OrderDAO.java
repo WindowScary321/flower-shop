@@ -38,7 +38,7 @@ public class OrderDAO extends DBContext {
             }
 
             // Bước 2: Tạo đơn hàng
-            String insertOrder = "INSERT INTO Orders (TotalAmount, ReceiverName, ReceiverAddress, ReceiverPhone, Status, AccountId, PaymentMethod, PaymentStatus) VALUES (?, ?, ?, ?, N'Chờ xử lý', ?, ?, 0)";
+            String insertOrder = "INSERT INTO Orders (TotalAmount, ReceiverName, ReceiverAddress, ReceiverPhone, Status, AccountId, PaymentMethod, PaymentStatus) VALUES (?, ?, ?, ?, N'\u0043\u0068\u1EDD\u0020\u0078\u1EED\u0020\u006C\u00FD', ?, ?, 0)";
             PreparedStatement stOrder = connection.prepareStatement(insertOrder, Statement.RETURN_GENERATED_KEYS);
             stOrder.setDouble(1, order.getTotalAmount());
             stOrder.setString(2, order.getReceiverName());
@@ -152,7 +152,7 @@ public class OrderDAO extends DBContext {
     public boolean cancelOrder(int orderId, int accountId) {
         try {
             // Verify order belongs to the account and is cancellable
-            String checkSql = "SELECT * FROM Orders WHERE OrderId = ? AND AccountId = ? AND Status = N'Chờ xử lý'";
+            String checkSql = "SELECT * FROM Orders WHERE OrderId = ? AND AccountId = ? AND Status = N'\u0043\u0068\u1EDD\u0020\u0078\u1EED\u0020\u006C\u00FD'";
             PreparedStatement stCheck = connection.prepareStatement(checkSql);
             stCheck.setInt(1, orderId);
             stCheck.setInt(2, accountId);
@@ -170,7 +170,7 @@ public class OrderDAO extends DBContext {
             stRestore.executeUpdate();
 
             // Cập nhật trạng thái đơn hàng
-            String cancelSql = "UPDATE Orders SET Status = N'Đã hủy' WHERE OrderId = ?";
+            String cancelSql = "UPDATE Orders SET Status = N'\u0110\u00E3\u0020\u0068\u1EE7\u0079' WHERE OrderId = ?";
             PreparedStatement stCancel = connection.prepareStatement(cancelSql);
             stCancel.setInt(1, orderId);
             stCancel.executeUpdate();
@@ -199,5 +199,82 @@ public class OrderDAO extends DBContext {
         o.setPaymentMethod(rs.getString("PaymentMethod"));
         o.setPaymentStatus(rs.getBoolean("PaymentStatus"));
         return o;
+    }
+
+    public int countOrders(int accountId, String status, String fromDate, String toDate) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Orders WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+        
+        if (accountId > 0) {
+            sql.append(" AND AccountId = ?");
+            params.add(accountId);
+        }
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append(" AND Status = ?");
+            params.add(status.trim());
+        }
+        if (fromDate != null && !fromDate.trim().isEmpty()) {
+            sql.append(" AND OrderDate >= ?");
+            params.add(fromDate + " 00:00:00");
+        }
+        if (toDate != null && !toDate.trim().isEmpty()) {
+            sql.append(" AND OrderDate <= ?");
+            params.add(toDate + " 23:59:59");
+        }
+        
+        try {
+            PreparedStatement st = connection.prepareStatement(sql.toString());
+            for (int i = 0; i < params.size(); i++) {
+                st.setObject(i + 1, params.get(i));
+            }
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error countOrders: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    public List<Order> searchOrdersPaging(int accountId, String status, String fromDate, String toDate, int page, int pageSize) {
+        List<Order> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM Orders WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+        
+        if (accountId > 0) {
+            sql.append(" AND AccountId = ?");
+            params.add(accountId);
+        }
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append(" AND Status = ?");
+            params.add(status.trim());
+        }
+        if (fromDate != null && !fromDate.trim().isEmpty()) {
+            sql.append(" AND OrderDate >= ?");
+            params.add(fromDate + " 00:00:00");
+        }
+        if (toDate != null && !toDate.trim().isEmpty()) {
+            sql.append(" AND OrderDate <= ?");
+            params.add(toDate + " 23:59:59");
+        }
+        
+        sql.append(" ORDER BY OrderDate DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        params.add((page - 1) * pageSize);
+        params.add(pageSize);
+        
+        try {
+            PreparedStatement st = connection.prepareStatement(sql.toString());
+            for (int i = 0; i < params.size(); i++) {
+                st.setObject(i + 1, params.get(i));
+            }
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                list.add(extractOrder(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error searchOrdersPaging: " + e.getMessage());
+        }
+        return list;
     }
 }

@@ -15,6 +15,35 @@
             </button>
         </div>
 
+        <!-- Filter Form -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body">
+                <form action="${pageContext.request.contextPath}/admin/manage-accounts" method="GET" class="row g-3">
+                    <div class="col-md-4">
+                        <input type="text" name="keyword" class="form-control" placeholder="Tìm theo Username, Tên, Email, SĐT..." value="${keyword}">
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" name="role">
+                            <option value="">Tất cả vai trò</option>
+                            <option value="admin" ${role == 'admin' ? 'selected' : ''}>Admin</option>
+                            <option value="employee" ${role == 'employee' ? 'selected' : ''}>Nhân viên</option>
+                            <option value="customer" ${role == 'customer' ? 'selected' : ''}>Khách hàng</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" name="status">
+                            <option value="">Tất cả trạng thái</option>
+                            <option value="1" ${status == '1' ? 'selected' : ''}>Hoạt động</option>
+                            <option value="0" ${status == '0' ? 'selected' : ''}>Đã khóa</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-grid">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Lọc</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <c:if test="${not empty sessionScope.successMsg}">
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 ${sessionScope.successMsg}
@@ -75,10 +104,34 @@
                                 </td>
                             </tr>
                         </c:forEach>
+                        <c:if test="${empty accounts}">
+                            <tr>
+                                <td colspan="7" class="text-center py-4 text-muted">Không tìm thấy tài khoản nào.</td>
+                            </tr>
+                        </c:if>
                     </tbody>
                 </table>
             </div>
         </div>
+        
+        <!-- Pagination -->
+        <c:if test="${totalPages > 1}">
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                        <a class="page-link" href="?page=${currentPage - 1}&keyword=${keyword}&role=${role}&status=${status}">Trang trước</a>
+                    </li>
+                    <c:forEach begin="1" end="${totalPages}" var="i">
+                        <li class="page-item ${i == currentPage ? 'active' : ''}">
+                            <a class="page-link" href="?page=${i}&keyword=${keyword}&role=${role}&status=${status}">${i}</a>
+                        </li>
+                    </c:forEach>
+                    <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                        <a class="page-link" href="?page=${currentPage + 1}&keyword=${keyword}&role=${role}&status=${status}">Trang sau</a>
+                    </li>
+                </ul>
+            </nav>
+        </c:if>
     </div>
 </div>
 

@@ -140,4 +140,90 @@ public class AccountDAO extends DBContext {
             System.out.println(e);
         }
     }
+
+    public int countAccounts(String keyword, String role, String status) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Accounts WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+        
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append(" AND (Username LIKE ? OR FullName LIKE ? OR Email LIKE ? OR Phone LIKE ?)");
+            String k = "%" + keyword.trim() + "%";
+            params.add(k);
+            params.add(k);
+            params.add(k);
+            params.add(k);
+        }
+        if (role != null && !role.trim().isEmpty()) {
+            sql.append(" AND Role = ?");
+            params.add(role.trim());
+        }
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append(" AND Status = ?");
+            params.add("1".equals(status));
+        }
+        
+        try {
+            PreparedStatement st = connection.prepareStatement(sql.toString());
+            for (int i = 0; i < params.size(); i++) {
+                st.setObject(i + 1, params.get(i));
+            }
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error countAccounts: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    public List<Account> searchAccountsPaging(String keyword, String role, String status, int page, int pageSize) {
+        List<Account> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM Accounts WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+        
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append(" AND (Username LIKE ? OR FullName LIKE ? OR Email LIKE ? OR Phone LIKE ?)");
+            String k = "%" + keyword.trim() + "%";
+            params.add(k);
+            params.add(k);
+            params.add(k);
+            params.add(k);
+        }
+        if (role != null && !role.trim().isEmpty()) {
+            sql.append(" AND Role = ?");
+            params.add(role.trim());
+        }
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append(" AND Status = ?");
+            params.add("1".equals(status));
+        }
+        
+        sql.append(" ORDER BY AccountId DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        params.add((page - 1) * pageSize);
+        params.add(pageSize);
+        
+        try {
+            PreparedStatement st = connection.prepareStatement(sql.toString());
+            for (int i = 0; i < params.size(); i++) {
+                st.setObject(i + 1, params.get(i));
+            }
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                list.add(new Account(
+                    rs.getInt("AccountId"),
+                    rs.getString("Username"),
+                    rs.getString("Password"),
+                    rs.getString("FullName"),
+                    rs.getString("Email"),
+                    rs.getString("Phone"),
+                    rs.getString("Role"),
+                    rs.getBoolean("Status")
+                ));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error searchAccountsPaging: " + e.getMessage());
+        }
+        return list;
+    }
 }

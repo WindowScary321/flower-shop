@@ -67,14 +67,14 @@
                                 <i class="bi bi-person-circle"></i> ${sessionScope.user.fullName}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/profile">Hồ sơ cá nhân</a></li>
                                 <c:if test="${sessionScope.user.role == 'admin'}">
                                     <li><a class="dropdown-item" href="${pageContext.request.contextPath}/admin/dashboard">Quản trị viên</a></li>
                                 </c:if>
                                 <c:if test="${sessionScope.user.role == 'employee'}">
-                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/employee/manage-orders">Nhân viên</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/employee/manage-orders">Quản lý đơn hàng</a></li>
                                 </c:if>
                                 <c:if test="${sessionScope.user.role == 'customer'}">
-                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/customer/profile">Hồ sơ cá nhân</a></li>
                                     <li><a class="dropdown-item" href="${pageContext.request.contextPath}/customer/order-history">Lịch sử đơn hàng</a></li>
                                 </c:if>
                                 <li><hr class="dropdown-divider"></li>

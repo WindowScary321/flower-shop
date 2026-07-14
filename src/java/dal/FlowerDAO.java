@@ -147,5 +147,88 @@ public class FlowerDAO extends DBContext {
         }
         return list;
     }
+
+    public int countFlowers(String keyword, int categoryId, double minPrice, double maxPrice, boolean statusOnly) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Flowers WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+        
+        if (statusOnly) {
+            sql.append(" AND Status = 1");
+        }
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append(" AND FlowerName LIKE ?");
+            params.add("%" + keyword.trim() + "%");
+        }
+        if (categoryId > 0) {
+            sql.append(" AND CategoryId = ?");
+            params.add(categoryId);
+        }
+        if (minPrice > 0) {
+            sql.append(" AND Price >= ?");
+            params.add(minPrice);
+        }
+        if (maxPrice > 0 && maxPrice >= minPrice) {
+            sql.append(" AND Price <= ?");
+            params.add(maxPrice);
+        }
+        
+        try {
+            PreparedStatement st = connection.prepareStatement(sql.toString());
+            for (int i = 0; i < params.size(); i++) {
+                st.setObject(i + 1, params.get(i));
+            }
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error countFlowers: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    public List<Flower> searchFlowersPaging(String keyword, int categoryId, double minPrice, double maxPrice, boolean statusOnly, int page, int pageSize) {
+        List<Flower> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM Flowers WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+        
+        if (statusOnly) {
+            sql.append(" AND Status = 1");
+        }
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append(" AND FlowerName LIKE ?");
+            params.add("%" + keyword.trim() + "%");
+        }
+        if (categoryId > 0) {
+            sql.append(" AND CategoryId = ?");
+            params.add(categoryId);
+        }
+        if (minPrice > 0) {
+            sql.append(" AND Price >= ?");
+            params.add(minPrice);
+        }
+        if (maxPrice > 0 && maxPrice >= minPrice) {
+            sql.append(" AND Price <= ?");
+            params.add(maxPrice);
+        }
+        
+        sql.append(" ORDER BY FlowerId DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        params.add((page - 1) * pageSize);
+        params.add(pageSize);
+        
+        try {
+            PreparedStatement st = connection.prepareStatement(sql.toString());
+            for (int i = 0; i < params.size(); i++) {
+                st.setObject(i + 1, params.get(i));
+            }
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                list.add(extractFlower(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error searchFlowersPaging: " + e.getMessage());
+        }
+        return list;
+    }
 }
 

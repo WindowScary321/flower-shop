@@ -8,12 +8,32 @@
     <div class="col-md-3">
         <div class="card border-0 shadow-sm mb-3">
             <div class="card-body">
-                <h6 class="fw-bold text-primary mb-3"><i class="bi bi-filter-circle"></i> Lọc theo danh mục</h6>
-                <div class="list-group list-group-flush">
-                    <a href="${pageContext.request.contextPath}/flower-catalog" class="list-group-item list-group-item-action ${empty param.categoryId ? 'active' : ''}">
-                        Tất cả sản phẩm
-                    </a>
-                </div>
+                <h6 class="fw-bold text-primary mb-3"><i class="bi bi-filter-circle"></i> Bộ lọc tìm kiếm</h6>
+                <form action="${pageContext.request.contextPath}/flower-catalog" method="GET">
+                    <input type="hidden" name="keyword" value="${keyword}">
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Danh mục</label>
+                        <select class="form-select" name="categoryId">
+                            <option value="">Tất cả danh mục</option>
+                            <c:forEach var="c" items="${categories}">
+                                <option value="${c.categoryId}" ${categoryId == c.categoryId ? 'selected' : ''}>${c.categoryName}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Giá từ (VNĐ)</label>
+                        <input type="number" class="form-control" name="minPrice" value="${minPrice}" min="0" step="1000" placeholder="VD: 100000">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Đến giá (VNĐ)</label>
+                        <input type="number" class="form-control" name="maxPrice" value="${maxPrice}" min="0" step="1000" placeholder="VD: 500000">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100">Áp dụng bộ lọc</button>
+                    <a href="${pageContext.request.contextPath}/flower-catalog" class="btn btn-outline-secondary w-100 mt-2">Xóa bộ lọc</a>
+                </form>
             </div>
         </div>
     </div>
@@ -83,6 +103,25 @@
                 </div>
             </c:forEach>
         </div>
+        
+        <!-- Pagination -->
+        <c:if test="${totalPages > 1}">
+            <nav aria-label="Page navigation" class="mt-5">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                        <a class="page-link" href="?page=${currentPage - 1}&keyword=${keyword}&categoryId=${categoryId}&minPrice=${minPrice}&maxPrice=${maxPrice}">Trang trước</a>
+                    </li>
+                    <c:forEach begin="1" end="${totalPages}" var="i">
+                        <li class="page-item ${i == currentPage ? 'active' : ''}">
+                            <a class="page-link" href="?page=${i}&keyword=${keyword}&categoryId=${categoryId}&minPrice=${minPrice}&maxPrice=${maxPrice}">${i}</a>
+                        </li>
+                    </c:forEach>
+                    <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                        <a class="page-link" href="?page=${currentPage + 1}&keyword=${keyword}&categoryId=${categoryId}&minPrice=${minPrice}&maxPrice=${maxPrice}">Trang sau</a>
+                    </li>
+                </ul>
+            </nav>
+        </c:if>
     </div>
 </div>
 

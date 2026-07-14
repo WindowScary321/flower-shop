@@ -10,6 +10,35 @@
     <div class="col-md-9">
         <h2 class="text-primary fw-bold mb-4">Quản Lý Đơn Hàng</h2>
         
+        <!-- Filter Form -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body">
+                <form action="${pageContext.request.contextPath}/admin/manage-orders" method="GET" class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small text-muted">Trạng thái</label>
+                        <select class="form-select" name="status">
+                            <option value="">Tất cả</option>
+                            <option value="Chờ xử lý" ${status == 'Chờ xử lý' ? 'selected' : ''}>Chờ xử lý</option>
+                            <option value="Đang giao" ${status == 'Đang giao' ? 'selected' : ''}>Đang giao</option>
+                            <option value="Đã giao" ${status == 'Đã giao' ? 'selected' : ''}>Đã giao</option>
+                            <option value="Đã hủy" ${status == 'Đã hủy' ? 'selected' : ''}>Đã hủy</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small text-muted">Từ ngày</label>
+                        <input type="date" class="form-control" name="fromDate" value="${fromDate}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small text-muted">Đến ngày</label>
+                        <input type="date" class="form-control" name="toDate" value="${toDate}">
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100"><i class="bi bi-search"></i> Lọc đơn hàng</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
         <c:if test="${not empty sessionScope.successMsg}">
             <div class="alert alert-success alert-dismissible fade show">
                 ${sessionScope.successMsg}
@@ -88,13 +117,32 @@
                         </c:forEach>
                         <c:if test="${empty orders}">
                             <tr>
-                                <td colspan="8" class="text-center py-4 text-muted">Chưa có đơn hàng nào.</td>
+                                <td colspan="8" class="text-center py-4 text-muted">Không tìm thấy đơn hàng nào.</td>
                             </tr>
                         </c:if>
                     </tbody>
                 </table>
             </div>
         </div>
+        
+        <!-- Pagination -->
+        <c:if test="${totalPages > 1}">
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                        <a class="page-link" href="?page=${currentPage - 1}&status=${status}&fromDate=${fromDate}&toDate=${toDate}">Trang trước</a>
+                    </li>
+                    <c:forEach begin="1" end="${totalPages}" var="i">
+                        <li class="page-item ${i == currentPage ? 'active' : ''}">
+                            <a class="page-link" href="?page=${i}&status=${status}&fromDate=${fromDate}&toDate=${toDate}">${i}</a>
+                        </li>
+                    </c:forEach>
+                    <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                        <a class="page-link" href="?page=${currentPage + 1}&status=${status}&fromDate=${fromDate}&toDate=${toDate}">Trang sau</a>
+                    </li>
+                </ul>
+            </nav>
+        </c:if>
     </div>
 </div>
 
