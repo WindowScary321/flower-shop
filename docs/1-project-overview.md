@@ -58,43 +58,54 @@ Vai trò có quyền hạn cao nhất, đăng nhập với vai trò `admin`. Adm
 
 ## 1.4. Cấu trúc thư mục dự án
 
-```
+```text
 flower-shop/
 ├── src/
+│   ├── conf/
+│   │   └── MANIFEST.MF
 │   └── java/
 │       ├── ConnectDB.properties           # Cấu hình kết nối SQL Server
 │       ├── controllers/                   # Tầng điều khiển (Servlet)
+│       │   ├── HomeServlet.java           # Servlet xử lý trang chủ
+│       │   ├── ProfileServlet.java        # Servlet xử lý hồ sơ cá nhân
 │       │   ├── auth/
 │       │   │   ├── LoginServlet.java      # Xử lý đăng nhập
 │       │   │   ├── LogoutServlet.java     # Hủy session, đăng xuất
 │       │   │   └── RegisterServlet.java   # Xử lý đăng ký
 │       │   ├── admin/
-│       │   │   ├── ManageFlowerServlet.java      # CRUD hoa
-│       │   │   ├── ManageCategoryServlet.java    # CRUD danh mục
+│       │   │   ├── DashboardServlet.java         # Trang thống kê
 │       │   │   ├── ManageAccountServlet.java     # CRUD tài khoản
-│       │   │   └── DashboardServlet.java         # Trang thống kê
+│       │   │   ├── ManageCategoryServlet.java    # CRUD danh mục
+│       │   │   ├── ManageFlowerServlet.java      # CRUD hoa
+│       │   │   └── ManageOrderServlet.java       # Xử lý đơn hàng cho Admin
 │       │   ├── employee/
-│       │   │   └── ManageOrderServlet.java       # Xử lý đơn hàng
+│       │   │   └── ManageOrderServlet.java       # Xử lý đơn hàng cho Employee
 │       │   └── customer/
-│       │       ├── FlowerCatalogServlet.java     # Duyệt danh mục hoa
-│       │       ├── FlowerDetailServlet.java      # Xem chi tiết hoa
 │       │       ├── CartServlet.java              # Thao tác giỏ hàng
 │       │       ├── CheckoutServlet.java          # Thanh toán
-│       │       └── OrderHistoryServlet.java      # Lịch sử đơn hàng
+│       │       ├── CheckoutSuccessServlet.java   # Màn hình thanh toán thành công
+│       │       ├── FlowerCatalogServlet.java     # Duyệt danh mục hoa
+│       │       ├── FlowerDetailServlet.java      # Xem chi tiết hoa
+│       │       ├── OrderHistoryServlet.java      # Lịch sử đơn hàng
+│       │       └── PaymentQRServlet.java         # Hỗ trợ thanh toán QR
 │       ├── dal/                           # Tầng truy xuất dữ liệu
+│       │   ├── AccountDAO.java
+│       │   ├── CategoryDAO.java
 │       │   ├── DBContext.java             # Kết nối cơ sở dữ liệu
 │       │   ├── FlowerDAO.java
-│       │   ├── CategoryDAO.java
-│       │   ├── AccountDAO.java
 │       │   ├── OrderDAO.java
-│       │   └── OrderDetailDAO.java
+│       │   ├── OrderDetailDAO.java
+│       │   └── ReportDAO.java             # Xử lý các query thống kê
 │       ├── models/                        # Lớp thực thể (Java Beans)
-│       │   ├── Flower.java
-│       │   ├── Category.java
 │       │   ├── Account.java
+│       │   ├── CartItem.java              # Đối tượng giỏ hàng (Session)
+│       │   ├── Category.java
+│       │   ├── Flower.java
 │       │   ├── Order.java
 │       │   ├── OrderDetail.java
-│       │   └── CartItem.java              # Đối tượng giỏ hàng (Session)
+│       │   ├── ReportSummary.java         # Model cho Dashboard
+│       │   ├── RevenueByMonth.java        # Model thống kê doanh thu
+│       │   └── TopSellingFlower.java      # Model thống kê hoa bán chạy
 │       ├── filter/                        # Bộ lọc
 │       │   ├── AuthenticationFilter.java  # Kiểm tra đăng nhập
 │       │   ├── AuthorizationFilter.java   # Kiểm tra phân quyền
@@ -102,41 +113,37 @@ flower-shop/
 │       └── utils/
 │           └── PasswordHasher.java        # Băm mật khẩu SHA-256
 └── web/                                   # Tầng hiển thị
+    ├── META-INF/
+    │   └── context.xml
     ├── WEB-INF/
-    │   └── web.xml
-    ├── common/                            # Thành phần dùng chung
-    │   ├── header.jsp                     # Header + Navigation
-    │   ├── footer.jsp
-    │   └── sidebar-admin.jsp              # Sidebar quản trị
+    │   └── web.xml (nếu có)
     ├── admin/
     │   ├── dashboard.jsp                  # Trang thống kê tổng quan
-    │   ├── manage-flowers.jsp             # Danh sách hoa (bảng)
-    │   ├── flower-form.jsp                # Form thêm/sửa hoa
-    │   ├── manage-categories.jsp
-    │   ├── category-form.jsp
     │   ├── manage-accounts.jsp
-    │   └── account-form.jsp
-    ├── employee/
-    │   ├── manage-orders.jsp              # Danh sách đơn hàng
-    │   └── order-detail.jsp               # Chi tiết 1 đơn hàng
-    ├── customer/
-    │   ├── order-history.jsp              # Lịch sử đơn hàng cá nhân
-    │   └── profile.jsp                    # Trang hồ sơ cá nhân
+    │   ├── manage-categories.jsp
+    │   ├── manage-flowers.jsp             # Danh sách hoa
+    │   └── manage-orders.jsp              # Quản lý đơn hàng (Admin)
+    ├── common/                            # Thành phần dùng chung
+    │   ├── footer.jsp
+    │   ├── header.jsp                     # Header + Navigation
+    │   └── sidebar-admin.jsp              # Sidebar quản trị
     ├── css/
     │   └── style.css
-    ├── js/
-    │   └── main.js
-    ├── images/
-    │   └── flowers/                       # Thư mục chứa ảnh hoa upload
-    ├── index.jsp                          # Trang chủ
+    ├── customer/
+    │   ├── my-orders.jsp                  # Danh sách đơn của KH
+    │   └── order-history.jsp              # Lịch sử đơn hàng cá nhân
+    ├── employee/
+    │   └── manage-orders.jsp              # Danh sách đơn hàng
+    ├── resources/
+    │   └── qrcode-placeholder.png         # Ảnh giả lập QR Code
+    ├── cart.jsp                           # Giỏ hàng
+    ├── checkout-success.jsp               # Thông báo thành công
+    ├── checkout.jsp                       # Trang thanh toán
     ├── flower-catalog.jsp                 # Trang danh sách hoa
     ├── flower-detail.jsp                  # Trang chi tiết hoa
-    ├── cart.jsp                           # Giỏ hàng
-    ├── checkout.jsp                       # Trang thanh toán
+    ├── index.jsp                          # Trang chủ
     ├── login.jsp                          # Đăng nhập
-    ├── register.jsp                       # Đăng ký
-    ├── error/
-    │   ├── 403.jsp                        # Không có quyền truy cập
-    │   └── 404.jsp                        # Trang không tồn tại
-    └── success.jsp                        # Thông báo thành công
+    ├── payment-qr.jsp                     # Trang quét mã QR
+    ├── profile.jsp                        # Trang hồ sơ cá nhân
+    └── register.jsp                       # Đăng ký
 ```
