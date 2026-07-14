@@ -1,82 +1,9 @@
-# ==============================
-# Java
-# ==============================
-*.class
-*.jar
-*.war
-*.ear
-*.nar
-*.sar
-hs_err_pid*
-replay_pid*
-
-# ==============================
-# IntelliJ IDEA
-# ==============================
-.idea/
-.idea_modules/
-out/
-*.iml
-*.ipr
-*.iws
-
-# ==============================
-# NetBeans
-# ==============================
-nbproject/private/
+**/nbproject/private/
+**/nbproject/Makefile-*.mk
+**/nbproject/Package-*.bash
 build/
 nbbuild/
 dist/
 nbdist/
-nbactions.xml
-nb-configuration.xml
 .nb-gradle/
-
-# ==============================
-# Tomcat
-# ==============================
-work/
-logs/
-temp/
-bin/setenv.*
-
-# ==============================
-# Maven
-# ==============================
-target/
-dependency-reduced-pom.xml
-pom.xml.releaseBackup
-pom.xml.tag
-release.properties
-.mvn/wrapper/maven-wrapper.jar
-mvnw
-mvnw.cmd
-
-# ==============================
-# Eclipse
-# ==============================
-.project
-.classpath
-.settings/
-.metadata/
-.factorypath
-
-# ==============================
-# OS Files
-# ==============================
-.DS_Store
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# ==============================
-# Misc
-# ==============================
-*.log
-*.tmp
-*.bak
-*.swp
-*.swo
-local.properties
-.env
-.vscode/
+resources/

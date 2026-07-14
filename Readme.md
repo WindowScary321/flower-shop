@@ -22,7 +22,4 @@
 - Purchase
 - Account Management
 - Contact Info
-- There are many other features...
-
-## Thông tin thêm
-- [Cách chạy dự án bằng maven](./HowToRun.md)
+- blah, blah, ...
