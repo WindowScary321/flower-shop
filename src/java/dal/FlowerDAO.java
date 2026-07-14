@@ -115,4 +115,37 @@ public class FlowerDAO extends DBContext {
         f.setStatus(rs.getBoolean("Status"));
         return f;
     }
+
+    public List<Flower> searchFlowers(String keyword) {
+        List<Flower> list = new ArrayList<>();
+        String sql = "SELECT * FROM Flowers WHERE Status = 1 AND FlowerName LIKE ? ORDER BY FlowerId DESC";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, "%" + keyword + "%");
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                list.add(extractFlower(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error searchFlowers: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<Flower> getFlowersByCategoryId(int categoryId) {
+        List<Flower> list = new ArrayList<>();
+        String sql = "SELECT * FROM Flowers WHERE Status = 1 AND CategoryId = ? ORDER BY FlowerId DESC";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, categoryId);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                list.add(extractFlower(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getFlowersByCategoryId: " + e.getMessage());
+        }
+        return list;
+    }
 }
+

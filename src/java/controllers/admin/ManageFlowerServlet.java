@@ -12,8 +12,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "FlowerServlet", urlPatterns = {"/admin/manage-flowers"})
-public class FlowerServlet extends HttpServlet {
+@WebServlet(name = "ManageFlowerServlet", urlPatterns = {"/admin/manage-flowers"})
+public class ManageFlowerServlet extends HttpServlet {
 
     private final FlowerDAO flowerDAO = new FlowerDAO();
     private final CategoryDAO categoryDAO = new CategoryDAO();

@@ -12,4 +12,7 @@
     <a href="${pageContext.request.contextPath}/admin/manage-accounts" class="list-group-item list-group-item-action">
         <i class="bi bi-people me-2"></i> Quản lý tài khoản
     </a>
+    <a href="${pageContext.request.contextPath}/admin/manage-orders" class="list-group-item list-group-item-action">
+        <i class="bi bi-bag-check me-2"></i> Quản lý đơn hàng
+    </a>
 </div>

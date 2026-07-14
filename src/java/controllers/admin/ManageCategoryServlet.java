@@ -10,8 +10,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "CategoryServlet", urlPatterns = {"/admin/manage-categories"})
-public class CategoryServlet extends HttpServlet {
+@WebServlet(name = "ManageCategoryServlet", urlPatterns = {"/admin/manage-categories"})
+public class ManageCategoryServlet extends HttpServlet {
 
     private final CategoryDAO categoryDAO = new CategoryDAO();
 
@@ -19,17 +19,10 @@ public class CategoryServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
-        if (action == null) {
-            action = "list";
-        }
-
+        if (action == null) action = "list";
         switch (action) {
-            case "delete":
-                deleteCategory(request, response);
-                break;
-            default:
-                listCategories(request, response);
-                break;
+            case "delete": deleteCategory(request, response); break;
+            default: listCategories(request, response); break;
         }
     }
 
@@ -37,7 +30,6 @@ public class CategoryServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
-        
         if ("add".equals(action)) {
             addCategory(request, response);
         } else if ("edit".equals(action)) {
@@ -56,13 +48,9 @@ public class CategoryServlet extends HttpServlet {
 
     private void addCategory(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        String name = request.getParameter("categoryName");
-        String description = request.getParameter("description");
-        
         Category c = new Category();
-        c.setCategoryName(name);
-        c.setDescription(description);
-        
+        c.setCategoryName(request.getParameter("categoryName"));
+        c.setDescription(request.getParameter("description"));
         categoryDAO.insertCategory(c);
         request.getSession().setAttribute("successMsg", "Thêm danh mục thành công!");
         response.sendRedirect(request.getContextPath() + "/admin/manage-categories");
@@ -70,15 +58,10 @@ public class CategoryServlet extends HttpServlet {
 
     private void editCategory(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        int id = Integer.parseInt(request.getParameter("categoryId"));
-        String name = request.getParameter("categoryName");
-        String description = request.getParameter("description");
-        
         Category c = new Category();
-        c.setCategoryId(id);
-        c.setCategoryName(name);
-        c.setDescription(description);
-        
+        c.setCategoryId(Integer.parseInt(request.getParameter("categoryId")));
+        c.setCategoryName(request.getParameter("categoryName"));
+        c.setDescription(request.getParameter("description"));
         categoryDAO.updateCategory(c);
         request.getSession().setAttribute("successMsg", "Cập nhật danh mục thành công!");
         response.sendRedirect(request.getContextPath() + "/admin/manage-categories");

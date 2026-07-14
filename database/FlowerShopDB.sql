@@ -1,6 +1,11 @@
--- ============================================
--- TẠO DATABASE
--- ============================================
+USE master;
+GO
+IF EXISTS (SELECT name FROM sys.databases WHERE name = N'FLOWER_SHOP')
+BEGIN
+    ALTER DATABASE FLOWER_SHOP SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE FLOWER_SHOP;
+END
+GO
 CREATE DATABASE FLOWER_SHOP;
 GO
 USE FLOWER_SHOP;
@@ -60,6 +65,8 @@ CREATE TABLE Orders (
     ReceiverPhone   VARCHAR(15)    NOT NULL,
     Status          NVARCHAR(50)   DEFAULT N'Chờ xử lý'
                     CHECK (Status IN (N'Chờ xử lý', N'Đang giao', N'Đã giao', N'Đã hủy')),
+    PaymentMethod   VARCHAR(20)    DEFAULT 'COD' CHECK (PaymentMethod IN ('COD', 'QR')),
+    PaymentStatus   BIT            DEFAULT 0, -- 0: Chưa thanh toán, 1: Đã thanh toán
     AccountId       INT            NOT NULL,
     CONSTRAINT FK_Orders_Accounts
         FOREIGN KEY (AccountId) REFERENCES Accounts(AccountId)
@@ -123,10 +130,10 @@ INSERT INTO Accounts (Username, Password, FullName, Email, Phone, Role) VALUES
     N'Phạm Minh Anh',     'minhanh@gmail.com',      '0901000004', 'customer');
 
 -- Đơn hàng mẫu
-INSERT INTO Orders (TotalAmount, ReceiverName, ReceiverAddress, ReceiverPhone, Status, AccountId) VALUES
-(700000,  N'Nguyễn Văn A', N'123 Nguyễn Huệ, Q.1, TP.HCM',   '0909111222', N'Đã giao', 3),
-(800000,  N'Trần Thị B',   N'456 Lê Lợi, Q.3, TP.HCM',       '0909333444', N'Đang giao', 3),
-(350000,  N'Phạm Văn C',   N'789 Hai Bà Trưng, Q.1, TP.HCM',  '0909555666', N'Chờ xử lý', 4);
+INSERT INTO Orders (TotalAmount, ReceiverName, ReceiverAddress, ReceiverPhone, Status, PaymentMethod, PaymentStatus, AccountId) VALUES
+(700000,  N'Nguyễn Văn A', N'123 Nguyễn Huệ, Q.1, TP.HCM',   '0909111222', N'Đã giao', 'COD', 1, 3),
+(800000,  N'Trần Thị B',   N'456 Lê Lợi, Q.3, TP.HCM',       '0909333444', N'Đang giao', 'QR', 1, 3),
+(350000,  N'Phạm Văn C',   N'789 Hai Bà Trưng, Q.1, TP.HCM',  '0909555666', N'Chờ xử lý', 'QR', 0, 4);
 
 -- Chi tiết đơn hàng
 INSERT INTO OrderDetails (OrderId, FlowerId, Quantity, UnitPrice) VALUES

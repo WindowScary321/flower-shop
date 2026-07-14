@@ -9,3 +9,4 @@ nbdist/
 resources/
 temp/
 *.class
+!web/resources/

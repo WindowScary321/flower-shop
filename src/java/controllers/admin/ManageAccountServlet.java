@@ -10,8 +10,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "AccountServlet", urlPatterns = {"/admin/manage-accounts"})
-public class AccountServlet extends HttpServlet {
+@WebServlet(name = "ManageAccountServlet", urlPatterns = {"/admin/manage-accounts"})
+public class ManageAccountServlet extends HttpServlet {
 
     private final AccountDAO accountDAO = new AccountDAO();
 
@@ -19,17 +19,10 @@ public class AccountServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
-        if (action == null) {
-            action = "list";
-        }
-
+        if (action == null) action = "list";
         switch (action) {
-            case "toggleStatus":
-                toggleStatus(request, response);
-                break;
-            default:
-                listAccounts(request, response);
-                break;
+            case "toggleStatus": toggleStatus(request, response); break;
+            default: listAccounts(request, response); break;
         }
     }
 
@@ -48,22 +41,21 @@ public class AccountServlet extends HttpServlet {
             throws IOException {
         String username = request.getParameter("username");
         String email = request.getParameter("email");
-        
+
         if (accountDAO.checkUsernameExists(username)) {
             request.getSession().setAttribute("errorMsg", "Tên đăng nhập đã tồn tại!");
             response.sendRedirect(request.getContextPath() + "/admin/manage-accounts");
             return;
         }
-        
+
         if (accountDAO.checkEmailExists(email)) {
             request.getSession().setAttribute("errorMsg", "Email đã tồn tại!");
             response.sendRedirect(request.getContextPath() + "/admin/manage-accounts");
             return;
         }
 
-        // Tạo tài khoản (mặc định cho Password là 'password123' rồi hash)
         String defaultHashedPassword = utils.PasswordHasher.hash("password123");
-        
+
         Account a = new Account();
         a.setUsername(username);
         a.setPassword(defaultHashedPassword);
@@ -72,7 +64,7 @@ public class AccountServlet extends HttpServlet {
         a.setPhone(request.getParameter("phone"));
         a.setRole(request.getParameter("role"));
         a.setStatus(true);
-        
+
         accountDAO.insertAccount(a);
         request.getSession().setAttribute("successMsg", "Thêm tài khoản thành công! Mật khẩu mặc định là: password123");
         response.sendRedirect(request.getContextPath() + "/admin/manage-accounts");
@@ -91,14 +83,13 @@ public class AccountServlet extends HttpServlet {
             int id = Integer.parseInt(request.getParameter("id"));
             Account currentAcc = accountDAO.getAccountById(id);
             if (currentAcc != null) {
-                // Prevent admin from banning themselves
                 Account loggedInAdmin = (Account) request.getSession().getAttribute("user");
                 if (loggedInAdmin != null && loggedInAdmin.getAccountId() == id) {
                     request.getSession().setAttribute("errorMsg", "Không thể tự khóa tài khoản của chính mình!");
                 } else {
                     boolean newStatus = !currentAcc.isStatus();
                     accountDAO.updateAccountStatus(id, newStatus);
-                    request.getSession().setAttribute("successMsg", 
+                    request.getSession().setAttribute("successMsg",
                         newStatus ? "Đã mở khóa tài khoản thành công!" : "Đã khóa tài khoản thành công!");
                 }
             }
