@@ -3,6 +3,7 @@ package models;
 public class Flower {
     private int flowerId;
     private String flowerName;
+    private String unit;
     private double price;
     private int quantity;
     private String image;
@@ -13,9 +14,10 @@ public class Flower {
     public Flower() {
     }
 
-    public Flower(int flowerId, String flowerName, double price, int quantity, String image, String description, int categoryId, boolean status) {
+    public Flower(int flowerId, String flowerName, String unit, double price, int quantity, String image, String description, int categoryId, boolean status) {
         this.flowerId = flowerId;
         this.flowerName = flowerName;
+        this.unit = unit;
         this.price = price;
         this.quantity = quantity;
         this.image = image;
@@ -38,6 +40,14 @@ public class Flower {
 
     public void setFlowerName(String flowerName) {
         this.flowerName = flowerName;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
     public double getPrice() {

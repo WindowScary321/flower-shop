@@ -21,6 +21,7 @@ CREATE TABLE Categories (
 CREATE TABLE Flowers (
     FlowerId    INT IDENTITY(1,1) PRIMARY KEY,
     FlowerName  NVARCHAR(150)  NOT NULL,
+    Unit        NVARCHAR(50)   DEFAULT N'Bông',
     Price       DECIMAL(18,2)  NOT NULL CHECK (Price >= 0),
     Quantity    INT            NOT NULL CHECK (Quantity >= 0),
     Image       VARCHAR(255)   NULL,
