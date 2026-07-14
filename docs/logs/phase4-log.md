@@ -17,7 +17,7 @@ Tối ưu hóa trải nghiệm người dùng và hiệu năng bằng việc áp
 
 3. **Phân trang & Tìm kiếm động: Đơn hàng**
    - Cập nhật `OrderDAO`: Thêm hàm `countOrders` và `searchOrdersPaging` để lọc đơn hàng theo `status` và khoảng thời gian (`fromDate`, `toDate`).
-   - Cập nhật các Servlet (`ManageOrderServlet` cho Admin, `EmployeeManageOrderServlet` cho Nhân viên, `OrderHistoryServlet` cho Khách hàng).
+   - Cập nhật các Servlet (`ManageOrderServlet` cho Admin, `ManageOrderServlet` cho Nhân viên, `OrderHistoryServlet` cho Khách hàng).
    - Cập nhật giao diện `manage-orders.jsp` và `order-history.jsp` với Form lọc ngày tháng và trạng thái đơn hàng.
 
 4. **Dashboard Báo cáo Thống kê**

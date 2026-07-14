@@ -33,7 +33,7 @@ Triển khai toàn bộ luồng nghiệp vụ mua hàng từ đầu đến cuố
    - `cancelOrder()` dùng Transaction: Xác minh đơn thuộc về đúng account + đang ở trạng thái `Chờ xử lý` → Hoàn kho qua JOIN UPDATE → Cập nhật Status = `Đã hủy`.
 
 6. **Phân quyền xử lý đơn hàng**:
-   - Nhân viên (`/employee/manage-orders`): Chỉ được phép đặt `Đang giao` hoặc `Đã giao`. (Đã xử lý đổi tên Servlet thành `EmployeeManageOrderServlet` để tránh conflict với Admin).
+   - Nhân viên (`/employee/manage-orders`): Chỉ được phép đặt `Đang giao` hoặc `Đã giao`. (Đã xử lý tạo `ManageOrderServlet` trong package `employee` riêng biệt để tránh conflict với nhánh Admin).
    - Admin (`/admin/manage-orders`): Toàn quyền cập nhật 3 trạng thái hợp lệ.
 
 ### File mới được tạo

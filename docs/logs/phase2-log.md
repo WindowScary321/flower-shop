@@ -9,17 +9,17 @@ Giai đoạn 2 tập trung vào việc biến ứng dụng từ giao diện tĩn
    
 2. **Quản trị Danh mục (Categories)**:
    - Viết `CategoryDAO` với các phương thức CRUD đầy đủ.
-   - Thiết kế `CategoryServlet` cho đường dẫn `/admin/manage-categories`.
+   - Thiết kế `ManageCategoryServlet` cho đường dẫn `/admin/manage-categories`.
    - Xây dựng giao diện `admin/manage-categories.jsp` sử dụng Bootstrap Modal cho thao tác Thêm/Sửa ngay trên cùng một trang, giúp UX mượt mà.
 
 3. **Quản trị Sản phẩm Hoa (Flowers)**:
    - Cập nhật `FlowerDAO` và mô hình `Flower.java` để tương thích hoàn toàn với trường `Unit` mới thiết kế.
-   - Xây dựng `FlowerServlet` hỗ trợ nhận toàn bộ dữ liệu form (Bao gồm Tên, Đơn vị tính, Giá, Số lượng, Ảnh, Danh mục, Trạng thái).
+   - Xây dựng `ManageFlowerServlet` hỗ trợ nhận toàn bộ dữ liệu form (Bao gồm Tên, Đơn vị tính, Giá, Số lượng, Ảnh, Danh mục, Trạng thái).
    - Xây dựng giao diện `admin/manage-flowers.jsp` với bảng hiển thị đẹp mắt, tự động đổi màu badge cho số lượng và trạng thái.
 
 4. **Quản trị Tài khoản (Accounts)**:
    - Bổ sung hàm lấy tất cả user và hàm UpdateStatus vào `AccountDAO`.
-   - Viết `AccountServlet` xử lý Toggle Status (Khóa/Mở khóa) với logic bảo vệ: Admin không thể tự khóa tài khoản của chính mình.
+   - Viết `ManageAccountServlet` xử lý Toggle Status (Khóa/Mở khóa) với logic bảo vệ: Admin không thể tự khóa tài khoản của chính mình.
    - Trang `admin/manage-accounts.jsp` hiển thị danh sách người dùng với nhãn phân quyền và nút Toggle Status tiện dụng.
 
 5. **Phân quyền Bảo mật (Authorization)**:
@@ -29,7 +29,7 @@ Giai đoạn 2 tập trung vào việc biến ứng dụng từ giao diện tĩn
 
 ## Cấu trúc file đã thay đổi
 - **DAL**: `CategoryDAO.java`, `FlowerDAO.java`, update `AccountDAO.java`.
-- **Controllers**: `HomeServlet.java`, `admin/CategoryServlet.java`, `admin/FlowerServlet.java`, `admin/AccountServlet.java`, `admin/AdminDashboardServlet.java`.
+- **Controllers**: `HomeServlet.java`, `admin/ManageCategoryServlet.java`, `admin/ManageFlowerServlet.java`, `admin/ManageAccountServlet.java`, `admin/DashboardServlet.java`.
 - **Filter**: `AuthFilter.java`.
 - **Views**: 
   - Update `web/index.jsp`.
