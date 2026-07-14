@@ -80,4 +80,64 @@ public class AccountDAO extends DBContext {
             System.out.println(e);
         }
     }
+
+    public List<Account> getAllAccounts() {
+        List<Account> list = new ArrayList<>();
+        String sql = "SELECT * FROM Accounts";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                list.add(new Account(
+                    rs.getInt("AccountId"),
+                    rs.getString("Username"),
+                    rs.getString("Password"),
+                    rs.getString("FullName"),
+                    rs.getString("Email"),
+                    rs.getString("Phone"),
+                    rs.getString("Role"),
+                    rs.getBoolean("Status")
+                ));
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public Account getAccountById(int id) {
+        String sql = "SELECT * FROM Accounts WHERE AccountId = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, id);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return new Account(
+                    rs.getInt("AccountId"),
+                    rs.getString("Username"),
+                    rs.getString("Password"),
+                    rs.getString("FullName"),
+                    rs.getString("Email"),
+                    rs.getString("Phone"),
+                    rs.getString("Role"),
+                    rs.getBoolean("Status")
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    public void updateAccountStatus(int id, boolean status) {
+        String sql = "UPDATE Accounts SET Status = ? WHERE AccountId = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setBoolean(1, status);
+            st.setInt(2, id);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
 }

@@ -16,24 +16,38 @@
     <div class="col-12 text-center mb-4">
         <h2 class="fw-bold text-primary border-bottom border-2 border-primary d-inline-block pb-2">Hoa Nổi Bật</h2>
     </div>
-    <!-- Dummy data for layout, logic to be implemented later -->
+    <!-- Real data from HomeServlet -->
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-        <c:forEach var="i" begin="1" end="4">
+        <c:forEach var="f" items="${featuredFlowers}">
             <div class="col">
                 <div class="card h-100 flower-card shadow-sm border-0">
-                    <div class="flower-image-container">
-                        <img src="${pageContext.request.contextPath}/images/flowers/placeholder.jpg" class="card-img-top" alt="Hoa mẫu" onerror="this.src='https://placehold.co/400x400/f8f9fa/ff6b81?text=Flower'">
+                    <div class="flower-image-container position-relative">
+                        <img src="${pageContext.request.contextPath}/images/flowers/${empty f.image ? 'placeholder.jpg' : f.image}" 
+                             class="card-img-top" alt="${f.flowerName}" 
+                             onerror="this.src='https://placehold.co/400x400/f8f9fa/ff6b81?text=Flower'">
+                        <span class="position-absolute top-0 end-0 badge bg-danger m-2 px-2 py-1">${f.unit}</span>
                     </div>
                     <div class="card-body text-center">
-                        <h5 class="card-title text-truncate">Sản phẩm hoa mẫu ${i}</h5>
-                        <p class="card-text text-danger fw-bold fs-5">500,000 đ</p>
+                        <h5 class="card-title text-truncate" title="${f.flowerName}">${f.flowerName}</h5>
+                        <p class="card-text text-danger fw-bold fs-5">
+                            <fmt:formatNumber value="${f.price}" pattern="#,###"/> đ
+                        </p>
                     </div>
                     <div class="card-footer bg-white border-top-0 pb-3 text-center">
-                        <a href="#" class="btn btn-outline-primary btn-sm rounded-pill px-3">Xem chi tiết</a>
+                        <a href="${pageContext.request.contextPath}/detail?id=${f.flowerId}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                            Xem chi tiết
+                        </a>
                     </div>
                 </div>
             </div>
         </c:forEach>
+        
+        <c:if test="${empty featuredFlowers}">
+            <div class="col-12 text-center py-5 text-muted">
+                <i class="bi bi-emoji-frown fs-1 d-block mb-3"></i>
+                <p>Hiện chưa có sản phẩm hoa nào được bày bán.</p>
+            </div>
+        </c:if>
     </div>
 </div>
 

@@ -96,23 +96,26 @@ INSERT INTO Categories (CategoryName, Description) VALUES
 (N'Hoa trang trí',  N'Hoa cắm bàn, hoa trang trí nội thất');
 
 -- Sản phẩm hoa
-INSERT INTO Flowers (FlowerName, Price, Quantity, Image, Description, CategoryId) VALUES
-(N'Bó hồng đỏ 20 bông',     350000,  50, 'rose_red.jpg',     N'Bó hoa hồng đỏ 20 bông kèm baby trắng',   2),
-(N'Giỏ hoa hướng dương',     280000,  35, 'sunflower.jpg',    N'Giỏ hoa hướng dương tươi sáng',             2),
-(N'Bó hoa cưới cầm tay',     500000,  20, 'bridal.jpg',       N'Bó hoa cưới cầm tay phong cách châu Âu',   1),
-(N'Lẵng hoa khai trương',    800000,  15, 'grand_open.jpg',   N'Lẵng hoa khai trương 2 tầng',               3),
-(N'Bó hoa ly trắng',         420000,  30, 'white_lily.jpg',   N'Bó hoa ly trắng thanh lịch 10 cành',        5),
-(N'Hoa cúc vàng chia buồn',  200000,  40, 'chrysanthemum.jpg', N'Vòng hoa cúc vàng chia buồn',              4),
-(N'Bó hoa tulip hỗn hợp',    600000,  25, 'tulip_mix.jpg',    N'Bó tulip hỗn hợp nhập khẩu Hà Lan',        5),
-(N'Hoa cưới pastel',         650000,  18, 'pastel_bridal.jpg', N'Bó hoa cưới tông màu pastel nhẹ nhàng',    1),
-(N'Giỏ hoa chúc mừng',       350000,  28, 'congrats.jpg',     N'Giỏ hoa hỗn hợp chúc mừng',                3),
-(N'Bó hoa lan hồ điệp',      750000,  12, 'orchid.jpg',       N'Bó lan hồ điệp nhập khẩu cao cấp',         5);
+INSERT INTO Flowers (FlowerName, Unit, Price, Quantity, Image, Description, CategoryId) VALUES
+(N'Bó hồng đỏ 20 bông',     N'Bó',    350000,  50, 'rose_red.jpg',     N'Bó hoa hồng đỏ 20 bông kèm baby trắng',   2),
+(N'Giỏ hoa hướng dương',     N'Giỏ',   280000,  35, 'sunflower.jpg',    N'Giỏ hoa hướng dương tươi sáng',             2),
+(N'Bó hoa cưới cầm tay',     N'Bó',    500000,  20, 'bridal.jpg',       N'Bó hoa cưới cầm tay phong cách châu Âu',   1),
+(N'Lẵng hoa khai trương',    N'Lẵng',  800000,  15, 'grand_open.jpg',   N'Lẵng hoa khai trương 2 tầng',               3),
+(N'Bó hoa ly trắng',         N'Bó',    420000,  30, 'white_lily.jpg',   N'Bó hoa ly trắng thanh lịch 10 cành',        5),
+(N'Hoa cúc vàng chia buồn',  N'Vòng',  200000,  40, 'chrysanthemum.jpg', N'Vòng hoa cúc vàng chia buồn',              4),
+(N'Bó hoa tulip hỗn hợp',    N'Bó',    600000,  25, 'tulip_mix.jpg',    N'Bó tulip hỗn hợp nhập khẩu Hà Lan',        5),
+(N'Hoa cưới pastel',         N'Bó',    650000,  18, 'pastel_bridal.jpg', N'Bó hoa cưới tông màu pastel nhẹ nhàng',    1),
+(N'Giỏ hoa chúc mừng',       N'Giỏ',   350000,  28, 'congrats.jpg',     N'Giỏ hoa hỗn hợp chúc mừng',                3),
+(N'Bó hoa lan hồ điệp',      N'Bó',    750000,  12, 'orchid.jpg',       N'Bó lan hồ điệp nhập khẩu cao cấp',         5),
+(N'Hoa hồng lẻ (1 bông)',    N'Bông',  20000,   100, 'single_rose.jpg', N'Hoa hồng đỏ bán lẻ theo từng bông',         2),
+(N'Nhành lan hồ điệp',       N'Nhành', 150000,  50, 'single_orchid.jpg', N'Lan hồ điệp cắt cành lẻ, đa dạng màu sắc',  5),
+(N'Hoa cẩm chướng',          N'Bông',  15000,   80, 'carnation.jpg',    N'Cẩm chướng đơn bông nhiều màu',             5);
 
 -- Tài khoản (mật khẩu mẫu: "123456" đã băm SHA-256)
 INSERT INTO Accounts (Username, Password, FullName, Email, Phone, Role) VALUES
 ('admin',    '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92',
     N'Nguyễn Quản Trị',   'admin@flowershop.vn',    '0901000001', 'admin'),
-('employee1','8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92',
+('staff1',   '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92',
     N'Trần Nhân Viên',    'nv1@flowershop.vn',      '0901000002', 'employee'),
 ('customer1','8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92',
     N'Lê Khách Hàng',     'kh1@gmail.com',          '0901000003', 'customer'),
