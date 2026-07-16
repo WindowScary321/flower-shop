@@ -1,6 +1,7 @@
 package filter;
 
 import models.Account;
+import dal.AccountDAO;
 import java.io.IOException;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -30,8 +31,17 @@ public class AuthenticationFilter implements Filter {
 
         Account user = (session != null) ? (Account) session.getAttribute("user") : null;
 
+        if (user != null) {
+            AccountDAO accountDAO = new AccountDAO();
+            Account dbUser = accountDAO.getAccountById(user.getAccountId());
+            if (dbUser == null || !dbUser.isStatus()) {
+                session.invalidate();
+                user = null;
+            }
+        }
+
         if (user == null) {
-            req.setAttribute("error", "Bạn cần đăng nhập để truy cập chức năng này.");
+            req.setAttribute("error", "Tài khoản của bạn đã bị khóa hoặc bạn chưa đăng nhập.");
             req.getRequestDispatcher("/login.jsp").forward(request, response);
             return;
         }
