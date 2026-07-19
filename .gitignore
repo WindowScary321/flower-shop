@@ -10,3 +10,4 @@ resources/
 temp/
 *.class
 !web/resources/
+.venv/
