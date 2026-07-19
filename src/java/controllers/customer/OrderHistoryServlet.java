@@ -10,18 +10,22 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 // Renamed to OrderHistoryServlet to match 1-project-overview.md spec.
 // URL pattern uses "order-history" for customer-facing route.
 @WebServlet(name = "OrderHistoryServlet", urlPatterns = {"/customer/order-history"})
 public class OrderHistoryServlet extends HttpServlet {
 
-    private final OrderDAO orderDAO = new OrderDAO();
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Account user = (Account) request.getSession(false).getAttribute("user");
+        HttpSession session = request.getSession(false);
+        Account user = (session != null) ? (Account) session.getAttribute("user") : null;
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
         
         String status = request.getParameter("status");
         String fromDate = request.getParameter("fromDate");
@@ -38,6 +42,7 @@ public class OrderHistoryServlet extends HttpServlet {
         } catch (NumberFormatException e) {
         }
 
+        OrderDAO orderDAO = new OrderDAO();
         int totalRecords = orderDAO.countOrders(user.getAccountId(), status, fromDate, toDate);
         int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
         if (page > totalPages && totalPages > 0) {
@@ -45,6 +50,7 @@ public class OrderHistoryServlet extends HttpServlet {
         }
 
         List<Order> orders = orderDAO.searchOrdersPaging(user.getAccountId(), status, fromDate, toDate, page, pageSize);
+        orderDAO.close();
         
         request.setAttribute("orders", orders);
         request.setAttribute("currentPage", page);
@@ -60,12 +66,19 @@ public class OrderHistoryServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
-        Account user = (Account) request.getSession(false).getAttribute("user");
+        HttpSession session = request.getSession(false);
+        Account user = (session != null) ? (Account) session.getAttribute("user") : null;
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
 
         if ("cancel".equals(action)) {
             try {
                 int orderId = Integer.parseInt(request.getParameter("orderId"));
+                OrderDAO orderDAO = new OrderDAO();
                 boolean success = orderDAO.cancelOrder(orderId, user.getAccountId());
+                orderDAO.close();
                 if (success) {
                     request.getSession().setAttribute("successMsg", "Đơn hàng #" + orderId + " đã được hủy thành công.");
                 } else {

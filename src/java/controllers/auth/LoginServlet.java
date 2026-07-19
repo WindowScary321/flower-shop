@@ -26,6 +26,12 @@ public class LoginServlet extends HttpServlet {
         String u = request.getParameter("username");
         String p = request.getParameter("password");
         
+        if (u == null || u.trim().isEmpty() || p == null || p.trim().isEmpty()) {
+            request.setAttribute("error", "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
+        }
+        
         AccountDAO dao = new AccountDAO();
         String hashedPassword = PasswordHasher.hash(p);
         Account a = dao.getAccountByUsernameAndPassword(u, hashedPassword);

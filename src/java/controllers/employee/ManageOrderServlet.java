@@ -13,8 +13,6 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet(name = "EmployeeManageOrderServlet", urlPatterns = {"/employee/manage-orders"})
 public class ManageOrderServlet extends HttpServlet {
 
-    private final OrderDAO orderDAO = new OrderDAO();
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -33,6 +31,7 @@ public class ManageOrderServlet extends HttpServlet {
         } catch (NumberFormatException e) {
         }
 
+        OrderDAO orderDAO = new OrderDAO();
         int totalRecords = orderDAO.countOrders(0, status, fromDate, toDate);
         int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
         if (page > totalPages && totalPages > 0) {
@@ -40,6 +39,7 @@ public class ManageOrderServlet extends HttpServlet {
         }
 
         List<Order> orders = orderDAO.searchOrdersPaging(0, status, fromDate, toDate, page, pageSize);
+        orderDAO.close();
         
         request.setAttribute("orders", orders);
         request.setAttribute("currentPage", page);
@@ -66,8 +66,11 @@ public class ManageOrderServlet extends HttpServlet {
                     deliveryTime = java.sql.Timestamp.valueOf(deliveryTimeStr.replace("T", " ") + ":00");
                 }
                 
+                OrderDAO orderDAO = new OrderDAO();
+                
                 Order order = orderDAO.getOrderById(orderId);
                 if (order != null && deliveryTime != null && deliveryTime.before(order.getOrderDate())) {
+                    orderDAO.close();
                     request.getSession().setAttribute("errorMsg", "Thời gian giao hàng không được thiết lập trước thời gian đặt hàng.");
                     response.sendRedirect(request.getContextPath() + "/employee/manage-orders");
                     return;
@@ -76,8 +79,10 @@ public class ManageOrderServlet extends HttpServlet {
                 // Employee chỉ được đặt trạng thái giao hàng
                 if (newStatus != null && (newStatus.equals("Đang giao") || newStatus.equals("Đã giao") || newStatus.equals("Chờ xử lý"))) {
                     orderDAO.updateOrderStatusAndDeliveryTime(orderId, newStatus, deliveryTime);
+                    orderDAO.close();
                     request.getSession().setAttribute("successMsg", "Cập nhật trạng thái đơn hàng #" + orderId + " thành công.");
                 } else {
+                    orderDAO.close();
                     request.getSession().setAttribute("errorMsg", "Nhân viên không có quyền đặt trạng thái này.");
                 }
             } catch (NumberFormatException e) {

@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  *
  * @author FPT University - PRJ30X
  */
-public class DBContext {
+public class DBContext implements AutoCloseable {
     protected Connection connection;
     public DBContext() {
         //@Students: You are not allowed to edit this method  
@@ -38,6 +38,17 @@ public class DBContext {
             connection = DriverManager.getConnection(url, user, pass);
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void close() {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 }

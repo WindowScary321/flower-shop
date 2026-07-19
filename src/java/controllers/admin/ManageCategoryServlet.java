@@ -13,8 +13,6 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet(name = "ManageCategoryServlet", urlPatterns = {"/admin/manage-categories"})
 public class ManageCategoryServlet extends HttpServlet {
 
-    private final CategoryDAO categoryDAO = new CategoryDAO();
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -41,7 +39,9 @@ public class ManageCategoryServlet extends HttpServlet {
 
     private void listCategories(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        CategoryDAO categoryDAO = new CategoryDAO();
         List<Category> categories = categoryDAO.getAllCategories();
+        categoryDAO.close();
         request.setAttribute("categories", categories);
         request.getRequestDispatcher("/admin/manage-categories.jsp").forward(request, response);
     }
@@ -51,7 +51,9 @@ public class ManageCategoryServlet extends HttpServlet {
         Category c = new Category();
         c.setCategoryName(request.getParameter("categoryName"));
         c.setDescription(request.getParameter("description"));
+        CategoryDAO categoryDAO = new CategoryDAO();
         categoryDAO.insertCategory(c);
+        categoryDAO.close();
         request.getSession().setAttribute("successMsg", "Thêm danh mục thành công!");
         response.sendRedirect(request.getContextPath() + "/admin/manage-categories");
     }
@@ -62,7 +64,9 @@ public class ManageCategoryServlet extends HttpServlet {
         c.setCategoryId(Integer.parseInt(request.getParameter("categoryId")));
         c.setCategoryName(request.getParameter("categoryName"));
         c.setDescription(request.getParameter("description"));
+        CategoryDAO categoryDAO = new CategoryDAO();
         categoryDAO.updateCategory(c);
+        categoryDAO.close();
         request.getSession().setAttribute("successMsg", "Cập nhật danh mục thành công!");
         response.sendRedirect(request.getContextPath() + "/admin/manage-categories");
     }
@@ -71,7 +75,9 @@ public class ManageCategoryServlet extends HttpServlet {
             throws IOException {
         try {
             int id = Integer.parseInt(request.getParameter("id"));
+            CategoryDAO categoryDAO = new CategoryDAO();
             categoryDAO.deleteCategory(id);
+            categoryDAO.close();
             request.getSession().setAttribute("successMsg", "Xóa danh mục thành công!");
         } catch (NumberFormatException e) {
             request.getSession().setAttribute("errorMsg", "ID không hợp lệ!");

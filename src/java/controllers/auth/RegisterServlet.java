@@ -35,6 +35,17 @@ public class RegisterServlet extends HttpServlet {
         request.setAttribute("email", email);
         request.setAttribute("phone", phone);
         
+        if (username == null || username.trim().isEmpty()
+                || fullname == null || fullname.trim().isEmpty()
+                || email == null || email.trim().isEmpty()
+                || phone == null || phone.trim().isEmpty()
+                || password == null || password.trim().isEmpty()
+                || confirm == null || confirm.trim().isEmpty()) {
+            request.setAttribute("error", "Vui lòng điền đầy đủ tất cả các trường bắt buộc.");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
+        }
+        
         if (!password.equals(confirm)) {
             request.setAttribute("error", "Mật khẩu xác nhận không khớp");
             request.getRequestDispatcher("register.jsp").forward(request, response);

@@ -35,6 +35,7 @@ public class AuthorizationFilter implements Filter {
         if (user != null) {
             AccountDAO accountDAO = new AccountDAO();
             Account dbUser = accountDAO.getAccountById(user.getAccountId());
+            accountDAO.close();
             if (dbUser == null || !dbUser.isStatus()) {
                 session.invalidate();
                 user = null;

@@ -15,9 +15,6 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet(name = "ManageFlowerServlet", urlPatterns = {"/admin/manage-flowers"})
 public class ManageFlowerServlet extends HttpServlet {
 
-    private final FlowerDAO flowerDAO = new FlowerDAO();
-    private final CategoryDAO categoryDAO = new CategoryDAO();
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -92,6 +89,7 @@ public class ManageFlowerServlet extends HttpServlet {
         } catch (NumberFormatException e) {
         }
 
+        FlowerDAO flowerDAO = new FlowerDAO();
         int totalRecords = flowerDAO.countFlowers(keyword, categoryId, minPrice, maxPrice, false);
         int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
         if (page > totalPages && totalPages > 0) {
@@ -99,7 +97,11 @@ public class ManageFlowerServlet extends HttpServlet {
         }
 
         List<Flower> flowers = flowerDAO.searchFlowersPaging(keyword, categoryId, minPrice, maxPrice, false, page, pageSize);
+        flowerDAO.close();
+        
+        CategoryDAO categoryDAO = new CategoryDAO();
         List<Category> categories = categoryDAO.getAllCategories();
+        categoryDAO.close();
         
         request.setAttribute("flowers", flowers);
         request.setAttribute("categories", categories);
@@ -130,7 +132,9 @@ public class ManageFlowerServlet extends HttpServlet {
         
         f.setStatus("1".equals(request.getParameter("status")));
         
+        FlowerDAO flowerDAO = new FlowerDAO();
         flowerDAO.insertFlower(f);
+        flowerDAO.close();
         request.getSession().setAttribute("successMsg", "Thêm sản phẩm hoa thành công!");
         response.sendRedirect(request.getContextPath() + "/admin/manage-flowers");
     }
@@ -152,7 +156,9 @@ public class ManageFlowerServlet extends HttpServlet {
         
         f.setStatus("1".equals(request.getParameter("status")));
         
+        FlowerDAO flowerDAO = new FlowerDAO();
         flowerDAO.updateFlower(f);
+        flowerDAO.close();
         request.getSession().setAttribute("successMsg", "Cập nhật sản phẩm hoa thành công!");
         response.sendRedirect(request.getContextPath() + "/admin/manage-flowers");
     }
@@ -161,7 +167,9 @@ public class ManageFlowerServlet extends HttpServlet {
             throws IOException {
         try {
             int id = Integer.parseInt(request.getParameter("id"));
+            FlowerDAO flowerDAO = new FlowerDAO();
             flowerDAO.deleteFlower(id);
+            flowerDAO.close();
             request.getSession().setAttribute("successMsg", "Xóa sản phẩm hoa thành công!");
         } catch (NumberFormatException e) {
             request.getSession().setAttribute("errorMsg", "ID không hợp lệ!");

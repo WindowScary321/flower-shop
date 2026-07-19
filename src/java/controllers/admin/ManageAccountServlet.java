@@ -13,8 +13,6 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet(name = "ManageAccountServlet", urlPatterns = {"/admin/manage-accounts"})
 public class ManageAccountServlet extends HttpServlet {
 
-    private final AccountDAO accountDAO = new AccountDAO();
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -42,13 +40,16 @@ public class ManageAccountServlet extends HttpServlet {
         String username = request.getParameter("username");
         String email = request.getParameter("email");
 
+        AccountDAO accountDAO = new AccountDAO();
         if (accountDAO.checkUsernameExists(username)) {
+            accountDAO.close();
             request.getSession().setAttribute("errorMsg", "Tên đăng nhập đã tồn tại!");
             response.sendRedirect(request.getContextPath() + "/admin/manage-accounts");
             return;
         }
 
         if (accountDAO.checkEmailExists(email)) {
+            accountDAO.close();
             request.getSession().setAttribute("errorMsg", "Email đã tồn tại!");
             response.sendRedirect(request.getContextPath() + "/admin/manage-accounts");
             return;
@@ -66,6 +67,7 @@ public class ManageAccountServlet extends HttpServlet {
         a.setStatus(true);
 
         accountDAO.insertAccount(a);
+        accountDAO.close();
         request.getSession().setAttribute("successMsg", "Thêm tài khoản thành công! Mật khẩu mặc định là: password123");
         response.sendRedirect(request.getContextPath() + "/admin/manage-accounts");
     }
@@ -87,6 +89,7 @@ public class ManageAccountServlet extends HttpServlet {
         } catch (NumberFormatException e) {
         }
 
+        AccountDAO accountDAO = new AccountDAO();
         int totalRecords = accountDAO.countAccounts(keyword, role, status);
         int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
         if (page > totalPages && totalPages > 0) {
@@ -94,6 +97,7 @@ public class ManageAccountServlet extends HttpServlet {
         }
 
         List<Account> accounts = accountDAO.searchAccountsPaging(keyword, role, status, page, pageSize);
+        accountDAO.close();
         
         request.setAttribute("accounts", accounts);
         request.setAttribute("currentPage", page);
@@ -110,6 +114,7 @@ public class ManageAccountServlet extends HttpServlet {
             throws IOException {
         try {
             int id = Integer.parseInt(request.getParameter("id"));
+            AccountDAO accountDAO = new AccountDAO();
             Account currentAcc = accountDAO.getAccountById(id);
             if (currentAcc != null) {
                 Account loggedInAdmin = (Account) request.getSession().getAttribute("user");
@@ -122,6 +127,7 @@ public class ManageAccountServlet extends HttpServlet {
                         newStatus ? "Đã mở khóa tài khoản thành công!" : "Đã khóa tài khoản thành công!");
                 }
             }
+            accountDAO.close();
         } catch (NumberFormatException e) {
             request.getSession().setAttribute("errorMsg", "ID không hợp lệ!");
         }

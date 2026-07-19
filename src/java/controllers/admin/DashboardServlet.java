@@ -16,12 +16,11 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet(name = "DashboardServlet", urlPatterns = {"/admin/dashboard"})
 public class DashboardServlet extends HttpServlet {
 
-    private final ReportDAO reportDAO = new ReportDAO();
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        ReportDAO reportDAO = new ReportDAO();
         ReportSummary summary = reportDAO.getReportSummary();
         
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
@@ -35,6 +34,7 @@ public class DashboardServlet extends HttpServlet {
         
         List<RevenueByMonth> revenueData = reportDAO.getRevenueByMonth(currentYear);
         List<TopSellingFlower> topFlowers = reportDAO.getTopSellingFlowers(5);
+        reportDAO.close();
 
         request.setAttribute("summary", summary);
         request.setAttribute("revenueData", revenueData);

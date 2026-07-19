@@ -16,8 +16,6 @@ import jakarta.servlet.http.HttpSession;
 @WebServlet(name = "CheckoutServlet", urlPatterns = {"/checkout"})
 public class CheckoutServlet extends HttpServlet {
 
-    private final OrderDAO orderDAO = new OrderDAO();
-
     @Override
     @SuppressWarnings("unchecked")
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -86,7 +84,9 @@ public class CheckoutServlet extends HttpServlet {
         order.setAccountId(user.getAccountId());
         order.setPaymentMethod(paymentMethod != null && paymentMethod.equals("QR") ? "QR" : "COD");
 
+        OrderDAO orderDAO = new OrderDAO();
         int orderId = orderDAO.createOrder(order, cart);
+        orderDAO.close();
 
         if (orderId == -2) {
             request.setAttribute("error", "Một hoặc nhiều sản phẩm trong giỏ đã hết hàng. Vui lòng kiểm tra lại giỏ hàng.");

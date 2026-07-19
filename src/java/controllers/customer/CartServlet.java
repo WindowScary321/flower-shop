@@ -16,8 +16,6 @@ import jakarta.servlet.http.HttpSession;
 @WebServlet(name = "CartServlet", urlPatterns = {"/cart"})
 public class CartServlet extends HttpServlet {
 
-    private final FlowerDAO flowerDAO = new FlowerDAO();
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -68,7 +66,9 @@ public class CartServlet extends HttpServlet {
             return;
         }
 
+        FlowerDAO flowerDAO = new FlowerDAO();
         Flower flower = flowerDAO.getFlowerById(flowerId);
+        flowerDAO.close();
         if (flower == null || !flower.isStatus()) {
             response.sendRedirect(request.getContextPath() + "/");
             return;

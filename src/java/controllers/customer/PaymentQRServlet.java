@@ -13,8 +13,6 @@ import jakarta.servlet.http.HttpSession;
 @WebServlet(name = "PaymentQRServlet", urlPatterns = {"/payment-qr"})
 public class PaymentQRServlet extends HttpServlet {
 
-    private final OrderDAO orderDAO = new OrderDAO();
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -25,7 +23,9 @@ public class PaymentQRServlet extends HttpServlet {
         }
 
         int orderId = (int) session.getAttribute("lastOrderId");
+        OrderDAO orderDAO = new OrderDAO();
         Order order = orderDAO.getOrderById(orderId);
+        orderDAO.close();
         
         if (order == null || !"QR".equals(order.getPaymentMethod())) {
             response.sendRedirect(request.getContextPath() + "/");
@@ -50,7 +50,9 @@ public class PaymentQRServlet extends HttpServlet {
         
         if ("checkPayment".equals(action)) {
             // Cập nhật trạng thái thanh toán thành công
+            OrderDAO orderDAO = new OrderDAO();
             orderDAO.updatePaymentStatus(orderId, true);
+            orderDAO.close();
             // Sau khi thanh toán xong, chuyển về trang checkout-success
             response.sendRedirect(request.getContextPath() + "/checkout-success");
         } else {

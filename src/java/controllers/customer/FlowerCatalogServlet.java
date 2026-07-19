@@ -15,9 +15,6 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet(name = "FlowerCatalogServlet", urlPatterns = {"/flower-catalog"})
 public class FlowerCatalogServlet extends HttpServlet {
 
-    private final FlowerDAO flowerDAO = new FlowerDAO();
-    private final CategoryDAO categoryDAO = new CategoryDAO();
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -61,6 +58,7 @@ public class FlowerCatalogServlet extends HttpServlet {
         } catch (NumberFormatException e) {
         }
 
+        FlowerDAO flowerDAO = new FlowerDAO();
         int totalRecords = flowerDAO.countFlowers(keyword, categoryId, minPrice, maxPrice, true);
         int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
         if (page > totalPages && totalPages > 0) {
@@ -68,7 +66,10 @@ public class FlowerCatalogServlet extends HttpServlet {
         }
 
         List<Flower> flowers = flowerDAO.searchFlowersPaging(keyword, categoryId, minPrice, maxPrice, true, page, pageSize);
+        flowerDAO.close();
+        CategoryDAO categoryDAO = new CategoryDAO();
         List<Category> categories = categoryDAO.getAllCategories();
+        categoryDAO.close();
 
         request.setAttribute("flowers", flowers);
         request.setAttribute("categories", categories);

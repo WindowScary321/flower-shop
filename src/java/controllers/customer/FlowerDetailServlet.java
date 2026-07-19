@@ -12,14 +12,14 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet(name = "FlowerDetailServlet", urlPatterns = {"/detail"})
 public class FlowerDetailServlet extends HttpServlet {
 
-    private final FlowerDAO flowerDAO = new FlowerDAO();
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             int id = Integer.parseInt(request.getParameter("id"));
+            FlowerDAO flowerDAO = new FlowerDAO();
             Flower flower = flowerDAO.getFlowerById(id);
+            flowerDAO.close();
 
             if (flower == null || !flower.isStatus()) {
                 response.sendRedirect(request.getContextPath() + "/flower-catalog");

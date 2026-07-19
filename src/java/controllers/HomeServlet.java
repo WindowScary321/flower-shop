@@ -13,14 +13,14 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet(name = "HomeServlet", urlPatterns = {"/home", ""})
 public class HomeServlet extends HttpServlet {
 
-    private final FlowerDAO flowerDAO = new FlowerDAO();
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
         // Lấy danh sách các hoa đang được bán (Status = 1)
+        FlowerDAO flowerDAO = new FlowerDAO();
         List<Flower> activeFlowers = flowerDAO.getActiveFlowers();
+        flowerDAO.close();
         
         // Nếu số lượng hoa nhiều, ta có thể giới hạn lấy top 8 hoa mới nhất
         if (activeFlowers.size() > 8) {
