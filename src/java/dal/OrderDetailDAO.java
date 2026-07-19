@@ -25,8 +25,10 @@ public class OrderDetailDAO extends DBContext {
                 od.setFlowerId(rs.getInt("FlowerId"));
                 od.setQuantity(rs.getInt("Quantity"));
                 od.setUnitPrice(rs.getDouble("UnitPrice"));
-                // Extra fields for display (use transient setters pattern or map directly in JSP via request)
-                // Stored as attributes on request in servlet
+                // Extra fields for display
+                od.setFlowerName(rs.getString("FlowerName"));
+                od.setUnit(rs.getString("Unit"));
+                od.setImage(rs.getString("Image"));
                 list.add(od);
             }
         } catch (SQLException e) {

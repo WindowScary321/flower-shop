@@ -1,6 +1,7 @@
 package models;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class Order {
     private int orderId;
@@ -14,6 +15,9 @@ public class Order {
     private String paymentMethod;
     private boolean paymentStatus;
     private Timestamp deliveryTime;
+    
+    // List of products inside order
+    private List<OrderDetail> details;
 
     public Order() {
     }
@@ -118,5 +122,13 @@ public class Order {
 
     public void setDeliveryTime(Timestamp deliveryTime) {
         this.deliveryTime = deliveryTime;
+    }
+
+    public List<OrderDetail> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<OrderDetail> details) {
+        this.details = details;
     }
 }

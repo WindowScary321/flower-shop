@@ -72,7 +72,12 @@
                     <tbody>
                         <c:forEach var="order" items="${orders}">
                             <tr>
-                                <td class="ps-4 fw-bold text-primary">#${order.orderId}</td>
+                                <td class="ps-4 fw-bold text-primary">
+                                    #${order.orderId}
+                                    <button class="btn btn-sm btn-outline-pink py-0 px-1 ms-1 text-danger" type="button" data-bs-toggle="collapse" data-bs-target="#details-${order.orderId}" title="Xem chi tiết sản phẩm" style="font-size: 0.85em; border-color: #f8ccd7;">
+                                        <i class="bi bi-eye-fill"></i>
+                                    </button>
+                                </td>
                                 <td class="small text-muted">
                                     <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm"/>
                                 </td>
@@ -122,6 +127,42 @@
                                             </div>
                                         </form>
                                     </c:if>
+                                </td>
+                            </tr>
+                            <!-- Details collapse row -->
+                            <tr class="align-top">
+                                <td colspan="8" class="p-0 border-0">
+                                    <div class="collapse" id="details-${order.orderId}">
+                                        <div class="p-3 bg-light border-bottom rounded-3 m-2 shadow-inner">
+                                            <div class="fw-bold mb-2 text-secondary small"><i class="bi bi-list-stars me-1"></i>SẢN PHẨM TRONG ĐƠN HÀNG #${order.orderId}</div>
+                                            <div class="table-responsive bg-white rounded shadow-sm">
+                                                <table class="table table-sm table-borderless align-middle mb-0 small">
+                                                    <thead class="bg-light text-muted">
+                                                        <tr>
+                                                            <th class="ps-3 py-2" style="width: 80px;">Hình ảnh</th>
+                                                            <th class="py-2">Tên sản phẩm</th>
+                                                            <th class="py-2 text-center" style="width: 100px;">Số lượng</th>
+                                                            <th class="py-2 text-end" style="width: 120px;">Đơn giá</th>
+                                                            <th class="pe-3 py-2 text-end" style="width: 150px;">Thành tiền</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <c:forEach var="detail" items="${order.details}">
+                                                            <tr class="border-top">
+                                                                <td class="ps-3 py-2">
+                                                                    <img src="${detail.image}" alt="${detail.flowerName}" class="rounded" style="width: 45px; height: 45px; object-fit: cover;">
+                                                                </td>
+                                                                <td class="py-2 fw-semibold text-dark">${detail.flowerName}</td>
+                                                                <td class="py-2 text-center">${detail.quantity} ${detail.unit}</td>
+                                                                <td class="py-2 text-end"><fmt:formatNumber value="${detail.unitPrice}" pattern="#,###"/> đ</td>
+                                                                <td class="pe-3 py-2 text-end fw-bold text-danger"><fmt:formatNumber value="${detail.quantity * detail.unitPrice}" pattern="#,###"/> đ</td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         </c:forEach>

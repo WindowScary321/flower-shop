@@ -41,6 +41,12 @@ public class ManageOrderServlet extends HttpServlet {
         List<Order> orders = orderDAO.searchOrdersPaging(0, status, fromDate, toDate, page, pageSize);
         orderDAO.close();
         
+        try (dal.OrderDetailDAO orderDetailDAO = new dal.OrderDetailDAO()) {
+            for (Order o : orders) {
+                o.setDetails(orderDetailDAO.getOrderDetailsByOrderId(o.getOrderId()));
+            }
+        }
+        
         request.setAttribute("orders", orders);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);

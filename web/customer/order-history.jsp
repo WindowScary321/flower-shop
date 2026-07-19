@@ -89,45 +89,69 @@
                     </c:if>
                 </div>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <small class="text-muted d-block"><i class="bi bi-person me-1"></i>Người nhận: <strong>${order.receiverName}</strong></small>
-                        <small class="text-muted d-block"><i class="bi bi-telephone me-1"></i>SĐT: ${order.receiverPhone}</small>
-                        <small class="text-muted d-block"><i class="bi bi-geo-alt me-1"></i>Địa chỉ: ${order.receiverAddress}</small>
-                        <small class="text-info fw-bold d-block mt-1">
-                            <i class="bi bi-clock-history me-1"></i>Giao hàng: 
-                            <c:choose>
-                                <c:when test="${not empty order.deliveryTime}">
-                                    <fmt:formatDate value="${order.deliveryTime}" pattern="dd/MM/yyyy HH:mm"/>
-                                </c:when>
-                                <c:otherwise>
-                                    Đang chờ sắp xếp
-                                </c:otherwise>
-                            </c:choose>
-                        </small>
-                        
-                        <div class="mt-2">
-                            <small class="text-muted"><i class="bi bi-credit-card me-1"></i>Thanh toán: 
-                                <strong>${order.paymentMethod == 'QR' ? 'Chuyển khoản QR' : 'Tiền mặt (COD)'}</strong>
+            <div class="card-body p-3">
+                <div class="row g-3">
+                    <!-- Left: List of products -->
+                    <div class="col-md-7 border-end-md">
+                        <div class="fw-bold text-secondary mb-2 small"><i class="bi bi-cart-check me-1"></i>Danh sách sản phẩm</div>
+                        <div class="d-flex flex-column gap-2">
+                            <c:forEach var="detail" items="${order.details}">
+                                <div class="d-flex align-items-center justify-content-between p-2 border rounded bg-white">
+                                    <div class="d-flex align-items-center">
+                                        <img src="${detail.image}" alt="${detail.flowerName}" class="rounded me-2" style="width: 50px; height: 50px; object-fit: cover;">
+                                        <div>
+                                            <div class="fw-semibold text-dark small">${detail.flowerName}</div>
+                                            <div class="text-muted small">${detail.quantity} ${detail.unit} x <fmt:formatNumber value="${detail.unitPrice}" pattern="#,###"/> đ</div>
+                                        </div>
+                                    </div>
+                                    <div class="fw-bold text-danger small">
+                                        <fmt:formatNumber value="${detail.quantity * detail.unitPrice}" pattern="#,###"/> đ
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </div>
+                    </div>
+                    <!-- Right: Shipping / Payment info -->
+                    <div class="col-md-5 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="fw-bold text-secondary mb-2 small"><i class="bi bi-truck me-1"></i>Thông tin nhận hàng & Thanh toán</div>
+                            <small class="text-muted d-block"><i class="bi bi-person me-1"></i>Người nhận: <strong>${order.receiverName}</strong></small>
+                            <small class="text-muted d-block"><i class="bi bi-telephone me-1"></i>SĐT: ${order.receiverPhone}</small>
+                            <small class="text-muted d-block"><i class="bi bi-geo-alt me-1"></i>Địa chỉ: ${order.receiverAddress}</small>
+                            <small class="text-info fw-bold d-block mt-1">
+                                <i class="bi bi-clock-history me-1"></i>Giao hàng: 
                                 <c:choose>
-                                    <c:when test="${order.paymentStatus}">
-                                        <span class="badge bg-success ms-1"><i class="bi bi-check-circle me-1"></i>Đã thanh toán</span>
+                                    <c:when test="${not empty order.deliveryTime}">
+                                        <fmt:formatDate value="${order.deliveryTime}" pattern="dd/MM/yyyy HH:mm"/>
                                     </c:when>
                                     <c:otherwise>
-                                        <span class="badge bg-secondary ms-1">Chưa thanh toán</span>
-                                        <c:if test="${order.paymentMethod == 'QR' && order.status != 'Đã hủy'}">
-                                            <a href="${pageContext.request.contextPath}/payment-qr" class="btn btn-sm btn-outline-primary ms-2 py-0" title="Thanh toán ngay" onclick="sessionStorage.setItem('lastOrderId', '${order.orderId}');">Thanh toán lại</a>
-                                        </c:if>
+                                        Đang chờ sắp xếp
                                     </c:otherwise>
                                 </c:choose>
                             </small>
+                            
+                            <div class="mt-2 border-top pt-2">
+                                <small class="text-muted d-block mb-1"><i class="bi bi-credit-card me-1"></i>Thanh toán: 
+                                    <strong>${order.paymentMethod == 'QR' ? 'Chuyển khoản QR' : 'Tiền mặt (COD)'}</strong>
+                                    <c:choose>
+                                        <c:when test="${order.paymentStatus}">
+                                            <span class="badge bg-success ms-1"><i class="bi bi-check-circle me-1"></i>Đã thanh toán</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="badge bg-secondary ms-1">Chưa thanh toán</span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </small>
+                                <c:if test="${!order.paymentStatus && order.paymentMethod == 'QR' && order.status != 'Đã hủy'}">
+                                    <a href="${pageContext.request.contextPath}/payment-qr" class="btn btn-sm btn-outline-primary ms-2 py-0" title="Thanh toán ngay" onclick="sessionStorage.setItem('lastOrderId', '${order.orderId}');">Thanh toán lại</a>
+                                </c:if>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6 text-md-end mt-2 mt-md-0">
-                        <span class="fs-5 fw-bold text-danger">
-                            Tổng: <fmt:formatNumber value="${order.totalAmount}" pattern="#,###"/> đ
-                        </span>
+                        <div class="mt-3 text-end">
+                            <span class="fs-5 fw-bold text-danger">
+                                Tổng cộng: <fmt:formatNumber value="${order.totalAmount}" pattern="#,###"/> đ
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
