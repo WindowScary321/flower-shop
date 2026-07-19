@@ -114,7 +114,8 @@
                                             </select>
                                             <div class="d-flex gap-1">
                                                 <fmt:formatDate value="${order.deliveryTime}" pattern="yyyy-MM-dd'T'HH:mm" var="formattedDeliveryTime"/>
-                                                <input type="datetime-local" name="deliveryTime" class="form-control form-control-sm" style="width:130px;" value="${formattedDeliveryTime}">
+                                                <fmt:formatDate value="${order.orderDate}" pattern="yyyy-MM-dd'T'HH:mm" var="minOrderDate"/>
+                                                <input type="datetime-local" name="deliveryTime" class="form-control form-control-sm" style="width:130px;" value="${formattedDeliveryTime}" min="${minOrderDate}">
                                                 <button type="submit" class="btn btn-sm btn-primary">
                                                     <i class="bi bi-check-lg"></i>
                                                 </button>

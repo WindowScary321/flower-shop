@@ -66,6 +66,13 @@ public class ManageOrderServlet extends HttpServlet {
                     deliveryTime = java.sql.Timestamp.valueOf(deliveryTimeStr.replace("T", " ") + ":00");
                 }
                 
+                Order order = orderDAO.getOrderById(orderId);
+                if (order != null && deliveryTime != null && deliveryTime.before(order.getOrderDate())) {
+                    request.getSession().setAttribute("errorMsg", "Thời gian giao hàng không được thiết lập trước thời gian đặt hàng.");
+                    response.sendRedirect(request.getContextPath() + "/admin/manage-orders");
+                    return;
+                }
+                
                 if (newStatus != null && (newStatus.equals("Chờ xử lý") || newStatus.equals("Đang giao") || newStatus.equals("Đã giao"))) {
                     orderDAO.updateOrderStatusAndDeliveryTime(orderId, newStatus, deliveryTime);
                     request.getSession().setAttribute("successMsg", "Cập nhật trạng thái đơn hàng #" + orderId + " thành công.");
