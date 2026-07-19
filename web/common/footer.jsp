@@ -116,12 +116,10 @@
                         <p class="mb-0">Địa Chỉ: 108-E2 Phuong Mai Street, Dong Da District, Hanoi</p>
                     </div>
                     <div>
-                        <img src="https://placehold.co/40x25?text=VISA" alt="VISA" class="mx-1 border rounded">
-                        <img src="https://placehold.co/40x25?text=PayPal" alt="PayPal" class="mx-1 border rounded">
-                        <img src="https://placehold.co/40x25?text=Stripe" alt="Stripe" class="mx-1 border rounded">
-                        <img src="https://placehold.co/40x25?text=Mastercard" alt="Mastercard"
-                            class="mx-1 border rounded">
-                        <img src="https://placehold.co/40x25?text=COD" alt="COD" class="mx-1 border rounded">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/68/VietQR_Logo.svg" alt="VietQR"
+                            class="mx-1 border rounded bg-white p-1" style="height: 25px; width: auto;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a0/MoMo_Logo_App.svg" alt="MoMo"
+                            class="mx-1 border rounded bg-white" style="height: 25px; width: auto;">
                     </div>
                 </div>
             </div>
