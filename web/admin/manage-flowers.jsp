@@ -79,7 +79,11 @@
                         <c:forEach var="f" items="${flowers}">
                             <tr>
                                 <td class="ps-4">
-                                    <img src="${pageContext.request.contextPath}/images/flowers/${empty f.image ? 'placeholder.jpg' : f.image}" 
+                                    <c:set var="imgUrl" value="${pageContext.request.contextPath}/images/flowers/${empty f.image ? 'placeholder.jpg' : f.image}" />
+                                    <c:if test="${not empty f.image and (f.image.startsWith('http://') or f.image.startsWith('https://'))}">
+                                        <c:set var="imgUrl" value="${f.image}" />
+                                    </c:if>
+                                    <img src="${imgUrl}" 
                                          class="rounded" style="width: 50px; height: 50px; object-fit: cover;" alt="hoa"
                                          onerror="this.src='https://placehold.co/100x100/f8f9fa/ff6b81?text=Flower'">
                                 </td>
@@ -164,7 +168,10 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Đơn vị tính <span class="text-danger">*</span></label>
-                            <input type="text" name="unit" class="form-control" value="Bông" required maxlength="50">
+                            <select name="unit" class="form-select" required>
+                                <option value="Cây" selected>Cây</option>
+                                <option value="Bó">Bó</option>
+                            </select>
                         </div>
                     </div>
                     <div class="row">
@@ -231,7 +238,10 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Đơn vị tính <span class="text-danger">*</span></label>
-                            <input type="text" name="unit" id="edit-unit" class="form-control" required maxlength="50">
+                            <select name="unit" id="edit-unit" class="form-select" required>
+                                <option value="Cây">Cây</option>
+                                <option value="Bó">Bó</option>
+                            </select>
                         </div>
                     </div>
                     <div class="row">

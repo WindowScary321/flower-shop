@@ -40,7 +40,11 @@
                                             <tr>
                                                 <td class="ps-4">
                                                     <div class="d-flex align-items-center gap-3">
-                                                        <img src="${pageContext.request.contextPath}/images/flowers/${empty item.flower.image ? 'placeholder.jpg' : item.flower.image}"
+                                                        <c:set var="imgUrl" value="${pageContext.request.contextPath}/images/flowers/${empty item.flower.image ? 'placeholder.jpg' : item.flower.image}" />
+                                                        <c:if test="${not empty item.flower.image and (item.flower.image.startsWith('http://') or item.flower.image.startsWith('https://'))}">
+                                                            <c:set var="imgUrl" value="${item.flower.image}" />
+                                                        </c:if>
+                                                        <img src="${imgUrl}"
                                                              class="rounded" style="width:60px;height:60px;object-fit:cover;"
                                                              onerror="this.src='https://placehold.co/100x100/f8f9fa/ff6b81?text=Flower'"
                                                              alt="${item.flower.flowerName}">

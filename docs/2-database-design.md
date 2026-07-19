@@ -72,7 +72,7 @@ erDiagram
 |--------------|------------------|------------------------|------------------------------------|
 | FlowerId     | INT IDENTITY     | PRIMARY KEY            | Mã hoa (tự tăng)                  |
 | FlowerName   | NVARCHAR(150)    | NOT NULL               | Tên sản phẩm hoa                  |
-| Unit         | NVARCHAR(50)     | DEFAULT N'Bông'        | Đơn vị tính (Bông, Đóa, Bó...)    |
+| Unit         | NVARCHAR(50)     | DEFAULT N'Cây'         | Đơn vị tính (Cây hoặc Bó)          |
 | Price        | DECIMAL(18,2)    | NOT NULL, CHECK >= 0   | Giá bán (VNĐ)                     |
 | Quantity     | INT              | NOT NULL, CHECK >= 0   | Số lượng tồn kho                  |
 | Image        | VARCHAR(255)     | NULL                   | Đường dẫn file ảnh hoa            |
@@ -139,7 +139,7 @@ CREATE TABLE Categories (
 CREATE TABLE Flowers (
     FlowerId    INT IDENTITY(1,1) PRIMARY KEY,
     FlowerName  NVARCHAR(150)  NOT NULL,
-    Unit        NVARCHAR(50)   DEFAULT N'Bông',
+    Unit        NVARCHAR(50)   DEFAULT N'Cây',
     Price       DECIMAL(18,2)  NOT NULL CHECK (Price >= 0),
     Quantity    INT            NOT NULL CHECK (Quantity >= 0),
     Image       VARCHAR(255)   NULL,

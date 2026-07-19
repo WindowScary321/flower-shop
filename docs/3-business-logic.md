@@ -251,16 +251,16 @@ sequenceDiagram
 
 ## 3.4. Câu hỏi thường gặp / Yêu cầu nghiệp vụ đặc thù
 
-### Trả lời câu hỏi của Giảng viên: Khách hàng mua 1 bông vs 1 đóa cùng lúc?
+### Trả lời câu hỏi của Giảng viên: Khách hàng mua 1 cây vs 1 bó cùng lúc?
 
-**Vấn đề:** Làm sao để khách hàng có thể mua "1 bông hoa hồng" và "1 đóa hoa hồng" (nhiều bông) trong cùng một đơn hàng?
+**Vấn đề:** Làm sao để khách hàng có thể mua "1 cây hoa hồng" và "1 bó hoa hồng" (nhiều cây) trong cùng một đơn hàng?
 
 **Giải pháp phân tích thiết kế:**
 Thay vì tạo ra một cấu trúc bảng trung gian (ProductVariants/Options) phức tạp không cần thiết cho đồ án PRJ302, chúng ta đã thêm cột `Unit` (Đơn vị tính) vào bảng `Flowers`. 
 
 **Luồng hoạt động:**
 1. **Phía Admin (Quản trị):** Admin sẽ tạo ra 2 sản phẩm (2 dòng) khác nhau trong bảng `Flowers` cho cùng một loại hoa, nhưng khác Đơn vị tính (`Unit`) và Giá (`Price`).
-   - `FlowerId = 1` | `FlowerName = 'Hoa Hồng Đỏ'` | `Unit = 'Bông'` | `Price = 20,000`
-   - `FlowerId = 2` | `FlowerName = 'Hoa Hồng Đỏ'` | `Unit = 'Đóa'` | `Price = 200,000`
+   - `FlowerId = 1` | `FlowerName = 'Hoa Hồng Đỏ'` | `Unit = 'Cây'` | `Price = 20,000`
+   - `FlowerId = 2` | `FlowerName = 'Hoa Hồng Đỏ'` | `Unit = 'Bó'` | `Price = 200,000`
 2. **Phía Khách hàng (Customer):** Khi mua hàng, khách hàng có thể bấm "Thêm vào giỏ" cho cả 2 sản phẩm trên.
-3. **Giỏ hàng (Cart) & Đơn hàng (OrderDetails):** Hệ thống sẽ lưu thành 2 dòng riêng biệt trong giỏ hàng (vì chúng có `FlowerId` khác nhau). Nhờ vậy, khách có thể mua cùng lúc 1 bông và 1 đóa một cách hoàn toàn tự nhiên và chính xác mà không gặp bất kỳ xung đột nào về dữ liệu.
+3. **Giỏ hàng (Cart) & Đơn hàng (OrderDetails):** Hệ thống sẽ lưu thành 2 dòng riêng biệt trong giỏ hàng (vì chúng có `FlowerId` khác nhau). Nhờ vậy, khách có thể mua cùng lúc 1 cây và 1 bó một cách hoàn toàn tự nhiên và chính xác mà không gặp bất kỳ xung đột nào về dữ liệu.

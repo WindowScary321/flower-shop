@@ -26,7 +26,7 @@ CREATE TABLE Categories (
 CREATE TABLE Flowers (
     FlowerId    INT IDENTITY(1,1) PRIMARY KEY,
     FlowerName  NVARCHAR(150)  NOT NULL,
-    Unit        NVARCHAR(50)   DEFAULT N'Bông',
+    Unit        NVARCHAR(50)   DEFAULT N'Cây',
     Price       DECIMAL(18,2)  NOT NULL CHECK (Price >= 0),
     Quantity    INT            NOT NULL CHECK (Quantity >= 0),
     Image       VARCHAR(255)   NULL,
@@ -105,22 +105,22 @@ INSERT INTO Categories (CategoryName, Description) VALUES
 -- Sản phẩm hoa
 INSERT INTO Flowers (FlowerName, Unit, Price, Quantity, Image, Description, CategoryId) VALUES
 (N'Bó hồng đỏ 20 bông',     N'Bó',    350000,  50, 'rose_red.jpg',     N'Bó hoa hồng đỏ 20 bông kèm baby trắng',   2),
-(N'Giỏ hoa hướng dương',     N'Giỏ',   280000,  35, 'sunflower.jpg',    N'Giỏ hoa hướng dương tươi sáng',             2),
+(N'Giỏ hoa hướng dương',     N'Bó',    280000,  35, 'sunflower.jpg',    N'Giỏ hoa hướng dương tươi sáng',             2),
 (N'Bó hoa cưới cầm tay',     N'Bó',    500000,  20, 'bridal.jpg',       N'Bó hoa cưới cầm tay phong cách châu Âu',   1),
-(N'Lẵng hoa khai trương',    N'Lẵng',  800000,  15, 'grand_open.jpg',   N'Lẵng hoa khai trương 2 tầng',               3),
+(N'Lẵng hoa khai trương',    N'Bó',    800000,  15, 'grand_open.jpg',   N'Lẵng hoa khai trương 2 tầng',               3),
 (N'Bó hoa ly trắng',         N'Bó',    420000,  30, 'white_lily.jpg',   N'Bó hoa ly trắng thanh lịch 10 cành',        5),
-(N'Hoa cúc vàng chia buồn',  N'Vòng',  200000,  40, 'chrysanthemum.jpg', N'Vòng hoa cúc vàng chia buồn',              4),
+(N'Hoa cúc vàng chia buồn',  N'Bó',    200000,  40, 'chrysanthemum.jpg', N'Vòng hoa cúc vàng chia buồn',              4),
 (N'Bó hoa tulip hỗn hợp',    N'Bó',    600000,  25, 'tulip_mix.jpg',    N'Bó tulip hỗn hợp nhập khẩu Hà Lan',        5),
 (N'Hoa cưới pastel',         N'Bó',    650000,  18, 'pastel_bridal.jpg', N'Bó hoa cưới tông màu pastel nhẹ nhàng',    1),
-(N'Giỏ hoa chúc mừng',       N'Giỏ',   350000,  28, 'congrats.jpg',     N'Giỏ hoa hỗn hợp chúc mừng',                3),
+(N'Giỏ hoa chúc mừng',       N'Bó',    350000,  28, 'congrats.jpg',     N'Giỏ hoa hỗn hợp chúc mừng',                3),
 (N'Bó hoa lan hồ điệp',      N'Bó',    750000,  12, 'orchid.jpg',       N'Bó lan hồ điệp nhập khẩu cao cấp',         5),
-(N'Hoa hồng lẻ (1 bông)',    N'Bông',  20000,   100, 'single_rose.jpg', N'Hoa hồng đỏ bán lẻ theo từng bông',         2),
-(N'Nhành lan hồ điệp',       N'Nhành', 150000,  50, 'single_orchid.jpg', N'Lan hồ điệp cắt cành lẻ, đa dạng màu sắc',  5),
-(N'Hoa cẩm chướng',          N'Bông',  15000,   80, 'carnation.jpg',    N'Cẩm chướng đơn bông nhiều màu',             5),
-(N'Giỏ hoa sen trắng',       N'Giỏ',   450000,  20, 'lotus.jpg',        N'Giỏ hoa sen trắng tinh khiết',              5),
+(N'Hoa hồng lẻ (1 cây)',     N'Cây',   20000,   100, 'single_rose.jpg', N'Hoa hồng đỏ bán lẻ theo từng cây',         2),
+(N'Nhành lan hồ điệp',       N'Cây',   150000,  50, 'single_orchid.jpg', N'Lan hồ điệp cắt cành lẻ, đa dạng màu sắc',  5),
+(N'Hoa cẩm chướng',          N'Cây',   15000,   80, 'carnation.jpg',    N'Cẩm chướng đơn cành nhiều màu',             5),
+(N'Giỏ hoa sen trắng',       N'Bó',    450000,  20, 'lotus.jpg',        N'Giỏ hoa sen trắng tinh khiết',              5),
 (N'Bó hoa cẩm tú cầu',       N'Bó',    550000,  15, 'hydrangea.jpg',    N'Bó cẩm tú cầu xanh biển',                   2),
-(N'Hoa đồng tiền đỏ',        N'Lẵng',  320000,  25, 'gerbera.jpg',      N'Lẵng hoa đồng tiền chúc mừng',              3),
-(N'Chậu lan hồ điệp',        N'Chậu', 1200000,  10, 'orchid_pot.jpg',   N'Chậu lan hồ điệp 3 cành loại A',            5),
+(N'Hoa đồng tiền đỏ',        N'Bó',    320000,  25, 'gerbera.jpg',      N'Lẵng hoa đồng tiền chúc mừng',              3),
+(N'Chậu lan hồ điệp',        N'Cây',   1200000,  10, 'orchid_pot.jpg',   N'Chậu lan hồ điệp 3 cành loại A',            5),
 (N'Bó hoa baby trắng',       N'Bó',    250000,  40, 'baby_breath.jpg',  N'Bó hoa baby trắng bọc giấy kraft',          2);
 
 -- Tài khoản (mật khẩu mẫu: "123456" đã băm SHA-256)

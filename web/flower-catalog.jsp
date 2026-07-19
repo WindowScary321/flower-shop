@@ -64,7 +64,11 @@
                     <div class="card h-100 flower-card shadow-sm border-0">
                         <div class="flower-image-container position-relative">
                             <a href="${pageContext.request.contextPath}/detail?id=${f.flowerId}">
-                                <img src="${pageContext.request.contextPath}/images/flowers/${empty f.image ? 'placeholder.jpg' : f.image}"
+                                <c:set var="imgUrl" value="${pageContext.request.contextPath}/images/flowers/${empty f.image ? 'placeholder.jpg' : f.image}" />
+                                <c:if test="${not empty f.image and (f.image.startsWith('http://') or f.image.startsWith('https://'))}">
+                                    <c:set var="imgUrl" value="${f.image}" />
+                                </c:if>
+                                <img src="${imgUrl}"
                                      class="card-img-top" alt="${f.flowerName}"
                                      onerror="this.src='https://placehold.co/400x400/f8f9fa/ff6b81?text=Flower'">
                             </a>

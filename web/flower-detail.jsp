@@ -6,7 +6,11 @@
 <div class="row mt-4 mb-5">
     <div class="col-md-5 mb-4 mb-md-0">
         <div class="position-relative">
-            <img src="${pageContext.request.contextPath}/images/flowers/${empty flower.image ? 'placeholder.jpg' : flower.image}"
+            <c:set var="imgUrl" value="${pageContext.request.contextPath}/images/flowers/${empty flower.image ? 'placeholder.jpg' : flower.image}" />
+            <c:if test="${not empty flower.image and (flower.image.startsWith('http://') or flower.image.startsWith('https://'))}">
+                <c:set var="imgUrl" value="${flower.image}" />
+            </c:if>
+            <img src="${imgUrl}"
                  class="img-fluid rounded-3 shadow w-100" alt="${flower.flowerName}"
                  style="max-height: 420px; object-fit: cover;"
                  onerror="this.src='https://placehold.co/600x500/f8f9fa/ff6b81?text=Flower'">
