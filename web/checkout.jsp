@@ -8,7 +8,7 @@
         <h2 class="text-primary fw-bold mb-4"><i class="bi bi-credit-card me-2"></i>Thông Tin Đặt Hàng</h2>
         
         <c:if test="${not empty error}">
-            <div class="alert alert-danger mb-3"><i class="bi bi-exclamation-triangle-fill me-2"></i>${error}</div>
+            <div class="alert alert-danger mb-3"><i class="bi bi-exclamation-triangle-fill me-2"></i><c:out value="${error}"/></div>
         </c:if>
         
         <div class="row">

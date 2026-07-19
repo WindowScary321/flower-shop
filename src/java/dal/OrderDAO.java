@@ -60,7 +60,7 @@ public class OrderDAO extends DBContext {
                 stDetail.setInt(1, orderId);
                 stDetail.setInt(2, item.getFlower().getFlowerId());
                 stDetail.setInt(3, item.getQuantity());
-                stDetail.setDouble(4, item.getFlower().getPrice());
+                stDetail.setDouble(4, item.getFlower().getFinalPrice());
                 stDetail.addBatch();
             }
             stDetail.executeBatch();

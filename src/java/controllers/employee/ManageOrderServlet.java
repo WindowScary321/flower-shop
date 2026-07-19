@@ -62,8 +62,14 @@ public class ManageOrderServlet extends HttpServlet {
                 String deliveryTimeStr = request.getParameter("deliveryTime");
                 
                 java.sql.Timestamp deliveryTime = null;
-                if (deliveryTimeStr != null && !deliveryTimeStr.trim().isEmpty()) {
-                    deliveryTime = java.sql.Timestamp.valueOf(deliveryTimeStr.replace("T", " ") + ":00");
+                try {
+                    if (deliveryTimeStr != null && !deliveryTimeStr.trim().isEmpty()) {
+                        deliveryTime = java.sql.Timestamp.valueOf(deliveryTimeStr.replace("T", " ") + ":00");
+                    }
+                } catch (IllegalArgumentException e) {
+                    request.getSession().setAttribute("errorMsg", "Định dạng thời gian giao hàng không hợp lệ.");
+                    response.sendRedirect(request.getContextPath() + "/employee/manage-orders");
+                    return;
                 }
                 
                 OrderDAO orderDAO = new OrderDAO();
@@ -72,6 +78,13 @@ public class ManageOrderServlet extends HttpServlet {
                 if (order != null && deliveryTime != null && deliveryTime.before(order.getOrderDate())) {
                     orderDAO.close();
                     request.getSession().setAttribute("errorMsg", "Thời gian giao hàng không được thiết lập trước thời gian đặt hàng.");
+                    response.sendRedirect(request.getContextPath() + "/employee/manage-orders");
+                    return;
+                }
+                
+                if (order != null && (order.getStatus().equals("Đã giao") || order.getStatus().equals("Đã hủy"))) {
+                    orderDAO.close();
+                    request.getSession().setAttribute("errorMsg", "Không thể cập nhật đơn hàng đã giao hoặc đã hủy.");
                     response.sendRedirect(request.getContextPath() + "/employee/manage-orders");
                     return;
                 }

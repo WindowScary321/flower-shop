@@ -168,9 +168,13 @@ public class ManageFlowerServlet extends HttpServlet {
         try {
             int id = Integer.parseInt(request.getParameter("id"));
             FlowerDAO flowerDAO = new FlowerDAO();
-            flowerDAO.deleteFlower(id);
+            boolean deleted = flowerDAO.deleteFlower(id);
             flowerDAO.close();
-            request.getSession().setAttribute("successMsg", "Xóa sản phẩm hoa thành công!");
+            if (deleted) {
+                request.getSession().setAttribute("successMsg", "Xóa sản phẩm hoa thành công!");
+            } else {
+                request.getSession().setAttribute("successMsg", "Sản phẩm đang nằm trong đơn hàng nên đã được ẩn (ngừng kinh doanh) thay vì xóa hoàn toàn.");
+            }
         } catch (NumberFormatException e) {
             request.getSession().setAttribute("errorMsg", "ID không hợp lệ!");
         }

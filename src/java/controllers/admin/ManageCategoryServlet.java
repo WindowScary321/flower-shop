@@ -76,9 +76,13 @@ public class ManageCategoryServlet extends HttpServlet {
         try {
             int id = Integer.parseInt(request.getParameter("id"));
             CategoryDAO categoryDAO = new CategoryDAO();
-            categoryDAO.deleteCategory(id);
+            boolean deleted = categoryDAO.deleteCategory(id);
             categoryDAO.close();
-            request.getSession().setAttribute("successMsg", "Xóa danh mục thành công!");
+            if (deleted) {
+                request.getSession().setAttribute("successMsg", "Xóa danh mục thành công!");
+            } else {
+                request.getSession().setAttribute("errorMsg", "Danh mục đang chứa sản phẩm hoa, không thể xóa!");
+            }
         } catch (NumberFormatException e) {
             request.getSession().setAttribute("errorMsg", "ID không hợp lệ!");
         }

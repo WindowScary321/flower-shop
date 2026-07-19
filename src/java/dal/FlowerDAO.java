@@ -93,14 +93,23 @@ public class FlowerDAO extends DBContext {
         }
     }
 
-    public void deleteFlower(int id) {
+    public boolean deleteFlower(int id) {
         String sql = "DELETE FROM Flowers WHERE FlowerId = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, id);
             st.executeUpdate();
+            return true;
         } catch (SQLException e) {
-            System.out.println("Error deleteFlower: " + e.getMessage());
+            if (e.getMessage() != null && (e.getMessage().contains("REFERENCE") || e.getMessage().contains("FOREIGN KEY") || e.getMessage().contains("FK_"))) {
+                try {
+                    PreparedStatement st2 = connection.prepareStatement("UPDATE Flowers SET Status = 0 WHERE FlowerId = ?");
+                    st2.setInt(1, id);
+                    st2.executeUpdate();
+                } catch (SQLException ex) {
+                }
+            }
+            return false;
         }
     }
 

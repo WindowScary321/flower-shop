@@ -63,7 +63,15 @@ public class ManageAccountServlet extends HttpServlet {
         a.setFullName(request.getParameter("fullName"));
         a.setEmail(email);
         a.setPhone(request.getParameter("phone"));
-        a.setRole(request.getParameter("role"));
+        String role = request.getParameter("role");
+        if (role == null || (!role.equals("admin") && !role.equals("employee") && !role.equals("customer"))) {
+            accountDAO.close();
+            request.getSession().setAttribute("errorMsg", "Role không hợp lệ!");
+            response.sendRedirect(request.getContextPath() + "/admin/manage-accounts");
+            return;
+        }
+
+        a.setRole(role);
         a.setStatus(true);
 
         accountDAO.insertAccount(a);

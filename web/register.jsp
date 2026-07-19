@@ -10,7 +10,7 @@
                 
                 <c:if test="${not empty error}">
                     <div class="alert alert-danger" role="alert">
-                        ${error}
+                        <c:out value="${error}" />
                     </div>
                 </c:if>
 

@@ -1,9 +1,11 @@
 package controllers.customer;
 
 import dal.OrderDAO;
+import dal.FlowerDAO;
 import models.Account;
 import models.CartItem;
 import models.Order;
+import models.Flower;
 import java.io.IOException;
 import java.util.List;
 import jakarta.servlet.ServletException;
@@ -33,6 +35,15 @@ public class CheckoutServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/cart");
             return;
         }
+
+        FlowerDAO flowerDAO = new FlowerDAO();
+        for (CartItem item : cart) {
+            Flower latestFlower = flowerDAO.getFlowerById(item.getFlower().getFlowerId());
+            if (latestFlower != null) {
+                item.setFlower(latestFlower); // Update price and info
+            }
+        }
+        flowerDAO.close();
 
         Account user = (Account) session.getAttribute("user");
         request.setAttribute("user", user);
@@ -72,9 +83,15 @@ public class CheckoutServlet extends HttpServlet {
         }
 
         double total = 0;
+        FlowerDAO flowerDAO = new FlowerDAO();
         for (CartItem item : cart) {
+            Flower latestFlower = flowerDAO.getFlowerById(item.getFlower().getFlowerId());
+            if (latestFlower != null) {
+                item.setFlower(latestFlower);
+            }
             total += item.getTotalPrice();
         }
+        flowerDAO.close();
 
         Order order = new Order();
         order.setReceiverName(receiverName.trim());

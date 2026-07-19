@@ -124,19 +124,32 @@ public class CartServlet extends HttpServlet {
         String[] quantities = request.getParameterValues("quantity");
 
         if (flowerIds != null && quantities != null) {
+            FlowerDAO flowerDAO = new FlowerDAO();
+            boolean overQuantity = false;
             for (int i = 0; i < flowerIds.length; i++) {
                 int fid = Integer.parseInt(flowerIds[i]);
                 int q = Integer.parseInt(quantities[i]);
                 if (q <= 0) {
                     cart.removeIf(item -> item.getFlower().getFlowerId() == fid);
                 } else {
-                    for (CartItem item : cart) {
-                        if (item.getFlower().getFlowerId() == fid) {
-                            item.setQuantity(q);
-                            break;
+                    Flower f = flowerDAO.getFlowerById(fid);
+                    if (f != null) {
+                        int finalQ = Math.min(q, f.getQuantity());
+                        if (q > f.getQuantity()) {
+                            overQuantity = true;
+                        }
+                        for (CartItem item : cart) {
+                            if (item.getFlower().getFlowerId() == fid) {
+                                item.setQuantity(finalQ);
+                                break;
+                            }
                         }
                     }
                 }
+            }
+            flowerDAO.close();
+            if (overQuantity) {
+                request.getSession().setAttribute("errorMsg", "Một số sản phẩm không đủ số lượng tồn kho nên đã được điều chỉnh lại.");
             }
         }
 

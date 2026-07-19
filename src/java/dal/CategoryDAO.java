@@ -72,14 +72,15 @@ public class CategoryDAO extends DBContext {
         }
     }
 
-    public void deleteCategory(int id) {
+    public boolean deleteCategory(int id) {
         String sql = "DELETE FROM Categories WHERE CategoryId = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, id);
             st.executeUpdate();
+            return true;
         } catch (SQLException e) {
-            System.out.println("Error deleteCategory: " + e.getMessage());
+            return false;
         }
     }
 }

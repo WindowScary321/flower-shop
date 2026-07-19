@@ -140,15 +140,33 @@
             <nav aria-label="Page navigation" class="mt-4">
                 <ul class="pagination justify-content-center">
                     <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-                        <a class="page-link" href="?page=${currentPage - 1}&status=${status}&fromDate=${fromDate}&toDate=${toDate}">Trang trước</a>
+                        <c:url var="prevUrl" value="">
+                            <c:param name="page" value="${currentPage - 1}"/>
+                            <c:param name="status" value="${status}"/>
+                            <c:param name="fromDate" value="${fromDate}"/>
+                            <c:param name="toDate" value="${toDate}"/>
+                        </c:url>
+                        <a class="page-link" href="${prevUrl}">Trang trước</a>
                     </li>
                     <c:forEach begin="1" end="${totalPages}" var="i">
                         <li class="page-item ${i == currentPage ? 'active' : ''}">
-                            <a class="page-link" href="?page=${i}&status=${status}&fromDate=${fromDate}&toDate=${toDate}">${i}</a>
+                            <c:url var="pageUrl" value="">
+                                <c:param name="page" value="${i}"/>
+                                <c:param name="status" value="${status}"/>
+                                <c:param name="fromDate" value="${fromDate}"/>
+                                <c:param name="toDate" value="${toDate}"/>
+                            </c:url>
+                            <a class="page-link" href="${pageUrl}">${i}</a>
                         </li>
                     </c:forEach>
                     <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                        <a class="page-link" href="?page=${currentPage + 1}&status=${status}&fromDate=${fromDate}&toDate=${toDate}">Trang sau</a>
+                        <c:url var="nextUrl" value="">
+                            <c:param name="page" value="${currentPage + 1}"/>
+                            <c:param name="status" value="${status}"/>
+                            <c:param name="fromDate" value="${fromDate}"/>
+                            <c:param name="toDate" value="${toDate}"/>
+                        </c:url>
+                        <a class="page-link" href="${nextUrl}">Trang sau</a>
                     </li>
                 </ul>
             </nav>
