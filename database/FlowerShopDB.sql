@@ -73,7 +73,9 @@ CREATE TABLE Orders (
     AccountId       INT            NOT NULL,
     CONSTRAINT FK_Orders_Accounts
         FOREIGN KEY (AccountId) REFERENCES Accounts(AccountId)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT CHK_DeliveryTime
+        CHECK (Status != N'Đã giao' OR DeliveryTime IS NOT NULL)
 );
 
 -- ============================================

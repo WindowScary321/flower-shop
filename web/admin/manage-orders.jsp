@@ -117,6 +117,10 @@
                                                 <option value="Đang giao" ${order.status == 'Đang giao' ? 'selected' : ''}>Đang giao</option>
                                                 <option value="Đã giao" ${order.status == 'Đã giao' ? 'selected' : ''}>Đã giao</option>
                                             </select>
+                                            <div class="form-check text-start mb-1 mt-1">
+                                                <input class="form-check-input" type="checkbox" name="paymentStatus" value="true" id="payAdmin-${order.orderId}" ${order.paymentStatus ? 'checked' : ''}>
+                                                <label class="form-check-label small text-muted" for="payAdmin-${order.orderId}">Đã thanh toán</label>
+                                            </div>
                                             <div class="d-flex gap-1">
                                                 <fmt:formatDate value="${order.deliveryTime}" pattern="yyyy-MM-dd'T'HH:mm" var="formattedDeliveryTime"/>
                                                 <fmt:formatDate value="${order.orderDate}" pattern="yyyy-MM-dd'T'HH:mm" var="minOrderDate"/>

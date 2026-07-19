@@ -87,6 +87,13 @@ public class ManageOrderServlet extends HttpServlet {
                     response.sendRedirect(request.getContextPath() + "/employee/manage-orders");
                     return;
                 }
+
+                if (newStatus != null && newStatus.equals("Đã giao") && deliveryTime == null) {
+                    orderDAO.close();
+                    request.getSession().setAttribute("errorMsg", "Đơn hàng Đã giao bắt buộc phải có thời gian giao hàng.");
+                    response.sendRedirect(request.getContextPath() + "/employee/manage-orders");
+                    return;
+                }
                 
                 if (order != null && (order.getStatus().equals("Đã giao") || order.getStatus().equals("Đã hủy"))) {
                     orderDAO.close();
@@ -97,6 +104,8 @@ public class ManageOrderServlet extends HttpServlet {
                 
                 // Employee chỉ được đặt trạng thái giao hàng
                 if (newStatus != null && (newStatus.equals("Đang giao") || newStatus.equals("Đã giao") || newStatus.equals("Chờ xử lý"))) {
+                    boolean paymentStatus = "true".equals(request.getParameter("paymentStatus"));
+                    orderDAO.updatePaymentStatus(orderId, paymentStatus);
                     orderDAO.updateOrderStatusAndDeliveryTime(orderId, newStatus, deliveryTime);
                     orderDAO.close();
                     request.getSession().setAttribute("successMsg", "Cập nhật trạng thái đơn hàng #" + orderId + " thành công.");
