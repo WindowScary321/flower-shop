@@ -95,6 +95,17 @@
                         <small class="text-muted d-block"><i class="bi bi-person me-1"></i>Người nhận: <strong>${order.receiverName}</strong></small>
                         <small class="text-muted d-block"><i class="bi bi-telephone me-1"></i>SĐT: ${order.receiverPhone}</small>
                         <small class="text-muted d-block"><i class="bi bi-geo-alt me-1"></i>Địa chỉ: ${order.receiverAddress}</small>
+                        <small class="text-info fw-bold d-block mt-1">
+                            <i class="bi bi-clock-history me-1"></i>Giao hàng: 
+                            <c:choose>
+                                <c:when test="${not empty order.deliveryTime}">
+                                    <fmt:formatDate value="${order.deliveryTime}" pattern="dd/MM/yyyy HH:mm"/>
+                                </c:when>
+                                <c:otherwise>
+                                    Đang chờ sắp xếp
+                                </c:otherwise>
+                            </c:choose>
+                        </small>
                         
                         <div class="mt-2">
                             <small class="text-muted"><i class="bi bi-credit-card me-1"></i>Thanh toán: 

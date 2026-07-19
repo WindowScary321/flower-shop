@@ -52,5 +52,10 @@ Giai đoạn 3 tập trung vào việc triển khai toàn bộ luồng nghiệp 
    - Sửa lỗi cú pháp CMD: Thay đổi hiển thị thông tin kết nối tài khoản từ `(sa/123)` sang `[sa/123]` nhằm tránh lỗi đóng ngoặc sớm của khối lệnh `if` gây lỗi cú pháp của tệp `.bat` (lỗi `. was unexpected at this time`).
    - Ngôn ngữ hiển thị: Đã Việt hóa không dấu để đảm bảo hiển thị chuẩn xác trên cửa sổ Command Prompt của Windows.
 
+10. **Quản lý Thời gian giao hàng**:
+   - Thêm trường `DeliveryTime (DATETIME)` vào DB.
+   - Admin và Nhân viên thiết lập lịch giao hàng (datetime-local) khi cập nhật trạng thái đơn hàng.
+   - Khách hàng xem được thời gian dự kiến giao hàng trong Lịch sử đơn hàng; nếu chưa có, sẽ hiển thị "Đang chờ sắp xếp".
+
 ## Hướng dẫn các bước tiếp theo
 - **Giai đoạn 4**: Tiếp tục tối ưu hóa trải nghiệm, thêm phân trang, tìm kiếm động và xây dựng báo cáo thống kê.

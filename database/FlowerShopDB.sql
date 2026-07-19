@@ -67,6 +67,7 @@ CREATE TABLE Orders (
                     CHECK (Status IN (N'Chờ xử lý', N'Đang giao', N'Đã giao', N'Đã hủy')),
     PaymentMethod   VARCHAR(20)    DEFAULT 'COD' CHECK (PaymentMethod IN ('COD', 'QR')),
     PaymentStatus   BIT            DEFAULT 0, -- 0: Chưa thanh toán, 1: Đã thanh toán
+    DeliveryTime    DATETIME       NULL,
     AccountId       INT            NOT NULL,
     CONSTRAINT FK_Orders_Accounts
         FOREIGN KEY (AccountId) REFERENCES Accounts(AccountId)
@@ -141,15 +142,15 @@ INSERT INTO Accounts (Username, Password, FullName, Email, Phone, Role) VALUES
     N'Đặng Hoàng Long',   'hoanglong@gmail.com',    '0901000007', 'customer');
 
 -- Đơn hàng mẫu
-INSERT INTO Orders (TotalAmount, ReceiverName, ReceiverAddress, ReceiverPhone, Status, PaymentMethod, PaymentStatus, AccountId) VALUES
-(700000,  N'Nguyễn Văn A', N'123 Nguyễn Huệ, Q.1, TP.HCM',   '0909111222', N'Đã giao', 'COD', 1, 3),
-(800000,  N'Trần Thị B',   N'456 Lê Lợi, Q.3, TP.HCM',       '0909333444', N'Đang giao', 'QR', 1, 3),
-(350000,  N'Phạm Văn C',   N'789 Hai Bà Trưng, Q.1, TP.HCM',  '0909555666', N'Chờ xử lý', 'QR', 0, 4),
-(1200000, N'Hoàng Gia Bảo',N'101 Hoàng Sa, Q.3, TP.HCM',     '0901000005', N'Đã giao',   'COD', 1, 5),
-(550000,  N'Vũ Thanh Thảo',N'202 Trường Sa, Q.Phú Nhuận, TP.HCM','0901000006', N'Đang giao', 'QR', 1, 6),
-(900000,  N'Đặng Hoàng Long',N'303 Cách Mạng Tháng 8, Q.10, TP.HCM','0901000007', N'Đã hủy', 'COD', 0, 7),
-(700000,  N'Trần Minh Đức',N'404 Võ Văn Tần, Q.3, TP.HCM',   '0909999888', N'Chờ xử lý', 'QR', 0, 3),
-(450000,  N'Lê Khách Hàng',N'505 Điện Biên Phủ, Q.Bình Thạnh, TP.HCM','0901000003', N'Đã giao', 'COD', 1, 3);
+INSERT INTO Orders (TotalAmount, ReceiverName, ReceiverAddress, ReceiverPhone, Status, PaymentMethod, PaymentStatus, DeliveryTime, AccountId) VALUES
+(700000,  N'Nguyễn Văn A', N'123 Nguyễn Huệ, Q.1, TP.HCM',   '0909111222', N'Đã giao', 'COD', 1, '2026-07-21 14:30:00', 3),
+(800000,  N'Trần Thị B',   N'456 Lê Lợi, Q.3, TP.HCM',       '0909333444', N'Đang giao', 'QR', 1, '2026-07-20 09:00:00', 3),
+(350000,  N'Phạm Văn C',   N'789 Hai Bà Trưng, Q.1, TP.HCM',  '0909555666', N'Chờ xử lý', 'QR', 0, NULL, 4),
+(1200000, N'Hoàng Gia Bảo',N'101 Hoàng Sa, Q.3, TP.HCM',     '0901000005', N'Đã giao',   'COD', 1, '2026-07-18 10:15:00', 5),
+(550000,  N'Vũ Thanh Thảo',N'202 Trường Sa, Q.Phú Nhuận, TP.HCM','0901000006', N'Đang giao', 'QR', 1, '2026-07-22 15:00:00', 6),
+(900000,  N'Đặng Hoàng Long',N'303 Cách Mạng Tháng 8, Q.10, TP.HCM','0901000007', N'Đã hủy', 'COD', 0, NULL, 7),
+(700000,  N'Trần Minh Đức',N'404 Võ Văn Tần, Q.3, TP.HCM',   '0909999888', N'Chờ xử lý', 'QR', 0, NULL, 3),
+(450000,  N'Lê Khách Hàng',N'505 Điện Biên Phủ, Q.Bình Thạnh, TP.HCM','0901000003', N'Đã giao', 'COD', 1, '2026-07-17 08:30:00', 3);
 
 -- Chi tiết đơn hàng
 INSERT INTO OrderDetails (OrderId, FlowerId, Quantity, UnitPrice) VALUES

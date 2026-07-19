@@ -84,6 +84,11 @@
                                         <c:when test="${order.paymentStatus}"><span class="badge bg-success" style="font-size:0.7em;">Đã thanh toán</span></c:when>
                                         <c:otherwise><span class="badge bg-secondary" style="font-size:0.7em;">Chưa thanh toán</span></c:otherwise>
                                     </c:choose>
+                                    <c:if test="${not empty order.deliveryTime}">
+                                        <div class="mt-1 small text-info fw-bold">
+                                            <i class="bi bi-clock-history"></i> Giao: <fmt:formatDate value="${order.deliveryTime}" pattern="dd/MM/yyyy HH:mm"/>
+                                        </div>
+                                    </c:if>
                                 </td>
                                 <td class="fw-bold text-danger">
                                     <fmt:formatNumber value="${order.totalAmount}" pattern="#,###"/> đ
@@ -99,17 +104,21 @@
                                 </td>
                                 <td class="text-center">
                                     <c:if test="${order.status != 'Đã giao' && order.status != 'Đã hủy'}">
-                                        <form action="${pageContext.request.contextPath}/admin/manage-orders" method="POST" class="d-inline-flex gap-1">
+                                        <form action="${pageContext.request.contextPath}/admin/manage-orders" method="POST" class="d-inline-flex flex-column gap-2">
                                             <input type="hidden" name="action" value="updateStatus">
                                             <input type="hidden" name="orderId" value="${order.orderId}">
-                                            <select name="newStatus" class="form-select form-select-sm" style="width:130px;">
+                                            <select name="newStatus" class="form-select form-select-sm" style="width:160px;">
                                                 <option value="Chờ xử lý" ${order.status == 'Chờ xử lý' ? 'selected' : ''}>Chờ xử lý</option>
                                                 <option value="Đang giao" ${order.status == 'Đang giao' ? 'selected' : ''}>Đang giao</option>
                                                 <option value="Đã giao" ${order.status == 'Đã giao' ? 'selected' : ''}>Đã giao</option>
                                             </select>
-                                            <button type="submit" class="btn btn-sm btn-primary">
-                                                <i class="bi bi-check-lg"></i>
-                                            </button>
+                                            <div class="d-flex gap-1">
+                                                <fmt:formatDate value="${order.deliveryTime}" pattern="yyyy-MM-dd'T'HH:mm" var="formattedDeliveryTime"/>
+                                                <input type="datetime-local" name="deliveryTime" class="form-control form-control-sm" style="width:130px;" value="${formattedDeliveryTime}">
+                                                <button type="submit" class="btn btn-sm btn-primary">
+                                                    <i class="bi bi-check-lg"></i>
+                                                </button>
+                                            </div>
                                         </form>
                                     </c:if>
                                 </td>

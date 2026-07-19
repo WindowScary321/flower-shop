@@ -59,8 +59,15 @@ public class ManageOrderServlet extends HttpServlet {
             try {
                 int orderId = Integer.parseInt(request.getParameter("orderId"));
                 String newStatus = request.getParameter("newStatus");
+                String deliveryTimeStr = request.getParameter("deliveryTime");
+                
+                java.sql.Timestamp deliveryTime = null;
+                if (deliveryTimeStr != null && !deliveryTimeStr.trim().isEmpty()) {
+                    deliveryTime = java.sql.Timestamp.valueOf(deliveryTimeStr.replace("T", " ") + ":00");
+                }
+                
                 if (newStatus != null && (newStatus.equals("Chờ xử lý") || newStatus.equals("Đang giao") || newStatus.equals("Đã giao"))) {
-                    orderDAO.updateOrderStatus(orderId, newStatus);
+                    orderDAO.updateOrderStatusAndDeliveryTime(orderId, newStatus, deliveryTime);
                     request.getSession().setAttribute("successMsg", "Cập nhật trạng thái đơn hàng #" + orderId + " thành công.");
                 } else {
                     request.getSession().setAttribute("errorMsg", "Trạng thái không hợp lệ.");

@@ -13,11 +13,12 @@ public class Order {
     private int accountId;
     private String paymentMethod;
     private boolean paymentStatus;
+    private Timestamp deliveryTime;
 
     public Order() {
     }
 
-    public Order(int orderId, Timestamp orderDate, double totalAmount, String receiverName, String receiverAddress, String receiverPhone, String status, int accountId, String paymentMethod, boolean paymentStatus) {
+    public Order(int orderId, Timestamp orderDate, double totalAmount, String receiverName, String receiverAddress, String receiverPhone, String status, int accountId, String paymentMethod, boolean paymentStatus, Timestamp deliveryTime) {
         this.orderId = orderId;
         this.orderDate = orderDate;
         this.totalAmount = totalAmount;
@@ -28,6 +29,7 @@ public class Order {
         this.accountId = accountId;
         this.paymentMethod = paymentMethod;
         this.paymentStatus = paymentStatus;
+        this.deliveryTime = deliveryTime;
     }
 
     public int getOrderId() {
@@ -108,5 +110,13 @@ public class Order {
 
     public void setPaymentStatus(boolean paymentStatus) {
         this.paymentStatus = paymentStatus;
+    }
+
+    public Timestamp getDeliveryTime() {
+        return deliveryTime;
+    }
+
+    public void setDeliveryTime(Timestamp deliveryTime) {
+        this.deliveryTime = deliveryTime;
     }
 }

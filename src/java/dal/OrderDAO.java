@@ -121,15 +121,16 @@ public class OrderDAO extends DBContext {
         return null;
     }
 
-    public void updateOrderStatus(int orderId, String newStatus) {
-        String sql = "UPDATE Orders SET Status = ? WHERE OrderId = ?";
+    public void updateOrderStatusAndDeliveryTime(int orderId, String newStatus, Timestamp deliveryTime) {
+        String sql = "UPDATE Orders SET Status = ?, DeliveryTime = ? WHERE OrderId = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, newStatus);
-            st.setInt(2, orderId);
+            st.setTimestamp(2, deliveryTime);
+            st.setInt(3, orderId);
             st.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error updateOrderStatus: " + e.getMessage());
+            System.out.println("Error updateOrderStatusAndDeliveryTime: " + e.getMessage());
         }
     }
 
@@ -198,6 +199,7 @@ public class OrderDAO extends DBContext {
         o.setAccountId(rs.getInt("AccountId"));
         o.setPaymentMethod(rs.getString("PaymentMethod"));
         o.setPaymentStatus(rs.getBoolean("PaymentStatus"));
+        o.setDeliveryTime(rs.getTimestamp("DeliveryTime"));
         return o;
     }
 
