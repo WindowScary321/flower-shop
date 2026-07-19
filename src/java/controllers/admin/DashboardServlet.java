@@ -34,12 +34,16 @@ public class DashboardServlet extends HttpServlet {
         
         List<RevenueByMonth> revenueData = reportDAO.getRevenueByMonth(currentYear);
         List<TopSellingFlower> topFlowers = reportDAO.getTopSellingFlowers(5);
+        List<models.RevenueByCategory> revByCategory = reportDAO.getRevenueByCategory();
+        double cancelledRatio = reportDAO.getCancelledOrderRatio();
         reportDAO.close();
 
         request.setAttribute("summary", summary);
         request.setAttribute("revenueData", revenueData);
         request.setAttribute("topFlowers", topFlowers);
         request.setAttribute("selectedYear", currentYear);
+        request.setAttribute("revByCategory", revByCategory);
+        request.setAttribute("cancelledRatio", cancelledRatio);
         
         request.getRequestDispatcher("/admin/dashboard.jsp").forward(request, response);
     }

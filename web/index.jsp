@@ -18,36 +18,34 @@
 
             <!-- Features Section -->
             <div class="container mb-5">
-                <div class="text-center mb-4 position-relative">
-                    <hr class="position-absolute top-50 w-100" style="z-index: -1;">
-                </div>
-                <div class="row text-center mt-4">
-                    <div class="col-md-3">
-                        <div class="rounded-circle border border-danger border-2 d-inline-flex align-items-center justify-content-center mb-3"
+                <div class="row text-center mt-4 position-relative">
+                    <hr class="position-absolute w-100" style="top: 40px; left: 0; z-index: 0; margin: 0; border: 0; border-top: 1px solid #dee2e6; opacity: 1;">
+                    <div class="col-md-3 position-relative" style="z-index: 1;">
+                        <div class="rounded-circle border border-danger border-2 d-inline-flex align-items-center justify-content-center mb-3 bg-white"
                             style="width: 80px; height: 80px;">
                             <i class="bi bi-truck text-danger" style="font-size: 2.5rem;"></i>
                         </div>
                         <h6 class="fw-bold">MIỄN PHÍ GIAO HOA</h6>
                         <p class="small text-muted mb-0">NỘI THÀNH CÁC TỈNH</p>
                     </div>
-                    <div class="col-md-3">
-                        <div class="rounded-circle border border-danger border-2 d-inline-flex align-items-center justify-content-center mb-3"
+                    <div class="col-md-3 position-relative" style="z-index: 1;">
+                        <div class="rounded-circle border border-danger border-2 d-inline-flex align-items-center justify-content-center mb-3 bg-white"
                             style="width: 80px; height: 80px;">
                             <i class="bi bi-shield-check text-danger" style="font-size: 2.5rem;"></i>
                         </div>
                         <h6 class="fw-bold">0% RỦI RO KHI</h6>
                         <p class="small text-muted mb-0">MUA HOA ONLINE</p>
                     </div>
-                    <div class="col-md-3">
-                        <div class="rounded-circle border border-danger border-2 d-inline-flex align-items-center justify-content-center mb-3"
+                    <div class="col-md-3 position-relative" style="z-index: 1;">
+                        <div class="rounded-circle border border-danger border-2 d-inline-flex align-items-center justify-content-center mb-3 bg-white"
                             style="width: 80px; height: 80px;">
                             <i class="bi bi-camera text-danger" style="font-size: 2.5rem;"></i>
                         </div>
                         <h6 class="fw-bold">GỬI HÌNH ẢNH</h6>
                         <p class="small text-muted mb-0">TRƯỚC & SAU GIAO HOA</p>
                     </div>
-                    <div class="col-md-3">
-                        <div class="rounded-circle border border-danger border-2 d-inline-flex align-items-center justify-content-center mb-3"
+                    <div class="col-md-3 position-relative" style="z-index: 1;">
+                        <div class="rounded-circle border border-danger border-2 d-inline-flex align-items-center justify-content-center mb-3 bg-white"
                             style="width: 80px; height: 80px;">
                             <i class="bi bi-flower1 text-danger" style="font-size: 2.5rem;"></i>
                         </div>

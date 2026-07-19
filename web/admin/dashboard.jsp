@@ -15,8 +15,8 @@
         <h2 class="text-primary fw-bold mb-4">Dashboard Báo Cáo & Thống Kê</h2>
         
         <!-- Summary Cards -->
-        <div class="row g-3 mb-4">
-            <div class="col-md-3">
+        <div class="row g-3 mb-4 row-cols-1 row-cols-md-5">
+            <div class="col">
                 <div class="card bg-primary text-white h-100 shadow-sm border-0">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-2">
@@ -27,7 +27,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col">
                 <div class="card bg-success text-white h-100 shadow-sm border-0">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-2">
@@ -38,7 +38,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col">
                 <div class="card bg-warning text-dark h-100 shadow-sm border-0">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-2">
@@ -49,7 +49,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col">
                 <div class="card bg-info text-dark h-100 shadow-sm border-0">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-2">
@@ -57,6 +57,17 @@
                             <i class="bi bi-people fs-4"></i>
                         </div>
                         <h4 class="fw-bold mb-0">${summary.totalCustomers}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card bg-danger text-white h-100 shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="card-title mb-0">Tỷ lệ hủy đơn</h6>
+                            <i class="bi bi-x-octagon fs-4"></i>
+                        </div>
+                        <h4 class="fw-bold mb-0"><fmt:formatNumber value="${cancelledRatio}" pattern="#,##0.0"/>%</h4>
                     </div>
                 </div>
             </div>
@@ -114,6 +125,20 @@
                 </div>
             </div>
         </div>
+
+        <div class="row">
+            <!-- Revenue By Category Chart -->
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0 fw-bold">Doanh Thu Theo Danh Mục</h5>
+                    </div>
+                    <div class="card-body d-flex justify-content-center">
+                        <canvas id="categoryChart" style="max-height: 300px; max-width: 300px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -165,6 +190,57 @@
                             }
                             if (context.parsed.y !== null) {
                                 label += new Intl.NumberFormat('vi-VN').format(context.parsed.y) + ' đ';
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Prepare Data for Category Chart
+    const catLabels = [];
+    const catDataPoints = [];
+    
+    <c:forEach var="catItem" items="${revByCategory}">
+        catLabels.push('${catItem.categoryName}');
+        catDataPoints.push(${catItem.totalRevenue});
+    </c:forEach>
+
+    // Render Category Chart
+    const ctxCat = document.getElementById('categoryChart').getContext('2d');
+    new Chart(ctxCat, {
+        type: 'doughnut',
+        data: {
+            labels: catLabels,
+            datasets: [{
+                label: 'Doanh Thu',
+                data: catDataPoints,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.7)',
+                    'rgba(54, 162, 235, 0.7)',
+                    'rgba(255, 206, 86, 0.7)',
+                    'rgba(75, 192, 192, 0.7)',
+                    'rgba(153, 102, 255, 0.7)',
+                    'rgba(255, 159, 64, 0.7)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed !== null) {
+                                label += new Intl.NumberFormat('vi-VN').format(context.parsed) + ' đ';
                             }
                             return label;
                         }

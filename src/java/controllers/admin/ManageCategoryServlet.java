@@ -48,8 +48,14 @@ public class ManageCategoryServlet extends HttpServlet {
 
     private void addCategory(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
+        String categoryName = request.getParameter("categoryName");
+        if (categoryName == null || categoryName.trim().isEmpty()) {
+            request.getSession().setAttribute("errorMsg", "Tên danh mục không được để trống!");
+            response.sendRedirect(request.getContextPath() + "/admin/manage-categories");
+            return;
+        }
         Category c = new Category();
-        c.setCategoryName(request.getParameter("categoryName"));
+        c.setCategoryName(categoryName);
         c.setDescription(request.getParameter("description"));
         CategoryDAO categoryDAO = new CategoryDAO();
         categoryDAO.insertCategory(c);
@@ -60,9 +66,15 @@ public class ManageCategoryServlet extends HttpServlet {
 
     private void editCategory(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
+        String categoryName = request.getParameter("categoryName");
+        if (categoryName == null || categoryName.trim().isEmpty()) {
+            request.getSession().setAttribute("errorMsg", "Tên danh mục không được để trống!");
+            response.sendRedirect(request.getContextPath() + "/admin/manage-categories");
+            return;
+        }
         Category c = new Category();
         c.setCategoryId(Integer.parseInt(request.getParameter("categoryId")));
-        c.setCategoryName(request.getParameter("categoryName"));
+        c.setCategoryName(categoryName);
         c.setDescription(request.getParameter("description"));
         CategoryDAO categoryDAO = new CategoryDAO();
         categoryDAO.updateCategory(c);

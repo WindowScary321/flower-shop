@@ -110,4 +110,47 @@ public class ReportDAO extends DBContext {
         }
         return list;
     }
+
+    public List<models.RevenueByCategory> getRevenueByCategory() {
+        List<models.RevenueByCategory> list = new ArrayList<>();
+        String sql = "SELECT c.CategoryName, ISNULL(SUM(od.Quantity * od.Price * (100 - f.Discount) / 100.0), 0) as TotalRevenue " +
+                     "FROM Categories c " +
+                     "JOIN Flowers f ON c.CategoryId = f.CategoryId " +
+                     "JOIN OrderDetails od ON f.FlowerId = od.FlowerId " +
+                     "JOIN Orders o ON o.OrderId = od.OrderId " +
+                     "WHERE o.Status != N'Đã hủy' " +
+                     "GROUP BY c.CategoryName " +
+                     "ORDER BY TotalRevenue DESC";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                list.add(new models.RevenueByCategory(
+                    rs.getString("CategoryName"),
+                    rs.getDouble("TotalRevenue")
+                ));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getRevenueByCategory: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public double getCancelledOrderRatio() {
+        double ratio = 0;
+        String sql = "SELECT " +
+                     "  CAST(SUM(CASE WHEN Status = N'Đã hủy' THEN 1 ELSE 0 END) AS FLOAT) / " +
+                     "  NULLIF(COUNT(*), 0) * 100 AS CancelledRatio " +
+                     "FROM Orders";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                ratio = rs.getDouble("CancelledRatio");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getCancelledOrderRatio: " + e.getMessage());
+        }
+        return ratio;
+    }
 }

@@ -45,6 +45,24 @@ public class RegisterServlet extends HttpServlet {
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
+
+        if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            request.setAttribute("error", "Email không đúng định dạng");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
+        }
+
+        if (!phone.matches("0[0-9]{9,10}")) {
+            request.setAttribute("error", "Số điện thoại không hợp lệ (Bắt đầu bằng 0, độ dài 10-11 số)");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
+        }
+
+        if (!password.matches("^(?=.*[a-zA-Z])(?=.*\\d).{8,}$")) {
+            request.setAttribute("error", "Mật khẩu phải có ít nhất 8 ký tự, bao gồm cả chữ và số");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
+        }
         
         if (!password.equals(confirm)) {
             request.setAttribute("error", "Mật khẩu xác nhận không khớp");

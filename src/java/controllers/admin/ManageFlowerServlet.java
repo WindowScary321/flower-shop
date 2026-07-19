@@ -118,48 +118,114 @@ public class ManageFlowerServlet extends HttpServlet {
 
     private void addFlower(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        Flower f = new Flower();
-        f.setFlowerName(request.getParameter("flowerName"));
-        f.setUnit(request.getParameter("unit"));
-        f.setPrice(Double.parseDouble(request.getParameter("price")));
-        f.setQuantity(Integer.parseInt(request.getParameter("quantity")));
-        f.setImage(request.getParameter("image"));
-        f.setDescription(request.getParameter("description"));
-        f.setCategoryId(Integer.parseInt(request.getParameter("categoryId")));
-        
-        String discountStr = request.getParameter("discount");
-        f.setDiscount((discountStr != null && !discountStr.trim().isEmpty()) ? Integer.parseInt(discountStr) : 0);
-        
-        f.setStatus("1".equals(request.getParameter("status")));
-        
-        FlowerDAO flowerDAO = new FlowerDAO();
-        flowerDAO.insertFlower(f);
-        flowerDAO.close();
-        request.getSession().setAttribute("successMsg", "Thêm sản phẩm hoa thành công!");
+        try {
+            String flowerName = request.getParameter("flowerName");
+            if (flowerName == null || flowerName.trim().isEmpty()) {
+                throw new IllegalArgumentException("Tên sản phẩm không được để trống!");
+            }
+            
+            String categoryIdStr = request.getParameter("categoryId");
+            if (categoryIdStr == null || categoryIdStr.trim().isEmpty()) {
+                throw new IllegalArgumentException("Vui lòng chọn danh mục!");
+            }
+
+            double price = Double.parseDouble(request.getParameter("price"));
+            if (price <= 0) {
+                throw new IllegalArgumentException("Giá sản phẩm phải lớn hơn 0!");
+            }
+
+            int quantity = Integer.parseInt(request.getParameter("quantity"));
+            if (quantity < 0) {
+                throw new IllegalArgumentException("Số lượng không được âm!");
+            }
+
+            Flower f = new Flower();
+            f.setFlowerName(flowerName);
+            f.setUnit(request.getParameter("unit"));
+            f.setPrice(price);
+            f.setQuantity(quantity);
+            f.setImage(request.getParameter("image"));
+            f.setDescription(request.getParameter("description"));
+            f.setCategoryId(Integer.parseInt(categoryIdStr));
+            
+            String discountStr = request.getParameter("discount");
+            int discount = (discountStr != null && !discountStr.trim().isEmpty()) ? Integer.parseInt(discountStr) : 0;
+            if (discount < 0 || discount > 100) {
+                throw new IllegalArgumentException("Giảm giá phải từ 0 đến 100%!");
+            }
+            f.setDiscount(discount);
+            
+            f.setStatus("1".equals(request.getParameter("status")));
+            
+            FlowerDAO flowerDAO = new FlowerDAO();
+            flowerDAO.insertFlower(f);
+            flowerDAO.close();
+            request.getSession().setAttribute("successMsg", "Thêm sản phẩm hoa thành công!");
+        } catch (NumberFormatException e) {
+            request.getSession().setAttribute("errorMsg", "Giá trị số không hợp lệ!");
+        } catch (IllegalArgumentException e) {
+            request.getSession().setAttribute("errorMsg", e.getMessage());
+        } catch (Exception e) {
+            request.getSession().setAttribute("errorMsg", "Đã xảy ra lỗi hệ thống khi thêm hoa.");
+        }
         response.sendRedirect(request.getContextPath() + "/admin/manage-flowers");
     }
 
     private void editFlower(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        Flower f = new Flower();
-        f.setFlowerId(Integer.parseInt(request.getParameter("flowerId")));
-        f.setFlowerName(request.getParameter("flowerName"));
-        f.setUnit(request.getParameter("unit"));
-        f.setPrice(Double.parseDouble(request.getParameter("price")));
-        f.setQuantity(Integer.parseInt(request.getParameter("quantity")));
-        f.setImage(request.getParameter("image"));
-        f.setDescription(request.getParameter("description"));
-        f.setCategoryId(Integer.parseInt(request.getParameter("categoryId")));
-        
-        String discountStr = request.getParameter("discount");
-        f.setDiscount((discountStr != null && !discountStr.trim().isEmpty()) ? Integer.parseInt(discountStr) : 0);
-        
-        f.setStatus("1".equals(request.getParameter("status")));
-        
-        FlowerDAO flowerDAO = new FlowerDAO();
-        flowerDAO.updateFlower(f);
-        flowerDAO.close();
-        request.getSession().setAttribute("successMsg", "Cập nhật sản phẩm hoa thành công!");
+        try {
+            int flowerId = Integer.parseInt(request.getParameter("flowerId"));
+            
+            String flowerName = request.getParameter("flowerName");
+            if (flowerName == null || flowerName.trim().isEmpty()) {
+                throw new IllegalArgumentException("Tên sản phẩm không được để trống!");
+            }
+            
+            String categoryIdStr = request.getParameter("categoryId");
+            if (categoryIdStr == null || categoryIdStr.trim().isEmpty()) {
+                throw new IllegalArgumentException("Vui lòng chọn danh mục!");
+            }
+
+            double price = Double.parseDouble(request.getParameter("price"));
+            if (price <= 0) {
+                throw new IllegalArgumentException("Giá sản phẩm phải lớn hơn 0!");
+            }
+
+            int quantity = Integer.parseInt(request.getParameter("quantity"));
+            if (quantity < 0) {
+                throw new IllegalArgumentException("Số lượng không được âm!");
+            }
+
+            Flower f = new Flower();
+            f.setFlowerId(flowerId);
+            f.setFlowerName(flowerName);
+            f.setUnit(request.getParameter("unit"));
+            f.setPrice(price);
+            f.setQuantity(quantity);
+            f.setImage(request.getParameter("image"));
+            f.setDescription(request.getParameter("description"));
+            f.setCategoryId(Integer.parseInt(categoryIdStr));
+            
+            String discountStr = request.getParameter("discount");
+            int discount = (discountStr != null && !discountStr.trim().isEmpty()) ? Integer.parseInt(discountStr) : 0;
+            if (discount < 0 || discount > 100) {
+                throw new IllegalArgumentException("Giảm giá phải từ 0 đến 100%!");
+            }
+            f.setDiscount(discount);
+            
+            f.setStatus("1".equals(request.getParameter("status")));
+            
+            FlowerDAO flowerDAO = new FlowerDAO();
+            flowerDAO.updateFlower(f);
+            flowerDAO.close();
+            request.getSession().setAttribute("successMsg", "Cập nhật sản phẩm hoa thành công!");
+        } catch (NumberFormatException e) {
+            request.getSession().setAttribute("errorMsg", "Giá trị số không hợp lệ!");
+        } catch (IllegalArgumentException e) {
+            request.getSession().setAttribute("errorMsg", e.getMessage());
+        } catch (Exception e) {
+            request.getSession().setAttribute("errorMsg", "Đã xảy ra lỗi hệ thống khi cập nhật hoa.");
+        }
         response.sendRedirect(request.getContextPath() + "/admin/manage-flowers");
     }
 
