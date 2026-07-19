@@ -103,7 +103,7 @@
                             <a href="${pageContext.request.contextPath}/detail?id=${f.flowerId}" class="btn btn-outline-primary btn-sm rounded-pill px-3 me-1">
                                 <i class="bi bi-eye"></i> Chi tiết
                             </a>
-                            <c:if test="${f.quantity > 0}">
+                            <c:if test="${f.quantity > 0 and (empty sessionScope.user or sessionScope.user.role == 'customer')}">
                                 <form action="${pageContext.request.contextPath}/cart" method="POST" class="d-inline">
                                     <input type="hidden" name="action" value="add">
                                     <input type="hidden" name="flowerId" value="${f.flowerId}">

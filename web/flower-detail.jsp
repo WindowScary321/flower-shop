@@ -54,7 +54,7 @@
         
         <p class="text-secondary mb-4">${flower.description}</p>
         
-        <c:if test="${flower.quantity > 0}">
+        <c:if test="${flower.quantity > 0 and (empty sessionScope.user or sessionScope.user.role == 'customer')}">
             <form action="${pageContext.request.contextPath}/cart" method="POST" class="d-flex align-items-center gap-3 flex-wrap">
                 <input type="hidden" name="action" value="add">
                 <input type="hidden" name="flowerId" value="${flower.flowerId}">
@@ -77,7 +77,7 @@
             <a href="${pageContext.request.contextPath}/flower-catalog" class="btn btn-outline-secondary rounded-pill">
                 <i class="bi bi-arrow-left me-1"></i> Tiếp tục mua
             </a>
-            <c:if test="${not empty sessionScope.cart}">
+            <c:if test="${not empty sessionScope.cart and (empty sessionScope.user or sessionScope.user.role == 'customer')}">
                 <a href="${pageContext.request.contextPath}/cart" class="btn btn-outline-primary rounded-pill">
                     <i class="bi bi-cart3 me-1"></i> Xem giỏ hàng
                 </a>

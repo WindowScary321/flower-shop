@@ -19,7 +19,7 @@ import jakarta.servlet.http.HttpSession;
  * - /admin/*  -> chỉ role 'admin'
  * - /employee/* -> role 'employee' hoặc 'admin'
  */
-@WebFilter(filterName = "AuthorizationFilter", urlPatterns = {"/admin/*", "/employee/*", "/customer/*"})
+@WebFilter(filterName = "AuthorizationFilter", urlPatterns = {"/admin/*", "/employee/*", "/customer/*", "/cart", "/checkout", "/checkout-success", "/payment-qr"})
 public class AuthorizationFilter implements Filter {
 
     @Override
@@ -65,6 +65,12 @@ public class AuthorizationFilter implements Filter {
 
         if (path.startsWith("/customer") && !role.equals("customer")) {
             req.setAttribute("error", "Bạn không có quyền truy cập chức năng của khách hàng.");
+            req.getRequestDispatcher("/login.jsp").forward(request, response);
+            return;
+        }
+
+        if ((path.startsWith("/cart") || path.startsWith("/checkout") || path.startsWith("/payment-qr")) && !role.equals("customer")) {
+            req.setAttribute("error", "Tài khoản của bạn không có quyền thực hiện chức năng mua hàng.");
             req.getRequestDispatcher("/login.jsp").forward(request, response);
             return;
         }
