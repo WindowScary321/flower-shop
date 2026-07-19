@@ -38,14 +38,15 @@ public class OrderDAO extends DBContext {
             }
 
             // Bước 2: Tạo đơn hàng
-            String insertOrder = "INSERT INTO Orders (TotalAmount, ReceiverName, ReceiverAddress, ReceiverPhone, Status, AccountId, PaymentMethod, PaymentStatus) VALUES (?, ?, ?, ?, N'\u0043\u0068\u1EDD\u0020\u0078\u1EED\u0020\u006C\u00FD', ?, ?, 0)";
+            String insertOrder = "INSERT INTO Orders (TotalAmount, ReceiverName, ReceiverAddress, ReceiverPhone, Status, AccountId, PaymentMethod, PaymentStatus) VALUES (?, ?, ?, ?, ?, ?, ?, 0)";
             PreparedStatement stOrder = connection.prepareStatement(insertOrder, Statement.RETURN_GENERATED_KEYS);
             stOrder.setDouble(1, order.getTotalAmount());
             stOrder.setString(2, order.getReceiverName());
             stOrder.setString(3, order.getReceiverAddress());
             stOrder.setString(4, order.getReceiverPhone());
-            stOrder.setInt(5, order.getAccountId());
-            stOrder.setString(6, order.getPaymentMethod() != null ? order.getPaymentMethod() : "COD");
+            stOrder.setString(5, "Chờ xử lý");
+            stOrder.setInt(6, order.getAccountId());
+            stOrder.setString(7, order.getPaymentMethod() != null ? order.getPaymentMethod() : "COD");
             stOrder.executeUpdate();
 
             ResultSet rs = stOrder.getGeneratedKeys();
@@ -153,10 +154,11 @@ public class OrderDAO extends DBContext {
     public boolean cancelOrder(int orderId, int accountId) {
         try {
             // Verify order belongs to the account and is cancellable
-            String checkSql = "SELECT * FROM Orders WHERE OrderId = ? AND AccountId = ? AND Status = N'\u0043\u0068\u1EDD\u0020\u0078\u1EED\u0020\u006C\u00FD'";
+            String checkSql = "SELECT * FROM Orders WHERE OrderId = ? AND AccountId = ? AND Status = ?";
             PreparedStatement stCheck = connection.prepareStatement(checkSql);
             stCheck.setInt(1, orderId);
             stCheck.setInt(2, accountId);
+            stCheck.setString(3, "Chờ xử lý");
             ResultSet rs = stCheck.executeQuery();
             if (!rs.next()) {
                 return false;
@@ -165,15 +167,16 @@ public class OrderDAO extends DBContext {
             connection.setAutoCommit(false);
 
             // Hoàn lại tồn kho
-            String restoreStock = "UPDATE Flowers SET Quantity = Quantity + od.Quantity FROM Flowers f JOIN OrderDetails od ON f.FlowerId = od.FlowerId WHERE od.OrderId = ?";
+            String restoreStock = "UPDATE f SET f.Quantity = f.Quantity + od.Quantity FROM Flowers f JOIN OrderDetails od ON f.FlowerId = od.FlowerId WHERE od.OrderId = ?";
             PreparedStatement stRestore = connection.prepareStatement(restoreStock);
             stRestore.setInt(1, orderId);
             stRestore.executeUpdate();
 
             // Cập nhật trạng thái đơn hàng
-            String cancelSql = "UPDATE Orders SET Status = N'\u0110\u00E3\u0020\u0068\u1EE7\u0079' WHERE OrderId = ?";
+            String cancelSql = "UPDATE Orders SET Status = ? WHERE OrderId = ?";
             PreparedStatement stCancel = connection.prepareStatement(cancelSql);
-            stCancel.setInt(1, orderId);
+            stCancel.setString(1, "Đã hủy");
+            stCancel.setInt(2, orderId);
             stCancel.executeUpdate();
 
             connection.commit();
