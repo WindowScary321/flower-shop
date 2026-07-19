@@ -32,6 +32,7 @@ CREATE TABLE Flowers (
     Image       VARCHAR(255)   NULL,
     Description NVARCHAR(MAX)  NULL,
     CategoryId  INT            NULL,
+    Discount    INT            DEFAULT 0 CHECK (Discount >= 0 AND Discount <= 100),
     Status      BIT            DEFAULT 1,
     CONSTRAINT FK_Flowers_Categories
         FOREIGN KEY (CategoryId) REFERENCES Categories(CategoryId)
@@ -104,25 +105,25 @@ INSERT INTO Categories (CategoryName, Description) VALUES
 (N'Hoa trang trí',  N'Hoa cắm bàn, hoa trang trí nội thất');
 
 -- Sản phẩm hoa
-INSERT INTO Flowers (FlowerName, Unit, Price, Quantity, Image, Description, CategoryId) VALUES
-(N'Bó hồng đỏ 20 bông',     N'Bó',    350000,  50, 'rose_red.jpg',     N'Bó hoa hồng đỏ 20 bông kèm baby trắng',   2),
-(N'Giỏ hoa hướng dương',     N'Bó',    280000,  35, 'sunflower.jpg',    N'Giỏ hoa hướng dương tươi sáng',             2),
-(N'Bó hoa cưới cầm tay',     N'Bó',    500000,  20, 'bridal.jpg',       N'Bó hoa cưới cầm tay phong cách châu Âu',   1),
-(N'Lẵng hoa khai trương',    N'Bó',    800000,  15, 'grand_open.jpg',   N'Lẵng hoa khai trương 2 tầng',               3),
-(N'Bó hoa ly trắng',         N'Bó',    420000,  30, 'white_lily.jpg',   N'Bó hoa ly trắng thanh lịch 10 cành',        5),
-(N'Hoa cúc vàng chia buồn',  N'Bó',    200000,  40, 'chrysanthemum.jpg', N'Vòng hoa cúc vàng chia buồn',              4),
-(N'Bó hoa tulip hỗn hợp',    N'Bó',    600000,  25, 'tulip_mix.jpg',    N'Bó tulip hỗn hợp nhập khẩu Hà Lan',        5),
-(N'Hoa cưới pastel',         N'Bó',    650000,  18, 'pastel_bridal.jpg', N'Bó hoa cưới tông màu pastel nhẹ nhàng',    1),
-(N'Giỏ hoa chúc mừng',       N'Bó',    350000,  28, 'congrats.jpg',     N'Giỏ hoa hỗn hợp chúc mừng',                3),
-(N'Bó hoa lan hồ điệp',      N'Bó',    750000,  12, 'orchid.jpg',       N'Bó lan hồ điệp nhập khẩu cao cấp',         5),
-(N'Hoa hồng lẻ (1 cây)',     N'Cây',   20000,   100, 'single_rose.jpg', N'Hoa hồng đỏ bán lẻ theo từng cây',         2),
-(N'Nhành lan hồ điệp',       N'Cây',   150000,  50, 'single_orchid.jpg', N'Lan hồ điệp cắt cành lẻ, đa dạng màu sắc',  5),
-(N'Hoa cẩm chướng',          N'Cây',   15000,   80, 'carnation.jpg',    N'Cẩm chướng đơn cành nhiều màu',             5),
-(N'Giỏ hoa sen trắng',       N'Bó',    450000,  20, 'lotus.jpg',        N'Giỏ hoa sen trắng tinh khiết',              5),
-(N'Bó hoa cẩm tú cầu',       N'Bó',    550000,  15, 'hydrangea.jpg',    N'Bó cẩm tú cầu xanh biển',                   2),
-(N'Hoa đồng tiền đỏ',        N'Bó',    320000,  25, 'gerbera.jpg',      N'Lẵng hoa đồng tiền chúc mừng',              3),
-(N'Chậu lan hồ điệp',        N'Cây',   1200000,  10, 'orchid_pot.jpg',   N'Chậu lan hồ điệp 3 cành loại A',            5),
-(N'Bó hoa baby trắng',       N'Bó',    250000,  40, 'baby_breath.jpg',  N'Bó hoa baby trắng bọc giấy kraft',          2);
+INSERT INTO Flowers (FlowerName, Unit, Price, Quantity, Image, Description, CategoryId, Discount) VALUES
+(N'Hoa hồng đỏ',             N'Bó',    350000,  50, 'red_rose.jpg',     N'Bó hoa hồng đỏ Đà Lạt tươi thắm',          1, 10),
+(N'Giỏ hoa hướng dương',     N'Giỏ',   280000,  30, 'sunflower.jpg',    N'Giỏ hướng dương 5 bông kèm lá phụ',        4, 0),
+(N'Lẵng hoa chúc mừng',      N'Lẵng',  650000,  15, 'congrats_mix.jpg', N'Lẵng hoa mix nhiều màu chúc mừng',         3, 15),
+(N'Chậu lan hồ điệp',        N'Chậu',  1200000, 10, 'orchid_pot.jpg',   N'Lan hồ điệp trắng 3 cành cực sang trọng',  2, 5),
+(N'Bó hoa baby',             N'Bó',    250000,  40, 'baby_breath.jpg',  N'Bó baby trắng nhập khẩu bọc giấy xi măng', 5, 0),
+(N'Hoa cúc vàng chia buồn',  N'Bó',    200000,  40, 'chrysanthemum.jpg', N'Vòng hoa cúc vàng chia buồn',              4, 0),
+(N'Bó hoa tulip hỗn hợp',    N'Bó',    600000,  25, 'tulip_mix.jpg',    N'Bó tulip hỗn hợp nhập khẩu Hà Lan',        5, 10),
+(N'Hoa cưới pastel',         N'Bó',    650000,  18, 'pastel_bridal.jpg', N'Bó hoa cưới tông màu pastel nhẹ nhàng',    1, 0),
+(N'Giỏ hoa chúc mừng',       N'Bó',    350000,  28, 'congrats.jpg',     N'Giỏ hoa hỗn hợp chúc mừng',                3, 0),
+(N'Bó hoa lan hồ điệp',      N'Bó',    750000,  12, 'orchid.jpg',       N'Bó lan hồ điệp nhập khẩu cao cấp',         5, 0),
+(N'Hoa hồng lẻ (1 cây)',     N'Cây',   20000,   100, 'single_rose.jpg', N'Hoa hồng đỏ bán lẻ theo từng cây',         2, 0),
+(N'Nhành lan hồ điệp',       N'Cây',   150000,  50, 'single_orchid.jpg', N'Lan hồ điệp cắt cành lẻ, đa dạng màu sắc',  5, 0),
+(N'Hoa cẩm chướng',          N'Cây',   15000,   80, 'carnation.jpg',    N'Cẩm chướng đơn cành nhiều màu',             5, 0),
+(N'Giỏ hoa sen trắng',       N'Bó',    450000,  20, 'lotus.jpg',        N'Giỏ hoa sen trắng tinh khiết',              5, 10),
+(N'Bó hoa cẩm tú cầu',       N'Bó',    550000,  15, 'hydrangea.jpg',    N'Bó cẩm tú cầu xanh biển',                   2, 0),
+(N'Hoa đồng tiền đỏ',        N'Bó',    320000,  25, 'gerbera.jpg',      N'Lẵng hoa đồng tiền chúc mừng',              3, 0),
+(N'Chậu lan hồ điệp',        N'Cây',   1200000,  10, 'orchid_pot.jpg',   N'Chậu lan hồ điệp 3 cành loại A',            5, 0),
+(N'Bó hoa baby trắng',       N'Bó',    250000,  40, 'baby_breath.jpg',  N'Bó hoa baby trắng bọc giấy kraft',          2, 0);
 
 -- Tài khoản (mật khẩu mẫu: "123456" đã băm SHA-256)
 INSERT INTO Accounts (Username, Password, FullName, Email, Phone, Role) VALUES

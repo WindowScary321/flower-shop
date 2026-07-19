@@ -57,5 +57,10 @@ Giai đoạn 3 tập trung vào việc triển khai toàn bộ luồng nghiệp 
    - Admin và Nhân viên thiết lập lịch giao hàng (datetime-local) khi cập nhật trạng thái đơn hàng.
    - Khách hàng xem được thời gian dự kiến giao hàng trong Lịch sử đơn hàng; nếu chưa có, sẽ hiển thị "Đang chờ sắp xếp".
 
+11. **Tính năng Giảm giá (Discount)**:
+    - Bổ sung cột `Discount` (0-100%) vào bảng `Flowers` và mô hình Java.
+    - Cập nhật hàm `getFinalPrice()` trong Model và áp dụng vào `CartItem` để tự động tính tiền khách cần trả.
+    - Sửa giao diện quản lý (Admin có thể đặt %) và hiển thị badge ưu đãi đẹp mắt trên Catalog, Detail, Cart.
+
 ## Hướng dẫn các bước tiếp theo
 - **Giai đoạn 4**: Tiếp tục tối ưu hóa trải nghiệm, thêm phân trang, tìm kiếm động và xây dựng báo cáo thống kê.

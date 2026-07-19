@@ -15,6 +15,9 @@
                  style="max-height: 420px; object-fit: cover;"
                  onerror="this.src='https://placehold.co/600x500/f8f9fa/ff6b81?text=Flower'">
             <span class="position-absolute top-0 end-0 badge bg-danger m-3 fs-6 px-3 py-2">${flower.unit}</span>
+            <c:if test="${flower.discount > 0}">
+                <span class="position-absolute top-0 start-0 badge bg-warning text-dark m-3 fs-5 px-3 py-2 shadow">-${flower.discount}%</span>
+            </c:if>
         </div>
     </div>
     
@@ -30,8 +33,16 @@
         <h1 class="fw-bold text-dark mb-2">${flower.flowerName}</h1>
         <p class="text-muted mb-3"><i class="bi bi-tag"></i> Đơn vị bán: <strong>${flower.unit}</strong></p>
         
-        <div class="display-6 fw-bold text-danger mb-3">
-            <fmt:formatNumber value="${flower.price}" pattern="#,###"/> đ / ${flower.unit}
+        <div class="mb-3">
+            <c:choose>
+                <c:when test="${flower.discount > 0}">
+                    <span class="fs-4 text-muted text-decoration-line-through me-3"><fmt:formatNumber value="${flower.price}" pattern="#,###"/> đ</span>
+                    <span class="display-6 fw-bold text-danger"><fmt:formatNumber value="${flower.finalPrice}" pattern="#,###"/> đ / ${flower.unit}</span>
+                </c:when>
+                <c:otherwise>
+                    <span class="display-6 fw-bold text-danger"><fmt:formatNumber value="${flower.price}" pattern="#,###"/> đ / ${flower.unit}</span>
+                </c:otherwise>
+            </c:choose>
         </div>
         
         <c:if test="${flower.quantity > 0}">

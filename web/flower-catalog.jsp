@@ -73,6 +73,9 @@
                                      onerror="this.src='https://placehold.co/400x400/f8f9fa/ff6b81?text=Flower'">
                             </a>
                             <span class="position-absolute top-0 end-0 badge bg-danger m-2">${f.unit}</span>
+                            <c:if test="${f.discount > 0}">
+                                <span class="position-absolute top-0 start-0 badge bg-warning text-dark m-2 shadow-sm fs-6">-${f.discount}%</span>
+                            </c:if>
                             <c:if test="${f.quantity == 0}">
                                 <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" style="background:rgba(0,0,0,0.45);">
                                     <span class="badge bg-dark fs-6 px-3 py-2">Hết hàng</span>
@@ -83,9 +86,17 @@
                             <h5 class="card-title text-truncate" title="${f.flowerName}">
                                 <a href="${pageContext.request.contextPath}/detail?id=${f.flowerId}" class="text-decoration-none text-dark">${f.flowerName}</a>
                             </h5>
-                            <p class="card-text text-danger fw-bold fs-5 mb-1">
-                                <fmt:formatNumber value="${f.price}" pattern="#,###"/> đ
-                            </p>
+                            <div class="mb-1">
+                                <c:choose>
+                                    <c:when test="${f.discount > 0}">
+                                        <span class="text-muted text-decoration-line-through me-2"><fmt:formatNumber value="${f.price}" pattern="#,###"/> đ</span>
+                                        <span class="text-danger fw-bold fs-5"><fmt:formatNumber value="${f.finalPrice}" pattern="#,###"/> đ</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="text-danger fw-bold fs-5"><fmt:formatNumber value="${f.price}" pattern="#,###"/> đ</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
                             <small class="text-muted">Còn lại: ${f.quantity} ${f.unit}</small>
                         </div>
                         <div class="card-footer bg-white border-top-0 pb-3 text-center">

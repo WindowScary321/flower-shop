@@ -9,12 +9,13 @@ public class Flower {
     private String image;
     private String description;
     private int categoryId;
+    private int discount;
     private boolean status;
 
     public Flower() {
     }
 
-    public Flower(int flowerId, String flowerName, String unit, double price, int quantity, String image, String description, int categoryId, boolean status) {
+    public Flower(int flowerId, String flowerName, String unit, double price, int quantity, String image, String description, int categoryId, int discount, boolean status) {
         this.flowerId = flowerId;
         this.flowerName = flowerName;
         this.unit = unit;
@@ -23,6 +24,7 @@ public class Flower {
         this.image = image;
         this.description = description;
         this.categoryId = categoryId;
+        this.discount = discount;
         this.status = status;
     }
 
@@ -96,5 +98,20 @@ public class Flower {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public int getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
+    }
+
+    public double getFinalPrice() {
+        if (discount > 0) {
+            return price * (100 - discount) / 100.0;
+        }
+        return price;
     }
 }

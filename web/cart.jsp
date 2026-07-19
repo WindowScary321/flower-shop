@@ -55,8 +55,17 @@
                                                     </div>
                                                     <input type="hidden" name="flowerId" value="${item.flower.flowerId}">
                                                 </td>
-                                                <td class="text-danger fw-bold">
-                                                    <fmt:formatNumber value="${item.flower.price}" pattern="#,###"/> đ
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${item.flower.discount > 0}">
+                                                            <div class="text-muted text-decoration-line-through small"><fmt:formatNumber value="${item.flower.price}" pattern="#,###"/> đ</div>
+                                                            <div class="text-danger fw-bold"><fmt:formatNumber value="${item.flower.finalPrice}" pattern="#,###"/> đ</div>
+                                                            <span class="badge bg-warning text-dark mt-1">-${item.flower.discount}%</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <div class="text-danger fw-bold"><fmt:formatNumber value="${item.flower.price}" pattern="#,###"/> đ</div>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </td>
                                                 <td>
                                                     <input type="number" name="quantity" class="form-control form-control-sm text-center fw-bold"

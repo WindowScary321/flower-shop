@@ -55,7 +55,7 @@ public class FlowerDAO extends DBContext {
     }
 
     public void insertFlower(Flower f) {
-        String sql = "INSERT INTO Flowers (FlowerName, Unit, Price, Quantity, Image, Description, CategoryId, Status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Flowers (FlowerName, Unit, Price, Quantity, Image, Description, CategoryId, Discount, Status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, f.getFlowerName());
@@ -65,7 +65,8 @@ public class FlowerDAO extends DBContext {
             st.setString(5, f.getImage());
             st.setString(6, f.getDescription());
             st.setInt(7, f.getCategoryId());
-            st.setBoolean(8, f.isStatus());
+            st.setInt(8, f.getDiscount());
+            st.setBoolean(9, f.isStatus());
             st.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error insertFlower: " + e.getMessage());
@@ -73,7 +74,7 @@ public class FlowerDAO extends DBContext {
     }
 
     public void updateFlower(Flower f) {
-        String sql = "UPDATE Flowers SET FlowerName=?, Unit=?, Price=?, Quantity=?, Image=?, Description=?, CategoryId=?, Status=? WHERE FlowerId=?";
+        String sql = "UPDATE Flowers SET FlowerName=?, Unit=?, Price=?, Quantity=?, Image=?, Description=?, CategoryId=?, Discount=?, Status=? WHERE FlowerId=?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, f.getFlowerName());
@@ -83,8 +84,9 @@ public class FlowerDAO extends DBContext {
             st.setString(5, f.getImage());
             st.setString(6, f.getDescription());
             st.setInt(7, f.getCategoryId());
-            st.setBoolean(8, f.isStatus());
-            st.setInt(9, f.getFlowerId());
+            st.setInt(8, f.getDiscount());
+            st.setBoolean(9, f.isStatus());
+            st.setInt(10, f.getFlowerId());
             st.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error updateFlower: " + e.getMessage());
@@ -112,6 +114,7 @@ public class FlowerDAO extends DBContext {
         f.setImage(rs.getString("Image"));
         f.setDescription(rs.getString("Description"));
         f.setCategoryId(rs.getInt("CategoryId"));
+        f.setDiscount(rs.getInt("Discount"));
         f.setStatus(rs.getBoolean("Status"));
         return f;
     }

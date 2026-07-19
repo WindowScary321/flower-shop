@@ -70,6 +70,7 @@
                             <th>Đơn vị tính</th>
                             <th>Danh mục</th>
                             <th>Giá bán</th>
+                            <th>Giảm giá</th>
                             <th>Kho</th>
                             <th>Trạng thái</th>
                             <th class="text-center">Thao tác</th>
@@ -96,6 +97,10 @@
                                 </td>
                                 <td class="text-danger fw-bold"><fmt:formatNumber value="${f.price}" pattern="#,###"/> đ</td>
                                 <td>
+                                    <c:if test="${f.discount > 0}"><span class="badge bg-warning text-dark">-${f.discount}%</span></c:if>
+                                    <c:if test="${f.discount == 0}"><span class="text-muted">-</span></c:if>
+                                </td>
+                                <td>
                                     <c:choose>
                                         <c:when test="${f.quantity > 0}"><span class="badge bg-success">${f.quantity}</span></c:when>
                                         <c:otherwise><span class="badge bg-danger">Hết hàng</span></c:otherwise>
@@ -108,7 +113,7 @@
                                 <td class="text-center">
                                     <button class="btn btn-sm btn-outline-primary" 
                                             data-bs-toggle="modal" data-bs-target="#editModal"
-                                            onclick="fillEditModal(${f.flowerId}, '${f.flowerName}', '${f.unit}', ${f.price}, ${f.quantity}, '${f.image}', '${f.description}', ${f.categoryId}, ${f.status})">
+                                            onclick="fillEditModal(${f.flowerId}, '${f.flowerName}', '${f.unit}', ${f.price}, ${f.quantity}, '${f.image}', '${f.description}', ${f.categoryId}, ${f.discount}, ${f.status})">
                                         <i class="bi bi-pencil"></i>
                                     </button>
                                     <a href="${pageContext.request.contextPath}/admin/manage-flowers?action=delete&id=${f.flowerId}" 
@@ -185,7 +190,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label class="form-label">Danh mục <span class="text-danger">*</span></label>
                             <select name="categoryId" class="form-select" required>
                                 <c:forEach var="c" items="${categories}">
@@ -193,7 +198,11 @@
                                 </c:forEach>
                             </select>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Giảm giá (%)</label>
+                            <input type="number" name="discount" class="form-control" min="0" max="100" value="0">
+                        </div>
+                        <div class="col-md-4 mb-3">
                             <label class="form-label">Trạng thái</label>
                             <select name="status" class="form-select">
                                 <option value="1">Đang bán</option>
@@ -255,7 +264,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label class="form-label">Danh mục <span class="text-danger">*</span></label>
                             <select name="categoryId" id="edit-categoryId" class="form-select" required>
                                 <c:forEach var="c" items="${categories}">
@@ -263,7 +272,11 @@
                                 </c:forEach>
                             </select>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Giảm giá (%)</label>
+                            <input type="number" name="discount" id="edit-discount" class="form-control" min="0" max="100">
+                        </div>
+                        <div class="col-md-4 mb-3">
                             <label class="form-label">Trạng thái</label>
                             <select name="status" id="edit-status" class="form-select">
                                 <option value="1">Đang bán</option>
@@ -290,7 +303,7 @@
 </div>
 
 <script>
-    function fillEditModal(id, name, unit, price, quantity, image, desc, categoryId, status) {
+    function fillEditModal(id, name, unit, price, quantity, image, desc, categoryId, discount, status) {
         document.getElementById('edit-id').value = id;
         document.getElementById('edit-name').value = name;
         document.getElementById('edit-unit').value = unit;
@@ -299,6 +312,7 @@
         document.getElementById('edit-image').value = image === 'null' ? '' : image;
         document.getElementById('edit-desc').value = desc === 'null' ? '' : desc;
         document.getElementById('edit-categoryId').value = categoryId;
+        document.getElementById('edit-discount').value = discount;
         document.getElementById('edit-status').value = status ? "1" : "0";
     }
 </script>

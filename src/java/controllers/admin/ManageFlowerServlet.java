@@ -124,6 +124,10 @@ public class ManageFlowerServlet extends HttpServlet {
         f.setImage(request.getParameter("image"));
         f.setDescription(request.getParameter("description"));
         f.setCategoryId(Integer.parseInt(request.getParameter("categoryId")));
+        
+        String discountStr = request.getParameter("discount");
+        f.setDiscount((discountStr != null && !discountStr.trim().isEmpty()) ? Integer.parseInt(discountStr) : 0);
+        
         f.setStatus("1".equals(request.getParameter("status")));
         
         flowerDAO.insertFlower(f);
@@ -142,6 +146,10 @@ public class ManageFlowerServlet extends HttpServlet {
         f.setImage(request.getParameter("image"));
         f.setDescription(request.getParameter("description"));
         f.setCategoryId(Integer.parseInt(request.getParameter("categoryId")));
+        
+        String discountStr = request.getParameter("discount");
+        f.setDiscount((discountStr != null && !discountStr.trim().isEmpty()) ? Integer.parseInt(discountStr) : 0);
+        
         f.setStatus("1".equals(request.getParameter("status")));
         
         flowerDAO.updateFlower(f);
