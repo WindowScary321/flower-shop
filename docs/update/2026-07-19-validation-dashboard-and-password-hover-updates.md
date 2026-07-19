@@ -31,6 +31,9 @@
 - **`web/admin/dashboard.jsp`**:
   - Bổ sung thẻ thông tin thống kê thứ 5: Tỷ lệ hủy đơn hàng (`cancelledRatio`).
   - Bổ sung biểu đồ tròn (Doughnut chart) hiển thị trực quan tỷ lệ doanh thu theo danh mục hoa sử dụng thư viện Chart.js.
+- **`web/common/footer.jsp`**:
+  - Thu nhỏ kích thước hiển thị của logo Zalo SVG từ kích thước đầy đủ về kích thước đồng bộ cố định `20px` x `20px` bằng style inline để tương xứng với kích thước của các icon liên hệ khác sử dụng font size `fs-5` bên cạnh.
+  - Thay đổi nội dung liên kết mã nguồn GitHub hiển thị ở chân trang.
 
 ### Tài liệu (Docs)
 - **Tạo sơ đồ ERD**: Viết file sơ đồ quan hệ cơ sở dữ liệu thực tế [docs/erd.md](./erd.md) sử dụng cú pháp Mermaid JS để hiển thị trực quan trực tiếp trên Markdown.

@@ -11,8 +11,10 @@
                         <ul class="list-unstyled">
                             <li class="mb-3"><i class="bi bi-clock-fill text-success me-2 fs-5 align-middle"></i> 07:00
                                 – 22:30</li>
-                            <li class="mb-3"><img src="https://placehold.co/24x24/00a8e8/fff?text=Zalo"
-                                    class="rounded-circle me-2 align-middle" alt="Zalo"> 0937.87.87.38</li>
+                            <li class="mb-3"><img
+                                    src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg"
+                                    class="rounded-circle me-2 align-middle" alt="Zalo"
+                                    style="width: 20px; height: 20px;"> 0978.654.321</li>
                             <li class="mb-3"><i class="bi bi-telephone-fill text-primary me-2 fs-5 align-middle"></i>
                                 0987.654.321</li>
                             <li class="mb-3"><i class="bi bi-geo-alt-fill text-success me-2 fs-5 align-middle"></i>
@@ -109,7 +111,8 @@
             <div class="bg-white py-3 border-top">
                 <div class="container d-flex justify-content-between align-items-center flex-wrap small text-muted">
                     <div>
-                        <p class="mb-0">Copyright 2026 &copy; <strong>Flowershop.com.vn</strong></p>
+                        <p class="mb-0"><a href="https://github.com/WindowScary321/flower-shop"><strong>Toàn bộ mã
+                                    nguồn của dự án flower-shop nằm trên Github</a></strong></p>
                         <p class="mb-0">Địa Chỉ: 108-E2 Phuong Mai Street, Dong Da District, Hanoi</p>
                     </div>
                     <div>
