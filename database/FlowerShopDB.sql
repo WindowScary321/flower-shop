@@ -170,12 +170,13 @@ INSERT INTO Flowers (FlowerName, Unit, Price, Quantity, Image, Description, Cate
 (N'Chớm Nở', N'Bó', 390000, 30, 'https://flowercorner.b-cdn.net/image/cache/catalog/products/B%C3%B3%20Hoa/chom-no-26.jpg.webp', N'Bó hoa tươi Chớm Nở thiết kế sang trọng ý nghĩa', 5, 5),
 (N'Lời Nhắn', N'Bó', 360000, 30, 'https://flowercorner.b-cdn.net/image/cache/catalog/products/B%C3%B3%20Hoa/bo-hoa-dong-tien-loi-nhan.jpg.webp', N'Bó hoa tươi Lời Nhắn thiết kế sang trọng ý nghĩa', 5, 8);
 
--- Tài khoản (mật khẩu mẫu: "123456" đã băm SHA-256)
+-- Tài khoản (mật khẩu mẫu của customer1-5: "123456" đã băm SHA-256)
+-- Tài khoản admin và staff1 đã được đổi hash để tăng tính bảo mật
 INSERT INTO Accounts (Username, Password, FullName, Email, Phone, Role) VALUES
-('admin',    '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92',
-    N'Nguyễn Quản Trị',   'admin@flowershop.vn',    '0901000001', 'admin'),
-('staff1',   '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92',
-    N'Trần Nhân Viên',    'nv1@flowershop.vn',      '0901000002', 'employee'),
+('admin',    'c3a2591c22ef2e0dec9bede5681a7671eba91ae82dfa8bb96a0d6b7901590c64', 
+    N'Nguyễn Quản Trị',   'admin-flowershop@thenoob.eu.org',    '0901000001', 'admin'),
+('staff1',   'fad240b23b16e79d14e91fdbb2b481d3a3c4900e58c9482e2f2d90a673ed245f',
+    N'Trần Nhân Viên',    'staff1@thenoob.eu.org',      '0901000002', 'employee'),
 ('customer1','8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92',
     N'Lê Khách Hàng',     'kh1@gmail.com',          '0901000003', 'customer'),
 ('customer2','8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92',

@@ -44,16 +44,8 @@
                 </div>
                 
                 <div class="mt-4 pt-3 border-top">
-                    <h6 class="text-muted fw-bold mb-3 small text-center text-uppercase">Tài khoản mẫu (Mật khẩu chung: 123456)</h6>
+                    <h6 class="text-muted fw-bold mb-3 small text-center text-uppercase">Tài khoản khách hàng mẫu (Mật khẩu: 123456)</h6>
                     <div class="d-flex flex-column gap-2">
-                        <button type="button" class="btn btn-outline-danger btn-sm text-start d-flex justify-content-between align-items-center" onclick="quickLogin('admin', '123456')">
-                            <span><i class="bi bi-shield-lock me-2"></i>Admin: <strong>admin</strong></span>
-                            <span class="badge bg-danger">Click để điền</span>
-                        </button>
-                        <button type="button" class="btn btn-outline-warning btn-sm text-start d-flex justify-content-between align-items-center" onclick="quickLogin('staff1', '123456')">
-                            <span><i class="bi bi-briefcase me-2"></i>Nhân viên: <strong>staff1</strong></span>
-                            <span class="badge bg-warning text-dark">Click để điền</span>
-                        </button>
                         <button type="button" class="btn btn-outline-success btn-sm text-start d-flex justify-content-between align-items-center" onclick="quickLogin('customer1', '123456')">
                             <span><i class="bi bi-person me-2"></i>Khách hàng: <strong>customer1</strong></span>
                             <span class="badge bg-success">Click để điền</span>
