@@ -49,6 +49,7 @@ CREATE TABLE Accounts (
     FullName  NVARCHAR(100)  NOT NULL,
     Email     VARCHAR(100)   NOT NULL UNIQUE,
     Phone     VARCHAR(15)    NOT NULL,
+    Address   NVARCHAR(255)  NULL,
     Role      VARCHAR(20)    NOT NULL
               CHECK (Role IN ('admin', 'employee', 'customer')),
     Status    BIT            DEFAULT 1

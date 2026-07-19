@@ -24,6 +24,7 @@ public class AccountDAO extends DBContext {
                     rs.getString("FullName"),
                     rs.getString("Email"),
                     rs.getString("Phone"),
+                    rs.getString("Address"),
                     rs.getString("Role"),
                     rs.getBoolean("Status")
                 );
@@ -65,7 +66,7 @@ public class AccountDAO extends DBContext {
     }
 
     public void insertAccount(Account account) {
-        String sql = "INSERT INTO Accounts (Username, Password, FullName, Email, Phone, Role, Status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Accounts (Username, Password, FullName, Email, Phone, Address, Role, Status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, account.getUsername());
@@ -73,8 +74,9 @@ public class AccountDAO extends DBContext {
             st.setString(3, account.getFullName());
             st.setString(4, account.getEmail());
             st.setString(5, account.getPhone());
-            st.setString(6, account.getRole());
-            st.setBoolean(7, account.isStatus());
+            st.setString(6, account.getAddress());
+            st.setString(7, account.getRole());
+            st.setBoolean(8, account.isStatus());
             st.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e);
@@ -95,6 +97,7 @@ public class AccountDAO extends DBContext {
                     rs.getString("FullName"),
                     rs.getString("Email"),
                     rs.getString("Phone"),
+                    rs.getString("Address"),
                     rs.getString("Role"),
                     rs.getBoolean("Status")
                 ));
@@ -119,6 +122,7 @@ public class AccountDAO extends DBContext {
                     rs.getString("FullName"),
                     rs.getString("Email"),
                     rs.getString("Phone"),
+                    rs.getString("Address"),
                     rs.getString("Role"),
                     rs.getBoolean("Status")
                 );
@@ -217,6 +221,7 @@ public class AccountDAO extends DBContext {
                     rs.getString("FullName"),
                     rs.getString("Email"),
                     rs.getString("Phone"),
+                    rs.getString("Address"),
                     rs.getString("Role"),
                     rs.getBoolean("Status")
                 ));
@@ -225,5 +230,48 @@ public class AccountDAO extends DBContext {
             System.out.println("Error searchAccountsPaging: " + e.getMessage());
         }
         return list;
+    }
+
+    public void updateProfile(int accountId, String fullName, String email, String phone, String address) {
+        String sql = "UPDATE Accounts SET FullName = ?, Email = ?, Phone = ?, Address = ? WHERE AccountId = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, fullName);
+            st.setString(2, email);
+            st.setString(3, phone);
+            st.setString(4, address);
+            st.setInt(5, accountId);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error updateProfile: " + e.getMessage());
+        }
+    }
+
+    public void updatePassword(int accountId, String password) {
+        String sql = "UPDATE Accounts SET Password = ? WHERE AccountId = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, password);
+            st.setInt(2, accountId);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error updatePassword: " + e.getMessage());
+        }
+    }
+
+    public boolean checkEmailExistsExcept(String email, int accountId) {
+        String sql = "SELECT 1 FROM Accounts WHERE Email = ? AND AccountId != ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, email);
+            st.setInt(2, accountId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return false;
     }
 }

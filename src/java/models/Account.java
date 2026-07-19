@@ -7,6 +7,7 @@ public class Account {
     private String fullName;
     private String email;
     private String phone;
+    private String address;
     private String role;
     private boolean status;
 
@@ -20,6 +21,18 @@ public class Account {
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
+        this.role = role;
+        this.status = status;
+    }
+
+    public Account(int accountId, String username, String password, String fullName, String email, String phone, String address, String role, boolean status) {
+        this.accountId = accountId;
+        this.username = username;
+        this.password = password;
+        this.fullName = fullName;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
         this.role = role;
         this.status = status;
     }
@@ -70,6 +83,14 @@ public class Account {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getRole() {

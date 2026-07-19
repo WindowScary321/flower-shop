@@ -8,9 +8,9 @@
             <div class="card-body p-4">
                 <h3 class="text-center text-primary mb-4 fw-bold">Đăng Nhập</h3>
                 
-                <c:if test="${not empty error}">
+                <c:if test="${not empty error or not empty param.error}">
                     <div class="alert alert-danger" role="alert">
-                        <c:out value="${error}" />
+                        <c:out value="${not empty error ? error : param.error}" />
                     </div>
                 </c:if>
                 <c:if test="${not empty success}">
@@ -42,9 +42,34 @@
                 <div class="text-center mt-4">
                     <p class="text-muted mb-0">Chưa có tài khoản? <a href="${pageContext.request.contextPath}/register.jsp" class="text-primary text-decoration-none fw-bold">Đăng ký ngay</a></p>
                 </div>
+                
+                <div class="mt-4 pt-3 border-top">
+                    <h6 class="text-muted fw-bold mb-3 small text-center text-uppercase">Tài khoản mẫu (Mật khẩu chung: 123456)</h6>
+                    <div class="d-flex flex-column gap-2">
+                        <button type="button" class="btn btn-outline-danger btn-sm text-start d-flex justify-content-between align-items-center" onclick="quickLogin('admin', '123456')">
+                            <span><i class="bi bi-shield-lock me-2"></i>Admin: <strong>admin</strong></span>
+                            <span class="badge bg-danger">Click để điền</span>
+                        </button>
+                        <button type="button" class="btn btn-outline-warning btn-sm text-start d-flex justify-content-between align-items-center" onclick="quickLogin('staff1', '123456')">
+                            <span><i class="bi bi-briefcase me-2"></i>Nhân viên: <strong>staff1</strong></span>
+                            <span class="badge bg-warning text-dark">Click để điền</span>
+                        </button>
+                        <button type="button" class="btn btn-outline-success btn-sm text-start d-flex justify-content-between align-items-center" onclick="quickLogin('customer1', '123456')">
+                            <span><i class="bi bi-person me-2"></i>Khách hàng: <strong>customer1</strong></span>
+                            <span class="badge bg-success">Click để điền</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function quickLogin(user, pass) {
+        document.getElementById('username').value = user;
+        document.getElementById('password').value = pass;
+    }
+</script>
 
 <jsp:include page="/common/footer.jsp" />

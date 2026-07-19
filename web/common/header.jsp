@@ -1,89 +1,126 @@
-<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flower Shop</title>
-    <!-- Bootstrap 5 CSS CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm sticky-top">
-        <div class="container">
-            <a class="navbar-brand text-primary fw-bold" href="${pageContext.request.contextPath}/">
-                <i class="bi bi-flower1"></i> Flower Shop
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/">Trang Chủ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/flower-catalog">Sản Phẩm</a>
-                    </li>
-                </ul>
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+        <!DOCTYPE html>
+        <html lang="vi">
 
-                <form class="d-flex mx-3" action="${pageContext.request.contextPath}/flower-catalog" method="GET">
-                    <input class="form-control me-2" type="search" name="keyword" placeholder="Tìm hoa..." aria-label="Search">
-                    <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
-                </form>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Flower Shop</title>
+            <!-- Bootstrap 5 CSS CDN -->
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+            <!-- Bootstrap Icons -->
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+            <!-- Custom CSS -->
+            <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
+        </head>
 
-                <ul class="navbar-nav">
-                    <!-- Guest -->
-                    <c:if test="${empty sessionScope.user}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/login.jsp">Đăng nhập</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="btn btn-primary" href="${pageContext.request.contextPath}/register.jsp">Đăng ký</a>
-                        </li>
-                    </c:if>
+        <body>
+            <!-- Pink Top Bar -->
+            <div class="py-2" style="background-color: #fce2e8; color: #d63384;">
+                <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
 
-                    <!-- Logged in User -->
-                    <c:if test="${not empty sessionScope.user}">
-                        <c:if test="${sessionScope.user.role == 'customer'}">
-                            <li class="nav-item">
-                                <a class="nav-link" href="${pageContext.request.contextPath}/cart">
-                                    <i class="bi bi-cart3"></i> Giỏ hàng 
-                                    <span class="badge bg-danger rounded-pill" id="cart-count">
-                                        ${empty sessionScope.cart ? 0 : sessionScope.cart.size()}
-                                    </span>
-                                </a>
-                            </li>
-                        </c:if>
-                        
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="bi bi-person-circle"></i> ${sessionScope.user.fullName}
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/profile">Hồ sơ cá nhân</a></li>
-                                <c:if test="${sessionScope.user.role == 'admin'}">
-                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/admin/dashboard">Quản trị viên</a></li>
-                                </c:if>
-                                <c:if test="${sessionScope.user.role == 'employee'}">
-                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/employee/manage-orders">Quản lý đơn hàng</a></li>
-                                </c:if>
+                    <!-- Left: Logo -->
+                    <a class="text-danger fw-bold fs-3 text-decoration-none mb-2 mb-md-0"
+                        href="${pageContext.request.contextPath}/">
+                        <i class="bi bi-flower1"></i> Flower Shop
+                    </a>
+
+                    <!-- Right: User/Login -->
+                    <div class="d-flex align-items-center">
+                        <ul class="navbar-nav flex-row align-items-center mb-0">
+                            <!-- Guest -->
+                            <c:if test="${empty sessionScope.user}">
+                                <li class="nav-item me-3">
+                                    <a class="nav-link text-danger fw-bold py-0"
+                                        href="${pageContext.request.contextPath}/login.jsp">Đăng nhập</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-danger fw-bold py-0"
+                                        href="${pageContext.request.contextPath}/register.jsp">Đăng ký</a>
+                                </li>
+                            </c:if>
+
+                            <!-- Logged in User -->
+                            <c:if test="${not empty sessionScope.user}">
+                                <li class="nav-item dropdown me-3">
+                                    <a class="nav-link dropdown-toggle text-danger fw-bold py-0" href="#"
+                                        id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                        <i class="bi bi-person-circle"></i> ${sessionScope.user.fullName}
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end"
+                                        style="position: absolute; right: 0; left: auto; z-index: 1050;">
+                                        <li><a class="dropdown-item"
+                                                href="${pageContext.request.contextPath}/profile">Hồ sơ cá nhân</a></li>
+                                        <c:if test="${sessionScope.user.role == 'admin'}">
+                                            <li><a class="dropdown-item"
+                                                    href="${pageContext.request.contextPath}/admin/dashboard">Quản trị
+                                                    viên</a></li>
+                                        </c:if>
+                                        <c:if test="${sessionScope.user.role == 'employee'}">
+                                            <li><a class="dropdown-item"
+                                                    href="${pageContext.request.contextPath}/employee/manage-orders">Quản
+                                                    lý đơn hàng</a></li>
+                                        </c:if>
+                                        <c:if test="${sessionScope.user.role == 'customer'}">
+                                            <li><a class="dropdown-item"
+                                                    href="${pageContext.request.contextPath}/customer/order-history">Lịch
+                                                    sử đơn hàng</a></li>
+                                        </c:if>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li><a class="dropdown-item text-danger"
+                                                href="${pageContext.request.contextPath}/logout">Đăng xuất</a></li>
+                                    </ul>
+                                </li>
                                 <c:if test="${sessionScope.user.role == 'customer'}">
-                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/customer/order-history">Lịch sử đơn hàng</a></li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-danger fw-bold py-0"
+                                            href="${pageContext.request.contextPath}/cart">
+                                            <i class="bi bi-cart3"></i> Giỏ hàng
+                                            <span class="badge bg-danger rounded-pill" id="cart-count">${empty
+                                                sessionScope.cart ? 0 : sessionScope.cart.size()}</span>
+                                        </a>
+                                    </li>
                                 </c:if>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/logout">Đăng xuất</a></li>
-                            </ul>
-                        </li>
-                    </c:if>
-                </ul>
+                            </c:if>
+                        </ul>
+                    </div>
+                </div>
             </div>
-        </div>
-    </nav>
-    <main class="container my-4 min-vh-100">
+
+            <!-- White Navbar for Categories (Hidden for Admin/Employee) -->
+            <c:if test="${empty sessionScope.user or (sessionScope.user.role != 'admin' and sessionScope.user.role != 'employee')}">
+            <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+                <div class="container">
+                    <button class="navbar-toggler mx-auto" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item"><a class="nav-link fw-bold text-dark me-3"
+                                    href="${pageContext.request.contextPath}/">TRANG CHỦ</a></li>
+                            <li class="nav-item"><a class="nav-link fw-bold text-secondary text-nowrap me-3"
+                                    href="${pageContext.request.contextPath}/flower-catalog?categoryId=1">HOA CƯỚI</a>
+                            </li>
+                            <li class="nav-item"><a class="nav-link fw-bold text-secondary text-nowrap me-3"
+                                    href="${pageContext.request.contextPath}/flower-catalog?categoryId=2">HOA SINH
+                                    NHẬT</a></li>
+                            <li class="nav-item"><a class="nav-link fw-bold text-secondary text-nowrap me-3"
+                                    href="${pageContext.request.contextPath}/flower-catalog?categoryId=3">HOA KHAI
+                                    TRƯƠNG</a></li>
+                            <li class="nav-item"><a class="nav-link fw-bold text-secondary text-nowrap me-3"
+                                    href="${pageContext.request.contextPath}/flower-catalog?categoryId=4">HOA CHIA
+                                    BUỒN</a></li>
+                            <li class="nav-item"><a class="nav-link fw-bold text-secondary text-nowrap"
+                                    href="${pageContext.request.contextPath}/flower-catalog?categoryId=5">HOA TRANG
+                                    TRÍ</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            </c:if>
+            <main class="container my-4 min-vh-100">
