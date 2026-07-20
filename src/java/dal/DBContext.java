@@ -45,7 +45,7 @@ public class DBContext implements AutoCloseable {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connection = DriverManager.getConnection(url, user, pass);
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, "Lỗi kết nối DB", ex);
         }
     }
 
@@ -55,7 +55,7 @@ public class DBContext implements AutoCloseable {
             try {
                 connection.close();
             } catch (SQLException ex) {
-                Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, "Lỗi đóng kết nối", ex);
             }
         }
     }

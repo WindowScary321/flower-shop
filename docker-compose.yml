@@ -33,8 +33,10 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - sqlserver
-      - init-db
+      sqlserver:
+        condition: service_started
+      init-db:
+        condition: service_completed_successfully
     environment:
       - DB_URL=jdbc:sqlserver://sqlserver:1433;databaseName=FlowerShop;encrypt=true;trustServerCertificate=true
       - DB_USER=sa
