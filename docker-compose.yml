@@ -10,12 +10,16 @@ services:
     volumes:
       - sqlserver_data:/var/opt/mssql
     restart: unless-stopped
+    networks:
+      - flower-network
 
   init-db:
     image: mcr.microsoft.com/mssql-tools:latest
     container_name: flower_init_db
     depends_on:
       - sqlserver
+    networks:
+      - flower-network
     volumes:
       - ./database/FlowerShopDB.sql:/FlowerShopDB.sql
       - ./database/InsertMoreFlowers.sql:/InsertMoreFlowers.sql
@@ -45,6 +49,24 @@ services:
       - DB_USER=sa
       - DB_PASSWORD=2DS9WDJRYv4pK2WUXu6
     restart: unless-stopped
+    networks:
+      - flower-network
+
+  cloudflared:
+    image: ghcr.io/wisdomsky/cloudflared-web:latest
+    container_name: flower_cloudflared
+    restart: unless-stopped
+    ports:
+      - "8899:8899"
+    environment:
+      - WEBUI_PORT=8899
+    networks:
+      - flower-network
+
+networks:
+  flower-network:
+    driver: bridge
 
 volumes:
   sqlserver_data:
+
