@@ -25,8 +25,8 @@ FROM tomcat:10.1.57-jre25-temurin-noble
 # Xóa các ứng dụng mặc định của Tomcat để dọn dẹp
 RUN rm -rf /usr/local/tomcat/webapps/*
 
-# Copy file WAR đã được build từ stage builder vào thư mục webapps
-COPY --from=builder /app/dist/flower-shop.war /usr/local/tomcat/webapps/flower-shop.war
+# Copy file WAR đã được build từ stage builder vào thư mục webapps với tên ROOT.war để chạy ở trang chủ (/)
+COPY --from=builder /app/dist/flower-shop.war /usr/local/tomcat/webapps/ROOT.war
 
 EXPOSE 8080
 CMD ["catalina.sh", "run"]
