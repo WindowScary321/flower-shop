@@ -111,9 +111,10 @@
             <div class="bg-white py-3 border-top">
                 <div class="container d-flex justify-content-between align-items-center flex-wrap small text-muted">
                     <div>
-                        <p class="mb-0"><a href="https://github.com/WindowScary321/flower-shop"><strong>Toàn bộ mã
-                                    nguồn của dự án flower-shop nằm trên Github</a></strong></p>
-                        <p class="mb-0">Địa Chỉ: 108-E2 Phuong Mai Street, Dong Da District, Hanoi</p>
+                        <p class="mb-0"><a href="https://github.com/WindowScary321/flower-shop"><strong>Link mã nguồn
+                                    của dự án</a></strong></p>
+                        <p class="mb-0">Dữ liệu hoa, giá cả, danh mục
+                            lấy từ website <a href="https://www.flowercorner.vn/">FlowerCorner.vn</a></p>
                     </div>
                     <div>
                         <img src="https://upload.wikimedia.org/wikipedia/commons/6/68/VietQR_Logo.svg" alt="VietQR"
