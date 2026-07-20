@@ -1,9 +1,17 @@
-# Build file WAR bằng JDK và Ant
+# Stage 0: Cung cấp thư viện Tomcat (Servlet API) cho Ant build
+FROM tomcat:10.1.57-jre21-temurin-noble AS tomcat_libs
+
+# Stage 1: Build file WAR bằng JDK và Ant
 FROM eclipse-temurin:21-jdk AS builder
 RUN apt-get update && apt-get install -y ant
 WORKDIR /app
+
+# Lấy bộ thư viện Java EE của Tomcat bỏ vào Builder
+COPY --from=tomcat_libs /usr/local/tomcat /usr/local/tomcat
+
 COPY . .
-RUN ant
+# Chạy build Ant và chỉ định đường dẫn Tomcat cho NetBeans
+RUN ant -Dj2ee.server.home=/usr/local/tomcat
 
 # Triển khai trên Tomcat
 FROM tomcat:10.1.57-jre25-temurin-noble
