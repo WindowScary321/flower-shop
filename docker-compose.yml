@@ -38,7 +38,7 @@ services:
       init-db:
         condition: service_completed_successfully
     environment:
-      - DB_URL=jdbc:sqlserver://sqlserver:1433;databaseName=FlowerShop;encrypt=true;trustServerCertificate=true
+      - DB_URL=jdbc:sqlserver://sqlserver:1433;databaseName=FLOWER_SHOP;encrypt=true;trustServerCertificate=true
       - DB_USER=sa
       - DB_PASSWORD=2DS9WDJRYv4pK2WUXu6
     restart: unless-stopped
