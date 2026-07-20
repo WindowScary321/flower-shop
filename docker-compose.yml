@@ -19,13 +19,14 @@ services:
       - sqlserver
     command: >
       /bin/bash -c "
+        set -e;
         echo 'Waiting for SQL Server to be ready...';
         until /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P '2DS9WDJRYv4pK2WUXu6' -Q 'SELECT 1' -C > /dev/null 2>&1; do
           echo 'SQL Server is starting up... waiting 3 seconds';
           sleep 3;
         done;
         echo 'SQL Server is ready! Running database initialization script...';
-        /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P '2DS9WDJRYv4pK2WUXu6' -i /FlowerShopDB.sql -C && \
+        /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P '2DS9WDJRYv4pK2WUXu6' -i /FlowerShopDB.sql -C;
         echo 'Database FLOWER_SHOP initialized successfully!';
       "
 

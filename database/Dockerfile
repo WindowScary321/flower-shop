@@ -1,3 +1,3 @@
 FROM mcr.microsoft.com/mssql-tools:latest
 USER root
-COPY FlowerShopDB.sql /FlowerShopDB.sql
+COPY --chmod=644 FlowerShopDB.sql /FlowerShopDB.sql
