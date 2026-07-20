@@ -18,12 +18,15 @@ services:
       - sqlserver
     volumes:
       - ./database/FlowerShopDB.sql:/FlowerShopDB.sql
+      - ./database/InsertMoreFlowers.sql:/InsertMoreFlowers.sql
     command: >
       /bin/bash -c "
         echo 'Waiting for SQL Server to be ready...';
         sleep 20;
         echo 'Running database initialization script...';
         /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P '2DS9WDJRYv4pK2WUXu6' -i /FlowerShopDB.sql -C;
+        echo 'Running insert more flowers script...';
+        /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P '2DS9WDJRYv4pK2WUXu6' -i /InsertMoreFlowers.sql -C;
         echo 'Database initialized successfully!';
       "
 

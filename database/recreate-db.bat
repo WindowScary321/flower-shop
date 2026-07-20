@@ -18,6 +18,20 @@ if %errorlevel% neq 0 (
 )
 
 echo.
-echo [THANH CONG] Da khoi tao va import du lieu thanh cong!
+echo Dang thuc thi script InsertMoreFlowers.sql...
+echo.
+
+sqlcmd -S localhost -U sa -P 123 -C -f 65001 -i "%~dp0InsertMoreFlowers.sql"
+
+if %errorlevel% neq 0 (
+    echo.
+    echo [LOI] Co loi xay ra trong qua trinh nap them du lieu hoa!
+    echo.
+    pause
+    exit /b %errorlevel%
+)
+
+echo.
+echo [THANH CONG] Da khoi tao va import tat ca du lieu thanh cong!
 echo.
 pause

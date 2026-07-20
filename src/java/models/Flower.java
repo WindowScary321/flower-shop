@@ -80,6 +80,22 @@ public class Flower {
         return description;
     }
 
+    public String getFormattedDescription() {
+        if (description == null) {
+            return "";
+        }
+        String html = description;
+        // Replace **bold** with <strong>bold</strong>
+        html = html.replaceAll("\\*\\*(.*?)\\*\\*", "<strong>$1</strong>");
+        // Replace *italic* with <em>italic</em>
+        html = html.replaceAll("\\*(.*?)\\*", "<em>$1</em>");
+        // Replace newlines with <br/> only if it doesn't already contain common HTML block elements to prevent double-spacing
+        if (!html.contains("<p>") && !html.contains("<li>") && !html.contains("<br") && !html.contains("<div>")) {
+            html = html.replace("\r\n", "<br/>").replace("\n", "<br/>");
+        }
+        return html;
+    }
+
     public void setDescription(String description) {
         this.description = description;
     }

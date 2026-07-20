@@ -52,7 +52,7 @@
             <p class="text-danger fw-semibold"><i class="bi bi-x-circle-fill"></i> Hết hàng</p>
         </c:if>
         
-        <p class="text-secondary mb-4">${flower.description}</p>
+        <div class="text-secondary mb-4">${flower.formattedDescription}</div>
         
         <c:if test="${flower.quantity > 0 and (empty sessionScope.user or sessionScope.user.role == 'customer')}">
             <form action="${pageContext.request.contextPath}/cart" method="POST" class="d-flex align-items-center gap-3 flex-wrap">
@@ -85,6 +85,166 @@
         </div>
     </div>
 </div>
+
+<!-- Related Products Section -->
+<c:if test="${not empty relatedFlowers}">
+    <style>
+        .related-carousel-control {
+            width: 40px;
+            height: 40px;
+            background-color: #ff6b81;
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.85;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        .related-carousel-control:hover {
+            background-color: #ff4757;
+            opacity: 1;
+            transform: translateY(-50%) scale(1.1);
+        }
+        @media (min-width: 992px) {
+            .related-carousel-prev { left: -50px; }
+            .related-carousel-next { right: -50px; }
+        }
+        @media (max-width: 991px) {
+            .related-carousel-prev { left: -10px; }
+            .related-carousel-next { right: -10px; }
+        }
+    </style>
+
+    <div class="mt-5 pt-4 border-top position-relative">
+        <h4 class="fw-bold text-dark section-title-premium mb-4 d-inline-block">SẢN PHẨM KHÁC</h4>
+        
+        <div id="relatedFlowersCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000">
+            <div class="carousel-inner">
+                <!-- Slide 1 (First 5 items) -->
+                <div class="carousel-item active">
+                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-4 justify-content-center">
+                        <c:forEach var="f" items="${relatedFlowers}" varStatus="status">
+                            <c:if test="${status.index < 5}">
+                                <div class="col">
+                                    <div class="card h-100 flower-card shadow-sm border-0 position-relative overflow-hidden" style="border-radius: 12px;">
+                                        <c:if test="${f.discount > 0}">
+                                            <span class="position-absolute top-0 start-0 badge bg-danger m-2 px-2 py-1" style="z-index: 1;">-${f.discount}%</span>
+                                        </c:if>
+                                        
+                                        <div class="flower-image-container position-relative">
+                                            <c:set var="fImgUrl" value="${pageContext.request.contextPath}/images/flowers/${empty f.image ? 'placeholder.jpg' : f.image}" />
+                                            <c:if test="${not empty f.image and (f.image.startsWith('http://') or f.image.startsWith('https://'))}">
+                                                <c:set var="fImgUrl" value="${f.image}" />
+                                            </c:if>
+                                            <img src="${fImgUrl}" class="card-img-top" alt="${f.flowerName}"
+                                                 style="height: 180px; object-fit: cover;"
+                                                 onerror="this.src='https://placehold.co/400x400/f8f9fa/ff6b81?text=Flower'">
+                                            <span class="position-absolute top-0 end-0 badge bg-danger m-2 px-2 py-1">${f.unit}</span>
+                                        </div>
+                                        <div class="card-body text-center p-3">
+                                            <h6 class="card-title text-truncate fw-bold mb-2 small" title="${f.flowerName}">${f.flowerName}</h6>
+                                            <div class="price-container mb-2">
+                                                <c:choose>
+                                                    <c:when test="${f.discount > 0}">
+                                                        <span class="text-muted text-decoration-line-through small me-2" style="font-size: 0.85rem;">
+                                                            <fmt:formatNumber value="${f.price}" pattern="#,###" /> đ
+                                                        </span>
+                                                        <span class="text-danger fw-bold" style="font-size: 1rem;">
+                                                            <fmt:formatNumber value="${f.getFinalPrice()}" pattern="#,###" /> đ
+                                                        </span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="text-danger fw-bold" style="font-size: 1rem;">
+                                                            <fmt:formatNumber value="${f.price}" pattern="#,###" /> đ
+                                                        </span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer bg-white border-top-0 pb-3 text-center pt-0">
+                                            <a href="${pageContext.request.contextPath}/detail?id=${f.flowerId}"
+                                               class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1" style="font-size: 0.85rem;">
+                                                Xem chi tiết
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:if>
+                        </c:forEach>
+                    </div>
+                </div>
+
+                <!-- Slide 2 (Next 5 items) -->
+                <c:if test="${relatedFlowers.size() > 5}">
+                    <div class="carousel-item">
+                        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-4 justify-content-center">
+                            <c:forEach var="f" items="${relatedFlowers}" varStatus="status">
+                                <c:if test="${status.index >= 5 and status.index < 10}">
+                                    <div class="col">
+                                        <div class="card h-100 flower-card shadow-sm border-0 position-relative overflow-hidden" style="border-radius: 12px;">
+                                            <c:if test="${f.discount > 0}">
+                                                <span class="position-absolute top-0 start-0 badge bg-danger m-2 px-2 py-1" style="z-index: 1;">-${f.discount}%</span>
+                                            </c:if>
+                                            
+                                            <div class="flower-image-container position-relative">
+                                                <c:set var="fImgUrl" value="${pageContext.request.contextPath}/images/flowers/${empty f.image ? 'placeholder.jpg' : f.image}" />
+                                                <c:if test="${not empty f.image and (f.image.startsWith('http://') or f.image.startsWith('https://'))}">
+                                                    <c:set var="fImgUrl" value="${f.image}" />
+                                                </c:if>
+                                                <img src="${fImgUrl}" class="card-img-top" alt="${f.flowerName}"
+                                                     style="height: 180px; object-fit: cover;"
+                                                     onerror="this.src='https://placehold.co/400x400/f8f9fa/ff6b81?text=Flower'">
+                                                <span class="position-absolute top-0 end-0 badge bg-danger m-2 px-2 py-1">${f.unit}</span>
+                                            </div>
+                                            <div class="card-body text-center p-3">
+                                                <h6 class="card-title text-truncate fw-bold mb-2 small" title="${f.flowerName}">${f.flowerName}</h6>
+                                                <div class="price-container mb-2">
+                                                    <c:choose>
+                                                        <c:when test="${f.discount > 0}">
+                                                            <span class="text-muted text-decoration-line-through small me-2" style="font-size: 0.85rem;">
+                                                                <fmt:formatNumber value="${f.price}" pattern="#,###" /> đ
+                                                            </span>
+                                                            <span class="text-danger fw-bold" style="font-size: 1rem;">
+                                                                <fmt:formatNumber value="${f.getFinalPrice()}" pattern="#,###" /> đ
+                                                            </span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="text-danger fw-bold" style="font-size: 1rem;">
+                                                                <fmt:formatNumber value="${f.price}" pattern="#,###" /> đ
+                                                            </span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer bg-white border-top-0 pb-3 text-center pt-0">
+                                                <a href="${pageContext.request.contextPath}/detail?id=${f.flowerId}"
+                                                   class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1" style="font-size: 0.85rem;">
+                                                    Xem chi tiết
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:if>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </c:if>
+            </div>
+
+            <!-- Carousel Controls -->
+            <c:if test="${relatedFlowers.size() > 5}">
+                <button class="carousel-control-prev related-carousel-control related-carousel-prev" type="button" data-bs-target="#relatedFlowersCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next related-carousel-control related-carousel-next" type="button" data-bs-target="#relatedFlowersCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </c:if>
+        </div>
+    </div>
+</c:if>
 
 <script>
 function changeQty(delta) {
