@@ -1,4 +1,4 @@
-FROM tomcat:9.0-jdk11-openjdk-slim
+FROM tomcat:10.1.57-jre25-temurin-noble
 
 # Xóa các ứng dụng mặc định của Tomcat để dọn dẹp
 RUN rm -rf /usr/local/tomcat/webapps/*
