@@ -1,20 +1,23 @@
 # Stage 0: Cung cấp thư viện Tomcat (Servlet API) cho Ant build
 FROM tomcat:10.1.57-jre21-temurin-noble AS tomcat_libs
 
-# Stage 1: Build file WAR bằng JDK và Ant
+# Stage 1: Build file WAR bằng JDK (Bypass Ant để tránh lỗi thư viện NetBeans)
 FROM eclipse-temurin:21-jdk AS builder
-RUN apt-get update && apt-get install -y ant wget
 WORKDIR /app
 
-# Lấy bộ thư viện Java EE của Tomcat bỏ vào Builder
-COPY --from=tomcat_libs /usr/local/tomcat /usr/local/tomcat
-
-# Tải công cụ CopyLibs của NetBeans để hỗ trợ biên dịch file WAR
-RUN wget -qO /tmp/copylibstask.jar https://repo1.maven.org/maven2/org/netbeans/api/org-netbeans-modules-java-j2seproject-copylibstask/RELEASE126/org-netbeans-modules-java-j2seproject-copylibstask-RELEASE126.jar
+# Lấy bộ thư viện Java EE của Tomcat
+COPY --from=tomcat_libs /usr/local/tomcat/lib /usr/local/tomcat/lib
 
 COPY . .
-# Chạy build Ant và chỉ định đường dẫn Tomcat cho NetBeans
-RUN ant -Dj2ee.server.home=/usr/local/tomcat -Dlibs.CopyLibs.classpath=/tmp/copylibstask.jar
+
+# Tự biên dịch và đóng gói WAR bằng công cụ chuẩn của Java (javac & jar)
+RUN mkdir -p dist build/web/WEB-INF/classes build/web/WEB-INF/lib && \
+    cp -r web/* build/web/ && \
+    cp -r lib/* build/web/WEB-INF/lib/ 2>/dev/null || true && \
+    cp -r src/java/* build/web/WEB-INF/classes/ 2>/dev/null || true && \
+    find build/web/WEB-INF/classes/ -name "*.java" -type f -delete && \
+    javac -encoding UTF-8 -cp "build/web/WEB-INF/lib/*:/usr/local/tomcat/lib/*" -d build/web/WEB-INF/classes $(find src/java -name "*.java") && \
+    cd build/web && jar -cvf /app/dist/flower-shop.war .
 
 # Triển khai trên Tomcat
 FROM tomcat:10.1.57-jre25-temurin-noble
