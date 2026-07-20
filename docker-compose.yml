@@ -1,6 +1,6 @@
 services:
   sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: mcr.microsoft.com/mssql/server:2025-latest
     container_name: flower_sqlserver
     environment:
       ACCEPT_EULA: "Y"
@@ -12,13 +12,11 @@ services:
     restart: unless-stopped
 
   init-db:
-    image: mcr.microsoft.com/mssql-tools:latest
+    build: ./database
     container_name: flower_init_db
     user: root
     depends_on:
       - sqlserver
-    volumes:
-      - ./database/FlowerShopDB.sql:/FlowerShopDB.sql
     command: >
       /bin/bash -c "
         echo 'Waiting for SQL Server to be ready...';
@@ -27,7 +25,7 @@ services:
           sleep 3;
         done;
         echo 'SQL Server is ready! Running database initialization script...';
-        /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P '2DS9WDJRYv4pK2WUXu6' -i /FlowerShopDB.sql -C;
+        /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P '2DS9WDJRYv4pK2WUXu6' -i /FlowerShopDB.sql -C && \
         echo 'Database FLOWER_SHOP initialized successfully!';
       "
 
