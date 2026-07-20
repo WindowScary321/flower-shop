@@ -92,6 +92,8 @@
 
             <!-- White Navbar for Categories (Hidden for Admin/Employee) -->
             <c:if test="${empty sessionScope.user or (sessionScope.user.role != 'admin' and sessionScope.user.role != 'employee')}">
+            <c:set var="servletPath" value="${pageContext.request.servletPath}" />
+            <c:set var="reqCategoryId" value="${requestScope.categoryId != null ? requestScope.categoryId : param.categoryId}" />
             <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
                 <div class="container">
                     <button class="navbar-toggler mx-auto" type="button" data-bs-toggle="collapse"
@@ -101,23 +103,30 @@
 
                     <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                         <ul class="navbar-nav">
-                            <li class="nav-item"><a class="nav-link fw-bold text-dark me-3"
-                                    href="${pageContext.request.contextPath}/">TRANG CHỦ</a></li>
-                            <li class="nav-item"><a class="nav-link fw-bold text-secondary text-nowrap me-3"
-                                    href="${pageContext.request.contextPath}/flower-catalog?categoryId=1">HOA CƯỚI</a>
+                            <li class="nav-item">
+                                <a class="nav-link fw-bold me-3 ${servletPath == '/index.jsp' && (empty reqCategoryId || reqCategoryId == 0) ? 'active-tab' : 'text-secondary'}"
+                                   href="${pageContext.request.contextPath}/">TRANG CHỦ</a>
                             </li>
-                            <li class="nav-item"><a class="nav-link fw-bold text-secondary text-nowrap me-3"
-                                    href="${pageContext.request.contextPath}/flower-catalog?categoryId=2">HOA SINH
-                                    NHẬT</a></li>
-                            <li class="nav-item"><a class="nav-link fw-bold text-secondary text-nowrap me-3"
-                                    href="${pageContext.request.contextPath}/flower-catalog?categoryId=3">HOA KHAI
-                                    TRƯƠNG</a></li>
-                            <li class="nav-item"><a class="nav-link fw-bold text-secondary text-nowrap me-3"
-                                    href="${pageContext.request.contextPath}/flower-catalog?categoryId=4">HOA CHIA
-                                    BUỒN</a></li>
-                            <li class="nav-item"><a class="nav-link fw-bold text-secondary text-nowrap"
-                                    href="${pageContext.request.contextPath}/flower-catalog?categoryId=5">HOA TRANG
-                                    TRÍ</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link fw-bold text-nowrap me-3 ${reqCategoryId == 1 ? 'active-tab' : 'text-secondary'}"
+                                   href="${pageContext.request.contextPath}/flower-catalog?categoryId=1">HOA CƯỚI</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link fw-bold text-nowrap me-3 ${reqCategoryId == 2 ? 'active-tab' : 'text-secondary'}"
+                                   href="${pageContext.request.contextPath}/flower-catalog?categoryId=2">HOA SINH NHẬT</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link fw-bold text-nowrap me-3 ${reqCategoryId == 3 ? 'active-tab' : 'text-secondary'}"
+                                   href="${pageContext.request.contextPath}/flower-catalog?categoryId=3">HOA KHAI TRƯƠNG</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link fw-bold text-nowrap me-3 ${reqCategoryId == 4 ? 'active-tab' : 'text-secondary'}"
+                                   href="${pageContext.request.contextPath}/flower-catalog?categoryId=4">HOA CHIA BUỒN</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link fw-bold text-nowrap ${reqCategoryId == 5 ? 'active-tab' : 'text-secondary'}"
+                                   href="${pageContext.request.contextPath}/flower-catalog?categoryId=5">HOA TRANG TRÍ</a>
+                            </li>
                         </ul>
                     </div>
                 </div>

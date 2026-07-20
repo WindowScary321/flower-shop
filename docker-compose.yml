@@ -31,7 +31,7 @@ services:
     build: .
     container_name: flower_webapp
     ports:
-      - "8080:8080"
+      - "8067:8080" # Port ngoài là 8067
     depends_on:
       sqlserver:
         condition: service_started
