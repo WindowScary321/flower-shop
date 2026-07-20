@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: flower_sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "2DS9WDJRYv4pK2WUXu6"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    restart: unless-stopped
+
+  init-db:
+    image: mcr.microsoft.com/mssql-tools:latest
+    container_name: flower_init_db
+    depends_on:
+      - sqlserver
+    volumes:
+      - ./database/FlowerShopDB.sql:/FlowerShopDB.sql
+    command: >
+      /bin/bash -c "
+        echo 'Waiting for SQL Server to be ready...';
+        sleep 20;
+        echo 'Running database initialization script...';
+        /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P '2DS9WDJRYv4pK2WUXu6' -i /FlowerShopDB.sql -C;
+        echo 'Database initialized successfully!';
+      "
+
+  webapp:
+    build: .
+    container_name: flower_webapp
+    ports:
+      - "8080:8080"
+    depends_on:
+      - sqlserver
+      - init-db
+    environment:
+      - DB_URL=jdbc:sqlserver://sqlserver:1433;databaseName=FlowerShop;encrypt=true;trustServerCertificate=true
+      - DB_USER=sa
+      - DB_PASSWORD=2DS9WDJRYv4pK2WUXu6
+    restart: unless-stopped
+
+volumes:
+  sqlserver_data:
