@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import utils.ActivityLogger;
 
 @WebServlet(name = "CheckoutServlet", urlPatterns = {"/checkout"})
 public class CheckoutServlet extends HttpServlet {
@@ -106,12 +107,14 @@ public class CheckoutServlet extends HttpServlet {
         orderDAO.close();
 
         if (orderId == -2) {
+            ActivityLogger.log(request, "CHECKOUT_FAILED", "Thanh toán thất bại do có sản phẩm hết hàng");
             request.setAttribute("error", "Một hoặc nhiều sản phẩm trong giỏ đã hết hàng. Vui lòng kiểm tra lại giỏ hàng.");
             request.getRequestDispatcher("/checkout.jsp").forward(request, response);
             return;
         }
 
         if (orderId < 0) {
+            ActivityLogger.log(request, "CHECKOUT_FAILED", "Thanh toán thất bại do lỗi hệ thống");
             request.setAttribute("error", "Đặt hàng thất bại do lỗi hệ thống. Vui lòng thử lại.");
             request.getRequestDispatcher("/checkout.jsp").forward(request, response);
             return;
@@ -119,6 +122,9 @@ public class CheckoutServlet extends HttpServlet {
 
         session.removeAttribute("cart");
         session.setAttribute("lastOrderId", orderId);
+        
+        String paymentMethodStr = (order.getPaymentMethod() != null) ? order.getPaymentMethod() : "COD";
+        ActivityLogger.log(request, "CHECKOUT", "Thanh toán thành công đơn hàng #" + orderId + " (Tổng tiền: " + String.format("%,.0f", total) + " đ) qua " + paymentMethodStr);
         
         if ("QR".equals(order.getPaymentMethod())) {
             response.sendRedirect(request.getContextPath() + "/payment-qr");

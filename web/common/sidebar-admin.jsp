@@ -15,4 +15,7 @@
     <a href="${pageContext.request.contextPath}/admin/manage-orders" class="list-group-item list-group-item-action">
         <i class="bi bi-bag-check me-2"></i> Quản lý đơn hàng
     </a>
+    <a href="${pageContext.request.contextPath}/admin/activity-logs" class="list-group-item list-group-item-action">
+        <i class="bi bi-journal-text me-2"></i> Nhật ký hoạt động
+    </a>
 </div>

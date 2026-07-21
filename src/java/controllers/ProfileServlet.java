@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import utils.ActivityLogger;
 
 @WebServlet(name = "ProfileServlet", urlPatterns = {"/profile", "/customer/profile", "/employee/profile"})
 public class ProfileServlet extends HttpServlet {
@@ -84,6 +85,7 @@ public class ProfileServlet extends HttpServlet {
                 user.setPhone(phone.trim());
                 user.setAddress(address != null ? address.trim() : "");
                 session.setAttribute("user", user);
+                ActivityLogger.log(request, "PROFILE_UPDATE", "Cập nhật thông tin cá nhân thành công");
                 success = "Cập nhật thông tin cá nhân thành công";
             }
 
@@ -112,6 +114,7 @@ public class ProfileServlet extends HttpServlet {
                 accountDAO.updatePassword(user.getAccountId(), hashedNew);
                 user.setPassword(hashedNew);
                 session.setAttribute("user", user);
+                ActivityLogger.log(request, "PROFILE_UPDATE", "Đổi mật khẩu thành công");
                 success = "Đổi mật khẩu thành công";
             }
         }

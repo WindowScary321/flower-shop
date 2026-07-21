@@ -211,3 +211,31 @@ INSERT INTO OrderDetails (OrderId, FlowerId, Quantity, UnitPrice) VALUES
 (7, 29, 2, 2890000),
 (8, 49, 1, 1060000);
 GO
+
+-- ============================================
+-- BẢNG 6: ActivityLogs (Nhật ký hoạt động)
+-- ============================================
+CREATE TABLE ActivityLogs (
+    LogId        INT IDENTITY(1,1) PRIMARY KEY,
+    AccountId    INT           NULL,
+    Username     NVARCHAR(50)  NULL,
+    ActionType   VARCHAR(50)   NOT NULL,
+    Description  NVARCHAR(500) NOT NULL,
+    IpAddress    VARCHAR(45)   NULL,
+    CreatedAt    DATETIME      DEFAULT GETDATE(),
+    CONSTRAINT FK_ActivityLogs_Accounts
+        FOREIGN KEY (AccountId) REFERENCES Accounts(AccountId)
+        ON DELETE SET NULL
+);
+GO
+
+-- Log mẫu
+INSERT INTO ActivityLogs (AccountId, Username, ActionType, Description, IpAddress, CreatedAt) VALUES
+(1, 'admin', 'LOGIN_SUCCESS', N'Đăng nhập thành công với vai trò admin', '127.0.0.1', '2026-07-21 08:00:00'),
+(2, 'employee', 'ORDER_STATUS_UPDATE', N'Cập nhật trạng thái đơn hàng #1 từ Chờ xử lý sang Đang giao', '127.0.0.1', '2026-07-21 08:15:00'),
+(3, 'customer', 'ADD_TO_CART', N'Thêm sản phẩm Bó hoa Hồng Dâu (x2) vào giỏ hàng', '192.168.1.100', '2026-07-21 09:30:00'),
+(3, 'customer', 'CHECKOUT', N'Thanh toán thành công đơn hàng #10 (Tổng tiền: 2,980,000 đ) qua COD', '192.168.1.100', '2026-07-21 09:45:00'),
+(NULL, 'admin', 'LOGIN_FAILED', N'Đăng nhập thất bại do sai mật khẩu', '192.168.1.50', '2026-07-21 10:00:00'),
+(1, 'admin', 'FLOWER_CREATE', N'Thêm sản phẩm mới: Hoa hồng xanh', '127.0.0.1', '2026-07-21 10:15:00'),
+(3, 'customer', 'ORDER_CANCEL', N'Hủy đơn hàng #3', '192.168.1.100', '2026-07-21 11:00:00');
+GO

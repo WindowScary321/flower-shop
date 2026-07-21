@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import models.Account;
+import utils.ActivityLogger;
 import utils.PasswordHasher;
 
 @WebServlet(name = "LoginServlet", urlPatterns = {"/login"})
@@ -37,14 +38,18 @@ public class LoginServlet extends HttpServlet {
         Account a = dao.getAccountByUsernameAndPassword(u, hashedPassword);
         
         if (a == null) {
+            ActivityLogger.log(request, "LOGIN_FAILED", "Đăng nhập thất bại do sai mật khẩu", u);
             request.setAttribute("error", "Sai tên đăng nhập hoặc mật khẩu");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else if (!a.isStatus()) {
+            ActivityLogger.log(request, "LOGIN_FAILED", "Đăng nhập thất bại do tài khoản bị khóa", u);
             request.setAttribute("error", "Tài khoản của bạn đã bị khóa");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
             HttpSession session = request.getSession();
             session.setAttribute("user", a);
+            
+            ActivityLogger.log(request, "LOGIN_SUCCESS", "Đăng nhập thành công với vai trò " + a.getRole());
             
             if (a.getRole().equals("admin")) {
                 response.sendRedirect(request.getContextPath() + "/admin/dashboard");

@@ -9,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import utils.ActivityLogger;
 
 @WebServlet(name = "ManageCategoryServlet", urlPatterns = {"/admin/manage-categories"})
 public class ManageCategoryServlet extends HttpServlet {
@@ -60,6 +61,7 @@ public class ManageCategoryServlet extends HttpServlet {
         CategoryDAO categoryDAO = new CategoryDAO();
         categoryDAO.insertCategory(c);
         categoryDAO.close();
+        ActivityLogger.log(request, "CATEGORY_CREATE", "Thêm danh mục mới: " + categoryName);
         request.getSession().setAttribute("successMsg", "Thêm danh mục thành công!");
         response.sendRedirect(request.getContextPath() + "/admin/manage-categories");
     }
@@ -79,6 +81,7 @@ public class ManageCategoryServlet extends HttpServlet {
         CategoryDAO categoryDAO = new CategoryDAO();
         categoryDAO.updateCategory(c);
         categoryDAO.close();
+        ActivityLogger.log(request, "CATEGORY_UPDATE", "Cập nhật danh mục: " + categoryName);
         request.getSession().setAttribute("successMsg", "Cập nhật danh mục thành công!");
         response.sendRedirect(request.getContextPath() + "/admin/manage-categories");
     }
@@ -91,6 +94,7 @@ public class ManageCategoryServlet extends HttpServlet {
             boolean deleted = categoryDAO.deleteCategory(id);
             categoryDAO.close();
             if (deleted) {
+                ActivityLogger.log(request, "CATEGORY_DELETE", "Xóa danh mục (ID: " + id + ")");
                 request.getSession().setAttribute("successMsg", "Xóa danh mục thành công!");
             } else {
                 request.getSession().setAttribute("errorMsg", "Danh mục đang chứa sản phẩm hoa, không thể xóa!");

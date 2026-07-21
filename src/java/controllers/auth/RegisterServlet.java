@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import models.Account;
+import utils.ActivityLogger;
 import utils.PasswordHasher;
 
 @WebServlet(name = "RegisterServlet", urlPatterns = {"/register"})
@@ -86,6 +87,8 @@ public class RegisterServlet extends HttpServlet {
         String hashedPassword = PasswordHasher.hash(password);
         Account newAccount = new Account(0, username, hashedPassword, fullname, email, phone, "customer", true);
         dao.insertAccount(newAccount);
+        
+        ActivityLogger.log(request, "REGISTER", "Đăng ký tài khoản mới thành công", username);
         
         request.setAttribute("success", "Đăng ký thành công! Vui lòng đăng nhập.");
         request.getRequestDispatcher("login.jsp").forward(request, response);

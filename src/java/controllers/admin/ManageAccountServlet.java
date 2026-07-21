@@ -9,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import utils.ActivityLogger;
 
 @WebServlet(name = "ManageAccountServlet", urlPatterns = {"/admin/manage-accounts"})
 public class ManageAccountServlet extends HttpServlet {
@@ -76,6 +77,7 @@ public class ManageAccountServlet extends HttpServlet {
 
         accountDAO.insertAccount(a);
         accountDAO.close();
+        ActivityLogger.log(request, "ACCOUNT_CREATE", "Tạo tài khoản mới: " + username + " (Role: " + role + ")");
         request.getSession().setAttribute("successMsg", "Thêm tài khoản thành công! Mật khẩu mặc định là: password123");
         response.sendRedirect(request.getContextPath() + "/admin/manage-accounts");
     }
@@ -131,6 +133,8 @@ public class ManageAccountServlet extends HttpServlet {
                 } else {
                     boolean newStatus = !currentAcc.isStatus();
                     accountDAO.updateAccountStatus(id, newStatus);
+                    String statusText = newStatus ? "Mở khóa" : "Khóa";
+                    ActivityLogger.log(request, "ACCOUNT_TOGGLE_STATUS", statusText + " tài khoản " + currentAcc.getUsername());
                     request.getSession().setAttribute("successMsg",
                         newStatus ? "Đã mở khóa tài khoản thành công!" : "Đã khóa tài khoản thành công!");
                 }

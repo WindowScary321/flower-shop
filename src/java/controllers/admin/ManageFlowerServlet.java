@@ -11,6 +11,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import utils.ActivityLogger;
 
 @WebServlet(name = "ManageFlowerServlet", urlPatterns = {"/admin/manage-flowers"})
 public class ManageFlowerServlet extends HttpServlet {
@@ -160,6 +161,7 @@ public class ManageFlowerServlet extends HttpServlet {
             FlowerDAO flowerDAO = new FlowerDAO();
             flowerDAO.insertFlower(f);
             flowerDAO.close();
+            ActivityLogger.log(request, "FLOWER_CREATE", "Thêm sản phẩm mới: " + flowerName);
             request.getSession().setAttribute("successMsg", "Thêm sản phẩm hoa thành công!");
         } catch (NumberFormatException e) {
             request.getSession().setAttribute("errorMsg", "Giá trị số không hợp lệ!");
@@ -218,6 +220,7 @@ public class ManageFlowerServlet extends HttpServlet {
             FlowerDAO flowerDAO = new FlowerDAO();
             flowerDAO.updateFlower(f);
             flowerDAO.close();
+            ActivityLogger.log(request, "FLOWER_UPDATE", "Cập nhật sản phẩm: " + flowerName);
             request.getSession().setAttribute("successMsg", "Cập nhật sản phẩm hoa thành công!");
         } catch (NumberFormatException e) {
             request.getSession().setAttribute("errorMsg", "Giá trị số không hợp lệ!");
@@ -237,8 +240,10 @@ public class ManageFlowerServlet extends HttpServlet {
             boolean deleted = flowerDAO.deleteFlower(id);
             flowerDAO.close();
             if (deleted) {
+                ActivityLogger.log(request, "FLOWER_DELETE", "Xóa sản phẩm hoa (ID: " + id + ")");
                 request.getSession().setAttribute("successMsg", "Xóa sản phẩm hoa thành công!");
             } else {
+                ActivityLogger.log(request, "FLOWER_DELETE", "Ẩn sản phẩm hoa (ID: " + id + ") do đang có đơn hàng");
                 request.getSession().setAttribute("successMsg", "Sản phẩm đang nằm trong đơn hàng nên đã được ẩn (ngừng kinh doanh) thay vì xóa hoàn toàn.");
             }
         } catch (NumberFormatException e) {

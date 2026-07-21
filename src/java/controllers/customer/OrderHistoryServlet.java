@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import utils.ActivityLogger;
 
 // Renamed to OrderHistoryServlet to match 1-project-overview.md spec.
 // URL pattern uses "order-history" for customer-facing route.
@@ -86,6 +87,7 @@ public class OrderHistoryServlet extends HttpServlet {
                 boolean success = orderDAO.cancelOrder(orderId, user.getAccountId());
                 orderDAO.close();
                 if (success) {
+                    ActivityLogger.log(request, "ORDER_CANCEL", "Hủy đơn hàng #" + orderId);
                     request.getSession().setAttribute("successMsg", "Đơn hàng #" + orderId + " đã được hủy thành công.");
                 } else {
                     request.getSession().setAttribute("errorMsg", "Không thể hủy đơn hàng này. Chỉ có thể hủy đơn đang ở trạng thái 'Chờ xử lý'.");

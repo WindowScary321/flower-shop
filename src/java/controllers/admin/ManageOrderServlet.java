@@ -9,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import utils.ActivityLogger;
 
 @WebServlet(name = "ManageOrderServlet", urlPatterns = {"/admin/manage-orders"})
 public class ManageOrderServlet extends HttpServlet {
@@ -102,10 +103,16 @@ public class ManageOrderServlet extends HttpServlet {
                 }
                 
                 if (newStatus != null && (newStatus.equals("Chờ xử lý") || newStatus.equals("Đang giao") || newStatus.equals("Đã giao"))) {
+                    String oldStatus = order.getStatus();
                     boolean paymentStatus = "true".equals(request.getParameter("paymentStatus"));
                     orderDAO.updatePaymentStatus(orderId, paymentStatus);
                     orderDAO.updateOrderStatusAndDeliveryTime(orderId, newStatus, deliveryTime);
                     orderDAO.close();
+                    
+                    if (!oldStatus.equals(newStatus)) {
+                        ActivityLogger.log(request, "ORDER_STATUS_UPDATE", "Cập nhật trạng thái đơn hàng #" + orderId + " từ " + oldStatus + " sang " + newStatus);
+                    }
+                    
                     request.getSession().setAttribute("successMsg", "Cập nhật trạng thái đơn hàng #" + orderId + " thành công.");
                 } else {
                     request.getSession().setAttribute("errorMsg", "Trạng thái không hợp lệ.");
