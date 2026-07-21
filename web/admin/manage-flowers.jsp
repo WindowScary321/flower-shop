@@ -111,9 +111,18 @@
                                     <c:if test="${!f.status}"><span class="badge bg-secondary">Ngừng bán</span></c:if>
                                 </td>
                                 <td class="text-center">
-                                    <button class="btn btn-sm btn-outline-primary" 
+                                    <button class="btn btn-sm btn-outline-primary edit-btn" 
                                             data-bs-toggle="modal" data-bs-target="#editModal"
-                                            onclick="fillEditModal(${f.flowerId}, '${f.flowerName}', '${f.unit}', ${f.price}, ${f.quantity}, '${f.image}', '${f.description}', ${f.categoryId}, ${f.discount}, ${f.status})">
+                                            data-id="${f.flowerId}"
+                                            data-name="<c:out value='${f.flowerName}'/>"
+                                            data-unit="<c:out value='${f.unit}'/>"
+                                            data-price="${f.price}"
+                                            data-quantity="${f.quantity}"
+                                            data-image="<c:out value='${f.image}'/>"
+                                            data-desc="<c:out value='${f.description}'/>"
+                                            data-category="${f.categoryId}"
+                                            data-discount="${f.discount}"
+                                            data-status="${f.status}">
                                         <i class="bi bi-pencil"></i>
                                     </button>
                                     <a href="${pageContext.request.contextPath}/admin/manage-flowers?action=delete&id=${f.flowerId}" 
@@ -303,18 +312,28 @@
 </div>
 
 <script>
-    function fillEditModal(id, name, unit, price, quantity, image, desc, categoryId, discount, status) {
-        document.getElementById('edit-id').value = id;
-        document.getElementById('edit-name').value = name;
-        document.getElementById('edit-unit').value = unit;
-        document.getElementById('edit-price').value = price;
-        document.getElementById('edit-quantity').value = quantity;
-        document.getElementById('edit-image').value = image === 'null' ? '' : image;
-        document.getElementById('edit-desc').value = desc === 'null' ? '' : desc;
-        document.getElementById('edit-categoryId').value = categoryId;
-        document.getElementById('edit-discount').value = discount;
-        document.getElementById('edit-status').value = status ? "1" : "0";
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const editButtons = document.querySelectorAll('.edit-btn');
+        editButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.getElementById('edit-id').value = this.getAttribute('data-id');
+                document.getElementById('edit-name').value = this.getAttribute('data-name');
+                document.getElementById('edit-unit').value = this.getAttribute('data-unit');
+                document.getElementById('edit-price').value = this.getAttribute('data-price');
+                document.getElementById('edit-quantity').value = this.getAttribute('data-quantity');
+                
+                let img = this.getAttribute('data-image');
+                document.getElementById('edit-image').value = (img === 'null' || !img) ? '' : img;
+                
+                let desc = this.getAttribute('data-desc');
+                document.getElementById('edit-desc').value = (desc === 'null' || !desc) ? '' : desc;
+                
+                document.getElementById('edit-categoryId').value = this.getAttribute('data-category');
+                document.getElementById('edit-discount').value = this.getAttribute('data-discount');
+                document.getElementById('edit-status').value = this.getAttribute('data-status') === 'true' ? "1" : "0";
+            });
+        });
+    });
 </script>
 
 <jsp:include page="/common/footer.jsp" />
