@@ -8,6 +8,7 @@ erDiagram
     Accounts ||--o{ Orders : "đặt hàng"
     Orders ||--|{ OrderDetails : "bao gồm"
     Flowers ||--o{ OrderDetails : "được đặt mua"
+    Accounts ||--o{ ActivityLogs : "thực hiện"
 
     Categories {
         int CategoryId PK
@@ -24,6 +25,7 @@ erDiagram
         varchar Image
         nvarchar Description
         int CategoryId FK
+        int Discount
         bit Status
     }
 
@@ -34,6 +36,7 @@ erDiagram
         nvarchar FullName
         varchar Email UK
         varchar Phone
+        nvarchar Address
         varchar Role
         bit Status
     }
@@ -46,6 +49,9 @@ erDiagram
         nvarchar ReceiverAddress
         varchar ReceiverPhone
         nvarchar Status
+        varchar PaymentMethod
+        bit PaymentStatus
+        datetime DeliveryTime
         int AccountId FK
     }
 
@@ -55,6 +61,16 @@ erDiagram
         int FlowerId FK
         int Quantity
         decimal UnitPrice
+    }
+
+    ActivityLogs {
+        int LogId PK
+        int AccountId FK
+        nvarchar Username
+        varchar ActionType
+        nvarchar Description
+        varchar IpAddress
+        datetime CreatedAt
     }
 ```
 
@@ -75,9 +91,10 @@ erDiagram
 | Unit         | NVARCHAR(50)     | DEFAULT N'Cây'         | Đơn vị tính (Cây hoặc Bó)          |
 | Price        | DECIMAL(18,2)    | NOT NULL, CHECK >= 0   | Giá bán (VNĐ)                     |
 | Quantity     | INT              | NOT NULL, CHECK >= 0   | Số lượng tồn kho                  |
-| Image        | VARCHAR(255)     | NULL                   | Đường dẫn file ảnh hoa            |
+| Image        | VARCHAR(255)     | NULL                   | Đường dẫn / URL file ảnh hoa      |
 | Description  | NVARCHAR(MAX)    | NULL                   | Mô tả chi tiết sản phẩm           |
 | CategoryId   | INT              | FK -> Categories       | Mã danh mục hoa thuộc về          |
+| Discount     | INT              | DEFAULT 0, CHECK 0-100 | Phần trăm giảm giá (%)            |
 | Status       | BIT              | DEFAULT 1              | 1 = Đang bán, 0 = Ngừng bán       |
 
 ### Bảng `Accounts` — Tài khoản người dùng
@@ -89,6 +106,7 @@ erDiagram
 | FullName  | NVARCHAR(100)    | NOT NULL                               | Họ tên đầy đủ                       |
 | Email     | VARCHAR(100)     | NOT NULL, UNIQUE                       | Địa chỉ email                       |
 | Phone     | VARCHAR(15)      | NOT NULL                               | Số điện thoại                       |
+| Address   | NVARCHAR(255)    | NULL                                   | Địa chỉ mặc định                    |
 | Role      | VARCHAR(20)      | NOT NULL, CHECK IN (admin/employee/customer) | Vai trò phân quyền            |
 | Status    | BIT              | DEFAULT 1                              | 1 = Hoạt động, 0 = Bị khóa         |
 
@@ -102,6 +120,9 @@ erDiagram
 | ReceiverAddress | NVARCHAR(255)    | NOT NULL                                           | Địa chỉ giao hàng                   |
 | ReceiverPhone   | VARCHAR(15)      | NOT NULL                                           | SĐT người nhận                      |
 | Status          | NVARCHAR(50)     | DEFAULT N'Chờ xử lý', CHECK IN (4 trạng thái)     | Trạng thái đơn hàng                 |
+| PaymentMethod   | VARCHAR(20)      | DEFAULT 'COD', CHECK IN ('COD', 'QR')             | Phương thức thanh toán              |
+| PaymentStatus   | BIT              | DEFAULT 0                                          | 0 = Chưa thanh toán, 1 = Đã thanh toán |
+| DeliveryTime    | DATETIME         | NULL                                               | Thời gian hẹn giao hàng             |
 | AccountId       | INT              | FK -> Accounts, ON DELETE CASCADE                  | Mã khách hàng đặt đơn              |
 
 ### Bảng `OrderDetails` — Chi tiết đơn hàng
@@ -113,15 +134,31 @@ erDiagram
 | Quantity      | INT              | NOT NULL, CHECK > 0 | Số lượng hoa mua                                |
 | UnitPrice     | DECIMAL(18,2)    | NOT NULL, CHECK >= 0| Giá bán tại thời điểm đặt (đóng băng giá)      |
 
+### Bảng `ActivityLogs` — Nhật ký hoạt động
+| Cột          | Kiểu dữ liệu   | Ràng buộc           | Mô tả                                          |
+|--------------|------------------|---------------------|-------------------------------------------------|
+| LogId        | INT IDENTITY     | PRIMARY KEY         | Mã nhật ký (tự tăng)                           |
+| AccountId    | INT              | FK -> Accounts      | Tài khoản thực hiện (NULL nếu vãng lai/thất bại)|
+| Username     | NVARCHAR(50)     | NULL                | Tên đăng nhập tại thời điểm ghi log             |
+| ActionType   | VARCHAR(50)      | NOT NULL            | Loại hành động (vd: LOGIN_SUCCESS, CHECKOUT,...) |
+| Description  | NVARCHAR(500)    | NOT NULL            | Mô tả chi tiết hành động                       |
+| IpAddress    | VARCHAR(45)      | NULL                | Địa chỉ IP thực hiện                            |
+| CreatedAt    | DATETIME         | DEFAULT GETDATE()   | Thời điểm ghi log                               |
+
 ## 2.3. Script SQL tạo Database
 
 ```sql
--- ============================================
--- TẠO DATABASE
--- ============================================
-CREATE DATABASE FlowerShopDB;
+USE master;
 GO
-USE FlowerShopDB;
+IF EXISTS (SELECT name FROM sys.databases WHERE name = N'FLOWER_SHOP')
+BEGIN
+    ALTER DATABASE FLOWER_SHOP SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE FLOWER_SHOP;
+END
+GO
+CREATE DATABASE FLOWER_SHOP;
+GO
+USE FLOWER_SHOP;
 GO
 
 -- ============================================
@@ -145,6 +182,7 @@ CREATE TABLE Flowers (
     Image       VARCHAR(255)   NULL,
     Description NVARCHAR(MAX)  NULL,
     CategoryId  INT            NULL,
+    Discount    INT            DEFAULT 0 CHECK (Discount >= 0 AND Discount <= 100),
     Status      BIT            DEFAULT 1,
     CONSTRAINT FK_Flowers_Categories
         FOREIGN KEY (CategoryId) REFERENCES Categories(CategoryId)
@@ -161,6 +199,7 @@ CREATE TABLE Accounts (
     FullName  NVARCHAR(100)  NOT NULL,
     Email     VARCHAR(100)   NOT NULL UNIQUE,
     Phone     VARCHAR(15)    NOT NULL,
+    Address   NVARCHAR(255)  NULL,
     Role      VARCHAR(20)    NOT NULL
               CHECK (Role IN ('admin', 'employee', 'customer')),
     Status    BIT            DEFAULT 1
@@ -178,10 +217,15 @@ CREATE TABLE Orders (
     ReceiverPhone   VARCHAR(15)    NOT NULL,
     Status          NVARCHAR(50)   DEFAULT N'Chờ xử lý'
                     CHECK (Status IN (N'Chờ xử lý', N'Đang giao', N'Đã giao', N'Đã hủy')),
+    PaymentMethod   VARCHAR(20)    DEFAULT 'COD' CHECK (PaymentMethod IN ('COD', 'QR')),
+    PaymentStatus   BIT            DEFAULT 0,
+    DeliveryTime    DATETIME       NULL,
     AccountId       INT            NOT NULL,
     CONSTRAINT FK_Orders_Accounts
         FOREIGN KEY (AccountId) REFERENCES Accounts(AccountId)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT CHK_DeliveryTime
+        CHECK (Status != N'Đã giao' OR DeliveryTime IS NOT NULL)
 );
 
 -- ============================================
@@ -198,6 +242,22 @@ CREATE TABLE OrderDetails (
         ON DELETE CASCADE,
     CONSTRAINT FK_OrderDetails_Flowers
         FOREIGN KEY (FlowerId) REFERENCES Flowers(FlowerId)
+);
+
+-- ============================================
+-- BẢNG 6: ActivityLogs (Nhật ký hoạt động)
+-- ============================================
+CREATE TABLE ActivityLogs (
+    LogId        INT IDENTITY(1,1) PRIMARY KEY,
+    AccountId    INT           NULL,
+    Username     NVARCHAR(50)  NULL,
+    ActionType   VARCHAR(50)   NOT NULL,
+    Description  NVARCHAR(500) NOT NULL,
+    IpAddress    VARCHAR(45)   NULL,
+    CreatedAt    DATETIME      DEFAULT GETDATE(),
+    CONSTRAINT FK_ActivityLogs_Accounts
+        FOREIGN KEY (AccountId) REFERENCES Accounts(AccountId)
+        ON DELETE SET NULL
 );
 GO
 ```

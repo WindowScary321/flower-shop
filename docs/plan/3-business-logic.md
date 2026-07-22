@@ -66,6 +66,7 @@ Bảng dưới đây liệt kê rõ ràng từng chức năng mà mỗi vai trò
 | CRUD Sản phẩm hoa              |  ❌   |    ❌    |    ❌    |  ✅   |
 | Quản lý tài khoản người dùng   |  ❌   |    ❌    |    ❌    |  ✅   |
 | Xem Dashboard thống kê         |  ❌   |    ❌    |    ❌    |  ✅   |
+| Xem nhật ký hệ thống (Logs)    |  ❌   |    ❌    |    ❌    |  ✅   |
 
 ### Cấu hình URL Pattern cho Filter
 
@@ -153,28 +154,37 @@ sequenceDiagram
     participant DB as SQL Server
 
     Customer->>CatalogJSP: Bấm "Thêm vào giỏ"
-    CatalogJSP->>CartServlet: GET /cart?action=add&flowerId=3&qty=1
-    CartServlet->>Session: Lấy Map<Integer, CartItem> từ session
-    CartServlet->>Session: Thêm/cập nhật CartItem vào Map
+    CatalogJSP->>CartServlet: POST /cart (action=add, flowerId=3, qty=1)
+    CartServlet->>Session: Lấy List<CartItem> từ session
+    CartServlet->>Session: Thêm/cập nhật số lượng CartItem trong List
     CartServlet->>CatalogJSP: Redirect lại trang danh mục
 
-    Customer->>CartServlet: Xem giỏ hàng (/cart?action=view)
+    Customer->>CartServlet: Xem giỏ hàng (GET /cart)
     CartServlet->>Session: Đọc giỏ hàng
     CartServlet->>CatalogJSP: Forward -> cart.jsp
 
-    Customer->>CheckoutServlet: POST (receiverName, address, phone)
+    Customer->>CheckoutServlet: POST (receiverName, address, phone, paymentMethod)
     CheckoutServlet->>CheckoutServlet: Validate thông tin giao hàng
-    CheckoutServlet->>DB: BEGIN TRANSACTION
-    CheckoutServlet->>OrderDAO: insertOrder(order)
-    OrderDAO->>DB: INSERT INTO Orders ...
+    CheckoutServlet->>OrderDAO: createOrder(order, cart)
+    OrderDAO->>DB: BEGIN TRANSACTION
+    OrderDAO->>DB: INSERT INTO Orders (..., PaymentMethod)
     loop Mỗi CartItem trong giỏ hàng
-        CheckoutServlet->>OrderDAO: insertOrderDetail(detail)
         OrderDAO->>DB: INSERT INTO OrderDetails ...
-        CheckoutServlet->>DB: UPDATE Flowers SET Quantity = Quantity - ? WHERE FlowerId = ?
+        OrderDAO->>DB: UPDATE Flowers SET Quantity = Quantity - ? WHERE FlowerId = ?
     end
-    CheckoutServlet->>DB: COMMIT TRANSACTION
-    CheckoutServlet->>Session: Xóa giỏ hàng khỏi session
-    CheckoutServlet->>CatalogJSP: Redirect -> success.jsp
+    alt Số lượng tồn kho không đủ
+        OrderDAO->>DB: ROLLBACK TRANSACTION
+        OrderDAO->>CheckoutServlet: Trả về -2
+        CheckoutServlet->>CatalogJSP: Trả về lỗi "hết hàng"
+    else Hợp lệ
+        OrderDAO->>DB: COMMIT TRANSACTION
+        CheckoutServlet->>Session: Xóa giỏ hàng khỏi session
+        alt PaymentMethod = QR
+            CheckoutServlet->>CatalogJSP: Redirect -> /payment-qr
+        else PaymentMethod = COD
+            CheckoutServlet->>CatalogJSP: Redirect -> /checkout-success
+        end
+    end
 ```
 
 ### Luồng 4: Nhân viên xử lý đơn hàng
